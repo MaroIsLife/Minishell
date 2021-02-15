@@ -48,6 +48,7 @@ t_node		*g_first;
 
 
 char	*find_command(char *s);
+char	*find_argument(char *s);
 void	find_for_split(char *cmd);
 void	clear();
 void	print_prompt1();

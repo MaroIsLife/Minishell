@@ -41,98 +41,12 @@ void	push(char *cmd, char *arg,int num)
 }
 
 
-char	**splits(char *cmd)
-{
-	char **semiColons;
-	int i;
-
-
-	find_for_split(cmd);
-	if (g_find.foundSemiColons == 1)
-	{
-		semiColons = ft_split(cmd,';');
-		return semiColons;
-	}
-	else if (g_find.foundPipe == 1)
-	{
-		;
-	}
-	return semiColons;
-}
-
-void	find_argument(char *s)
-{
-	int i;
-	int b;
-	char *re;
-	int dQuotes;
-	int sQuotes;
-
-	b = 0;
-	dQuotes = 0;
-	if (s[i] == '\"')
-	{
-		;
-	}
-	i = g_source.offset + 1;
-	while (s[i] == ' ')
-		i++;
-	g_source.offset = i;
-	while (s[i] != '\n' && i <= g_source.cmdlen)
-	{
-		i++;
-
-		if (s[i - 1] != '\\' && s[i] == '\"')
-			b--;
-		b++; //b = size of Argument
-	}
-	i = g_source.offset;
-	re = malloc((b + 1) * sizeof(char));
-	b = 0;
-	while (s[i] != '\n' && s[i] != '|' && i <= g_source.cmdlen)
-	{
-		if (s[i] == ' ')
-		{
-			re[b] = s[i];
-			b++;
-			while (s[i + 1] == ' ' && dQuotes == 0)
-				i++;
-		}
-		else if (s[i] == '\"')
-		{
-			if (dQuotes == 0)
-				dQuotes = 1;
-			else
-				dQuotes = 0;
-		}
-		else if (s[i] == '\'' && dQuotes == 0)
-		{
-			if (sQuotes == 0)
-				sQuotes = 1;
-			else
-				sQuotes = 0;
-		}
-		else
-		{
-			re[b] = s[i];
-			b++;
-		}
-		i++;
-	}
-	re[b] = '\0';
-
-	// re = ft_substr(s,(g_source.offset),i - (g_source.offset));
-	
-	printf("%s\n",re);
-
-}
-
-
 void	ms_loop()
 {
 	char *cmd;
 	char **token;
 	char *command;
+	char *argument;
 
 	while(1)
 	{
@@ -144,13 +58,15 @@ void	ms_loop()
 
 		if (ft_strncmp(cmd,"exit",4) == 0)
 			exit(0);
+		if (ft_strncmp(cmd,"clear",5) == 0)
+			system("clear");
 
 		
 
 		// push(12);
 		// push(31);
 
-		token = splits(cmd);
+		// token = splits(cmd);
 		command = find_command(cmd);
 		// int i = 0;
 		// while (token[i] != NULL)
@@ -158,12 +74,13 @@ void	ms_loop()
 		// 	printf("%s\n",token[i]);
 		// 	i++;
 		// }
-			find_argument(cmd);
+		argument = find_argument(cmd);
 
 
 
 		free(command);
 		free(cmd);
+		free(argument);
 	}
 }
 
