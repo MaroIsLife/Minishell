@@ -35,7 +35,7 @@ void	find_for_split(char *cmd)
 	}
 }
 
-char	*find_first_space(char *s)
+char	*find_command(char *s)
 {
 	int i;
 	char *s1;
