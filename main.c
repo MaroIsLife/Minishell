@@ -65,20 +65,63 @@ void	find_argument(char *s)
 	int i;
 	int b;
 	char *re;
+	int dQuotes;
+	int sQuotes;
 
 	b = 0;
-	i = g_source.offset + 1;
+	dQuotes = 0;
 	if (s[i] == '\"')
 	{
 		;
 	}
-
-	while (s[i] != '\n')
+	i = g_source.offset + 1;
+	while (s[i] == ' ')
+		i++;
+	g_source.offset = i;
+	while (s[i] != '\n' && i <= g_source.cmdlen)
 	{
 		i++;
-	}
 
-	re = ft_substr(s,(g_source.offset + 1),i - (g_source.offset + 1));
+		if (s[i - 1] != '\\' && s[i] == '\"')
+			b--;
+		b++; //b = size of Argument
+	}
+	i = g_source.offset;
+	re = malloc((b + 1) * sizeof(char));
+	b = 0;
+	while (s[i] != '\n' && s[i] != '|' && i <= g_source.cmdlen)
+	{
+		if (s[i] == ' ')
+		{
+			re[b] = s[i];
+			b++;
+			while (s[i + 1] == ' ' && dQuotes == 0)
+				i++;
+		}
+		else if (s[i] == '\"')
+		{
+			if (dQuotes == 0)
+				dQuotes = 1;
+			else
+				dQuotes = 0;
+		}
+		else if (s[i] == '\'' && dQuotes == 0)
+		{
+			if (sQuotes == 0)
+				sQuotes = 1;
+			else
+				sQuotes = 0;
+		}
+		else
+		{
+			re[b] = s[i];
+			b++;
+		}
+		i++;
+	}
+	re[b] = '\0';
+
+	// re = ft_substr(s,(g_source.offset),i - (g_source.offset));
 	
 	printf("%s\n",re);
 
@@ -108,7 +151,7 @@ void	ms_loop()
 		// push(31);
 
 		token = splits(cmd);
-		command = find_first_space(cmd);
+		command = find_command(cmd);
 		// int i = 0;
 		// while (token[i] != NULL)
 		// {

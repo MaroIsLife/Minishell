@@ -47,7 +47,7 @@ t_node		*g_head;
 t_node		*g_first;
 
 
-char	*find_first_space(char *s);
+char	*find_command(char *s);
 void	find_for_split(char *cmd);
 void	clear();
 void	print_prompt1();
