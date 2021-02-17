@@ -121,7 +121,9 @@ void	ms_loop()
 			command = find_command(cmd);
 			argument = find_argument(cmd);
 
+
 			printf("#%d Command: %s Argument: %s\n",i,command,argument);
+			g_source.offset = 0;
 		// 	i++;
 		// }
 		
