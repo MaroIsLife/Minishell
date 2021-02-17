@@ -24,10 +24,24 @@ typedef struct	s_source
 typedef struct s_node {
     char		*cmd;
 	char		*arg;
-	char		*pipe;
+	int			pipe;
 	int			number;
     struct s_node	*next;
 }   t_node;
+
+
+typedef struct s_pipe {
+    char		*cmd;
+	char		*arg;
+	int			number;
+    struct s_node	*next;
+}   t_pipe;
+
+typedef struct s_pipes {
+	char	*arg;
+	char	*cmd;
+	int		num;
+}	t_pipes[1024];
 
 typedef struct	s_find
 {
@@ -45,11 +59,14 @@ t_source	g_source;
 t_find		g_find;
 t_node		*g_head;
 t_node		*g_first;
+int			g_dQuotes;
+int			g_sQuotes;
 
 
 char	*find_command(char *s);
 char	*find_argument(char *s);
 void	find_for_split(char *cmd);
+int 	finding_quotes(char *s, int i);
 void	clear();
 void	print_prompt1();
 void	print_prompt2();
