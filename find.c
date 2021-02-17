@@ -108,11 +108,11 @@ char	*find_argument(char *s)
 
 	b = 0;
 	dQuotes = 0;
-	if (s[i] == '\"')
-	{
-		;
-	}
-	i = g_source.offset + 1;
+	// if (s[i] == '\"')
+	// {
+	// 	;
+	// }
+	i = g_source.offset;
 	while (s[i] == ' ')
 		i++;
 	g_source.offset = i;
@@ -127,28 +127,37 @@ char	*find_argument(char *s)
 	i = g_source.offset;
 	re = malloc((b + 1) * sizeof(char));
 	b = 0;
-	while (s[i] != '\0' && s[i] != '|' && i <= g_source.cmdlen)
+	while (s[i] != '\0' && i <= g_source.cmdlen)
 	{
 		if (s[i] == ' ')
 		{
-			re[b] = s[i];
-			b++;
-			while (s[i + 1] == ' ' && dQuotes == 0)
+			if (s[i] == ' ' && (g_dQuotes == 1 || g_sQuotes == 1))
+			{
+				re[b] = s[i];
+				b++;
+			}
+			else if (s[i] == ' ' && (g_dQuotes == 0 || g_sQuotes == 0))
+			{
+				g_source.offset = i;
+				re[b] = '\0';
+				return (re);
+			}
+			while (s[i + 1] == ' ' && g_dQuotes == 0)
 				i++;
 		}
 		else if (s[i] == '\"')
 		{
-			if (dQuotes == 0)
-				dQuotes = 1;
+			if (g_dQuotes == 0)
+				g_dQuotes = 1;
 			else
-				dQuotes = 0;
+				g_dQuotes = 0;
 		}
-		else if (s[i] == '\'' && dQuotes == 0)
+		else if (s[i] == '\'' && g_dQuotes == 0)
 		{
-			if (sQuotes == 0)
-				sQuotes = 1;
+			if (g_sQuotes == 0)
+				g_sQuotes = 1;
 			else
-				sQuotes = 0;
+				g_sQuotes = 0;
 		}
 		else
 		{
@@ -157,6 +166,7 @@ char	*find_argument(char *s)
 		}
 		i++;
 	}
+	g_source.offset = i;
 	re[b] = '\0';
 
 	// re = ft_substr(s,(g_source.offset),i - (g_source.offset));
