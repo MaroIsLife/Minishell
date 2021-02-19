@@ -94,7 +94,7 @@ char	*find_command(char *s)
 	}
 	s1 = ft_substr(s,start,length);
 	s1 = ft_strtrim(s1," ");
-	g_source.offset = i;
+	g_source.offset = i + 1;
 		return (s1);
 }
 
@@ -103,15 +103,9 @@ char	*find_argument(char *s)
 	int i;
 	int b;
 	char *re;
-	int dQuotes;
-	int sQuotes;
+
 
 	b = 0;
-	dQuotes = 0;
-	// if (s[i] == '\"')
-	// {
-	// 	;
-	// }
 	i = g_source.offset;
 	while (s[i] == ' ')
 		i++;
@@ -174,3 +168,4 @@ char	*find_argument(char *s)
 	// printf("%s\n",re);
 	return (re);
 }
+

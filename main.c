@@ -7,6 +7,16 @@
 #include "minishell.h"
 
 
+void clearScreen()
+{
+  char *CLEAR_SCREEN_ANSI;
+  CLEAR_SCREEN_ANSI = malloc(1024 * sizeof(char));
+  CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J";
+  write(1, CLEAR_SCREEN_ANSI, 12);
+  free(CLEAR_SCREEN_ANSI);
+}
+
+
 void	print_list() {
    
    t_node *first;
@@ -36,11 +46,37 @@ void	push(char *cmd, char *arg, int num)
 
     g_head->next = (t_node *) malloc(sizeof(t_node));
     g_head->next->number = num;
-	g_head->next->arg = arg;
+	// g_head->next->arg = arg;
     g_head->next->cmd = cmd;
     // g_head->next->pipe = num;
     g_head->next->next = NULL;
 	g_head = tmp;
+}
+
+int count_argument(char *s, int offset)
+{
+	int i;
+	int count;
+
+	i = 0;
+	count = 0;
+	while (s[i] != '\0')
+	{
+		finding_quotes(s, i);
+		if ((s[i] == ';' || s[i] == '|') && (g_dQuotes == 0))
+		{
+			return (count);
+		}
+		if (s[i] == ' ' && g_dQuotes == 0)
+		{
+			count++;
+			while (s[i] == ' ')
+				i++;
+		}
+		else
+			i++;
+	}
+	return(count);
 }
 
 
@@ -50,6 +86,7 @@ void	ms_loop()
 	char **token;
 	char *command;
 	char *argument;
+	int count;
 	int i = 0;
 
 	while(1)
@@ -77,6 +114,7 @@ void	ms_loop()
 
 		// token = splits(cmd);
 		find_for_split(cmd);
+		count = count_argument(cmd,0);
 		// if (g_find.foundSemiColons == 1)
 		// {
 		// 	token = ft_split(cmd,';');
@@ -85,57 +123,45 @@ void	ms_loop()
 		// {
 		// 	token = NULL;
 		// }
-		if (g_find.foundPipe == 1)
-		{
-			i = 0;
-			while (cmd[i] != '\0')
-			{
-					finding_quotes(cmd,i);
-				if (cmd[i] == '|' && g_dQuotes == 0)
-				{
-					i++;
-					while (cmd[i] == ' ')
-					{
-						i++;
-					}
-					int start = i;
-					while (cmd[i] != ' ')
-					{
-						i++;
-					}
-					command = ft_substr(cmd,start,i - start);
-					printf("%s\n",command);
-				}
-
-					i++;
-			}
-
-			printf("Found Pipe\n");
-		}
-		// command = find_command(cmd);
+		command = find_command(cmd);
+		printf("%s\n",find_argument(cmd));
 		// argument = find_argument(cmd);
-		// printf("%s\n",token[0]);
+
 		i = 0;
-		// while (token[i] != NULL)
+		// while (i < count)
 		// {
-			command = find_command(cmd);
-			argument = find_argument(cmd);
-
-
-			printf("#%d Command: %s Argument: %s\n",i,command,argument);
-			g_source.offset = 0;
+		// 	printf("%s\n",find_argument(cmd));
 		// 	i++;
 		// }
-		
-		// int i = 0;
-		// while (token[i] != NULL)
+	
+
+
+
+		// if (g_find.foundPipe == 1)
 		// {
-		// 	printf("%s\n",token[i]);
-		// 	i++;
+		// 	i = 0;
+		// 	while (cmd[i] != '\0')
+		// 	{
+		// 			finding_quotes(cmd,i);
+		// 		if (cmd[i] == '|' && g_dQuotes == 0)
+		// 		{
+		// 			i++;
+		// 			while (cmd[i] == ' ')
+		// 			{
+		// 				i++;
+		// 			}
+		// 			int start = i;
+		// 			while (cmd[i] != ' ')
+		// 			{
+		// 				i++;
+		// 			}
+		// 			command = ft_substr(cmd,start,i - start);
+		// 		}
+		// 			i++;
+		// 	}
 		// }
 
-
-
+		g_source.offset = 0;
 		free(command);
 		free(cmd);
 		free(argument);

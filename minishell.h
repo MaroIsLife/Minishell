@@ -21,27 +21,25 @@ typedef struct	s_source
 
 }				t_source;
 
+typedef struct s_pipe {
+	char *cmd;
+	
+}	t_pipe;
+
+
+typedef struct s_arg {
+	char			*arg;
+	t_pipe			pipe;
+    struct s_node	*next;
+}   t_arg;
+
 typedef struct s_node {
-    char		*cmd;
-	char		*arg;
-	int			pipe;
-	int			number;
+    char			*cmd;
+	int				foundPipe;
+	int				number;
+	t_arg			arg;
     struct s_node	*next;
 }   t_node;
-
-
-typedef struct s_pipe {
-    char		*cmd;
-	char		*arg;
-	int			number;
-    struct s_node	*next;
-}   t_pipe;
-
-typedef struct s_pipes {
-	char	*arg;
-	char	*cmd;
-	int		num;
-}	t_pipes[1024];
 
 typedef struct	s_find
 {
