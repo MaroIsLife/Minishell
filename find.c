@@ -121,7 +121,7 @@ char	*find_argument(char *s)
 	i = g_source.offset;
 	re = malloc((b + 1) * sizeof(char));
 	b = 0;
-	while (s[i] != '\0' && i <= g_source.cmdlen)
+	while (s[i] != '\0' && s[i] != '|' && i <= g_source.cmdlen)
 	{
 		if (s[i] == ' ')
 		{
@@ -158,14 +158,15 @@ char	*find_argument(char *s)
 			re[b] = s[i];
 			b++;
 		}
+		printf("%d\n",i);
 		i++;
+	}
+	if (g_dQuotes == 1)
+	{
+		printf("Error\n");
 	}
 	g_source.offset = i;
 	re[b] = '\0';
-
-	// re = ft_substr(s,(g_source.offset),i - (g_source.offset));
-	
-	// printf("%s\n",re);
 	return (re);
 }
 

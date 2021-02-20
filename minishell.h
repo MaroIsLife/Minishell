@@ -17,27 +17,21 @@ typedef struct	s_source
 	int		cmdlen;
 	int		isPipe;
 	int		offset;
-
-
 }				t_source;
 
 typedef struct s_pipe {
-	char *cmd;
+	char			*cmd;
+	char			**arg;
+    struct s_node	*next;
 	
 }	t_pipe;
 
-
-typedef struct s_arg {
-	char			*arg;
-	t_pipe			pipe;
-    struct s_node	*next;
-}   t_arg;
-
 typedef struct s_node {
     char			*cmd;
+	char			**arg;
 	int				foundPipe;
 	int				number;
-	t_arg			arg;
+	t_pipe			*pipe;
     struct s_node	*next;
 }   t_node;
 
