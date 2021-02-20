@@ -83,9 +83,6 @@ int count_argument(char *s, int offset)
 void	ms_loop()
 {
 	char *cmd;
-	char **token;
-	char *command;
-	char *argument;
 	int count;
 	int i = 0;
 
@@ -93,7 +90,6 @@ void	ms_loop()
 	{
 		print_prompt1();
 		cmd = read_line();
-		char **argss;
 		if (ft_strncmp(cmd,"print",5) == 0)
 			printf("Hello\n");
 
@@ -111,28 +107,33 @@ void	ms_loop()
 
 		// push(12);
 		// push(31);
+		g_head = (t_node *) malloc(sizeof(t_node));
+		g_head->next = NULL;
+		g_head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
+		g_head->pipe->next = NULL;
+		g_first = g_head;
 
-		// token = splits(cmd);
 		find_for_split(cmd);
 		count = count_argument(cmd,0);
-		// if (g_find.foundSemiColons == 1)
-		// {
-		// 	token = ft_split(cmd,';');
-		// }
-		// // else 
-		// {
-		// 	token = NULL;
-		// }
-		command = find_command(cmd);
-		printf("%s\n",find_argument(cmd));
-		// argument = find_argument(cmd);
-
+		g_head->cmd = find_command(cmd);
+		printf("Command: %s\n",g_head->cmd);
 		i = 0;
-		// while (i < count)
-		// {
-		// 	printf("%s\n",find_argument(cmd));
-		// 	i++;
-		// }
+		g_head->pipe->arg = malloc((count + 1) * sizeof(char *));
+		while (i < count)
+		{
+			g_head->pipe->arg[i] = find_argument(cmd);
+			i++;
+		}
+		g_head->pipe->arg[i] = NULL;
+		i = 0;
+		while (g_head->pipe->arg[i] != NULL)
+		{
+			printf("Argument %d : %s\n",i,g_head->pipe->arg[i]);
+			i++;
+		}
+
+		
+
 	
 
 
@@ -162,18 +163,15 @@ void	ms_loop()
 		// }
 
 		g_source.offset = 0;
-		free(command);
-		free(cmd);
-		free(argument);
-		free(token);
+		// free(command);
+		// free(cmd);
+		// free(argument);
+		// free(token);
 	}
 }
 
 int     main()
 {
-	g_head = (t_node *) malloc(sizeof(t_node));
-	g_head->next = NULL;
-	g_first = g_head;
 
 	// clear();
 	ms_loop();
