@@ -36,9 +36,8 @@ void	print_list() {
 
 void	push(char *cmd, char *arg, int num) 
 {
-	
 	t_node		*tmp;
-
+	
 	tmp = g_head;
     while (g_head->next != NULL) {
         g_head = g_head->next;
@@ -76,6 +75,8 @@ int count_argument(char *s, int offset)
 		else
 			i++;
 	}
+	if (g_dQuotes == 1)
+		g_find.foundError = 1;
 	return(count);
 }
 
@@ -118,17 +119,19 @@ void	ms_loop()
 		g_head->cmd = find_command(cmd);
 		printf("Command: %s\n",g_head->cmd);
 		i = 0;
-		g_head->pipe->arg = malloc((count + 1) * sizeof(char *));
+		printf("count: %d\n",count);
+		g_head->arg = malloc((count + 1) * sizeof(char *));
+		// printf("%s\n",find_argument(cmd));
 		while (i < count)
 		{
-			g_head->pipe->arg[i] = find_argument(cmd);
+			g_head->arg[i] = find_argument(cmd);
 			i++;
 		}
-		g_head->pipe->arg[i] = NULL;
+		g_head->arg[i] = NULL;
 		i = 0;
-		while (g_head->pipe->arg[i] != NULL)
+		while (g_head->arg[i] != NULL)
 		{
-			printf("Argument %d : %s\n",i,g_head->pipe->arg[i]);
+			printf("Argument %d : %s\n",i,g_head->arg[i]);
 			i++;
 		}
 

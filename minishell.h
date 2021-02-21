@@ -45,6 +45,7 @@ typedef struct	s_find
 	int	nDQuotes;
 	int	foundSQuotes;
 	int	nSQuotes;
+	int	foundError;
 }				t_find;
 
 t_source	g_source;
@@ -53,12 +54,14 @@ t_node		*g_head;
 t_node		*g_first;
 int			g_dQuotes;
 int			g_sQuotes;
+int			g_aSlash;
 
 
 char	*find_command(char *s);
 char	*find_argument(char *s);
 void	find_for_split(char *cmd);
 int 	finding_quotes(char *s, int i);
+void	finding_aslash(char *s, int i);
 void	clear();
 void	print_prompt1();
 void	print_prompt2();
