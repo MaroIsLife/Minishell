@@ -1,7 +1,18 @@
 #include "minishell.h"
 
+
 int finding_quotes(char *s,int i)
 {
+	if (s[0] == '\"')
+	{
+		g_dQuotes = 1;
+		return 0;
+	}
+	else if (s[0] == '\'')
+	{
+		g_sQuotes = 1;
+		return 0;
+	}
 	if (s[i] == '\"' && s[i - 1] != '\\')
 		{
 			if (g_dQuotes == 0)
