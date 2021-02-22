@@ -135,7 +135,9 @@ void	ms_loop()
 			i++;
 		}
 
-		
+		//FIX "echo" "hello" !!!
+		//echo "\hello\\\""
+		//echo "hello\\"
 
 	
 
