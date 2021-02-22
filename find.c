@@ -27,22 +27,26 @@ int finding_quotes_cmd(char *s,int i)
 
 int finding_quotes(char *s,int i)
 {
-	if (s[i] == '\"' && s[i - 1] != '\\') //ADDED g_squotes??
-		{
+	finding_aslash(s, i);
+	if (s[i] == '\"' && g_squotes == 0 && g_aSlash == 0) //ADDED g_squotes??
+	{
 			if (g_dquotes == 0)
 			{
 				g_dquotes = 1;
 			}
 			else
 				g_dquotes = 0;
-		}
-		else if (s[i] == '\'' && g_dquotes == 0 && s[i - 1] != '\\')
-		{
+	}
+	else if (s[i] == '\'' && g_dquotes == 0 && g_aSlash == 0)
+	{
 			if (g_squotes == 0)
+			{
 				g_squotes = 1;
+				printf("Here");
+			}
 			else
 				g_squotes = 0;
-		}
+	}
 	return 0;
 }
 
@@ -50,7 +54,7 @@ void	finding_aslash(char *s, int i)
 {
 		if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\'' || s[i + 1] == '\\'))
 				g_aSlash = 1;
-			else
+		else
 				g_aSlash = 0;
 
 				//convert to return 0 or 1 for norminette?
@@ -147,9 +151,7 @@ char	*find_argument(char *s, int offset)
 		if (s[i] == ' ')
 		{
 			if (s[i] == ' ' && (g_dquotes == 1 || g_squotes == 1))
-			{
 				re[b++] = s[i];
-			}
 			else if (s[i] == ' ' && (g_dquotes == 0 || g_squotes == 0))
 			{
 				g_source.offset = i;
@@ -169,7 +171,7 @@ char	*find_argument(char *s, int offset)
 				return (re);
 			}
 		}
-		else if (s[i] == '\"' && s[i - 1] != '\\')
+		else if (s[i] == '\"' && g_squotes == 0 && g_aSlash == 0)
 		{
 			if (g_dquotes == 0)
 				g_dquotes = 1;

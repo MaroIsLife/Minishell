@@ -52,7 +52,7 @@ void	push(char *cmd, char *arg, int num)
 	g_head = tmp;
 }
 
-int count_argument(char *s, int offset)
+int count_argument(char *s, int offset) //CONVERT TO SPLIT?
 {
 	int i;
 	int count;
@@ -72,9 +72,7 @@ int count_argument(char *s, int offset)
 		if (s[i] == ' ' && g_dquotes == 0 && g_squotes == 0)
 		{
 			while (s[i] == ' ')
-			{ 
 				i++;
-			}
 			if ((s[i] == '|' || s[i] == ';') && g_dquotes == 0 && g_squotes == 0)
 				return (count);
 			count++;
@@ -130,17 +128,17 @@ void	ms_loop()
 		g_head->pipe->next = NULL;
 		g_first = g_head;
 
-		find_for_split(cmd);
+		// find_for_split(cmd);
 		g_head->cmd = find_command(cmd, g_source.offset);
 		count = count_argument(cmd,0);
-		printf("S: %d\n",g_squotes);
+		printf("S: %d\n",g_dquotes);
 		printf("Found Error: %d\n",g_find.founderror);
 		printf("Command: %s\n",g_head->cmd);
 		// printf("Argument's Offset: %d\n",g_source.offset);
 		i = 0;
 		printf("count: %d\n",count);
 		g_head->arg = malloc((count + 1) * sizeof(char *));
-		// printf("%s\n",find_argument(cmd));
+		// printf("%s\n",find_argument(cmd,g_source.offset));
 		while (i < count)
 		{
 			g_head->arg[i] = find_argument(cmd, g_source.offset);
@@ -157,7 +155,7 @@ void	ms_loop()
 		//FIX "echo" "hello" !!!
 		//echo "\hello\\\""
 		//echo "hello\\
-	//echo "helloa" 'aqeq
+		//echo "hello\\"  FIX THIS
 	//echo ' "ab" '
 
 	
