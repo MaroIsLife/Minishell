@@ -112,12 +112,12 @@ char	*find_command(char *s)
 	}
 	start = i;
 	length = 0;
-	while ((s[i] != '\"' && s[i] != ' ' && s[i] != '\'') && i <= g_source.cmdlen)
+	while ((s[i] != '\"' && s[i] != ' ' && s[i] != '\''))
 	{
 		if (s[i] == '\n')
 			break;
 		
-		if (s[i] != '\"' || s[i] != '\'')
+		if (s[i] != '\"' && s[i] != '\'')
 			length++;
 		i++;
 	}
@@ -142,7 +142,7 @@ char	*find_argument(char *s)
 	i = g_source.offset;
 	re = malloc((1024) * sizeof(char));
 	b = 0;
-	while (s[i] != '\0' && s[i] != '|' && i <= g_source.cmdlen)
+	while (s[i] != '\0' && s[i] != '|')
 	{
 		if (s[i] == ' ')
 		{
@@ -190,6 +190,7 @@ char	*find_argument(char *s)
 	}
 	if (g_dQuotes == 1)
 		printf("Error\n");
+	printf("Slash: %d\n",g_aSlash);
 	g_source.offset = i;
 	re[b] = '\0';
 	return (re);

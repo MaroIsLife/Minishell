@@ -78,9 +78,20 @@ int count_argument(char *s, int offset)
 		else
 			i++;
 	}
-	if (g_dQuotes == 1)
+	if (g_dQuotes == 1 || g_sQuotes == 1)
 		g_find.foundError = 1;
 	return(count);
+}
+void init()
+{
+	g_find.foundError = 0;
+	g_find.foundPipe = 0;
+	g_source.offset = 0;
+	g_source.cmdlen = 0;
+	g_source.isPipe = 0;
+	g_dQuotes = 0;
+	g_dQuotes = 0;
+	g_aSlash = 0;
 }
 
 
@@ -107,7 +118,7 @@ void	ms_loop()
 		// 	execve("/bin/cat","path.txt",)
 		// }
 
-		
+		init();
 
 		// push(12);
 		// push(31);
@@ -142,7 +153,8 @@ void	ms_loop()
 
 		//FIX "echo" "hello" !!!
 		//echo "\hello\\\""
-		//echo "hello\\"
+		//echo "hello\\
+	//echo "helloa" 'aqeq
 
 	
 
