@@ -62,35 +62,37 @@ int count_argument(char *s, int offset)
 	while (s[i] != '\0')
 	{
 		if (s[i] == '\"' && i == 0)
-			g_dQuotes = 1;
+			g_dquotes = 1;
 		else if (s[i] == '\'' && i == 0)
-			g_sQuotes = 1;
+			g_squotes = 1;
 		else
 			finding_quotes(s, i);
-		if ((s[i] == ';' || s[i] == '|') && (g_dQuotes == 0))
+		if ((s[i] == ';' || s[i] == '|') && (g_dquotes == 0 && g_squotes == 0))
 			return (count);
-		if (s[i] == ' ' && g_dQuotes == 0)
+		if (s[i] == ' ' && g_dquotes == 0 && g_squotes == 0)
 		{
-			count++;
 			while (s[i] == ' ')
+			{ 
 				i++;
+			}
+			if ((s[i] == '|' || s[i] == ';') && g_dquotes == 0 && g_squotes == 0)
+				return (count);
+			count++;
 		}
 		else
 			i++;
 	}
-	if (g_dQuotes == 1 || g_sQuotes == 1)
-		g_find.foundError = 1;
 	return(count);
 }
 void init()
 {
-	g_find.foundError = 0;
+	g_find.founderror = 0;
 	g_find.foundPipe = 0;
 	g_source.offset = 0;
 	g_source.cmdlen = 0;
 	g_source.isPipe = 0;
-	g_dQuotes = 0;
-	g_dQuotes = 0;
+	g_dquotes = 0;
+	g_dquotes = 0;
 	g_aSlash = 0;
 }
 
@@ -128,19 +130,20 @@ void	ms_loop()
 		g_head->pipe->next = NULL;
 		g_first = g_head;
 
-		// find_for_split(cmd);
-		g_head->cmd = find_command(cmd);
+		find_for_split(cmd);
+		g_head->cmd = find_command(cmd, g_source.offset);
 		count = count_argument(cmd,0);
-		printf("Found Error: %d\n",g_find.foundError);
+		printf("S: %d\n",g_squotes);
+		printf("Found Error: %d\n",g_find.founderror);
 		printf("Command: %s\n",g_head->cmd);
-		printf("Argument's Offset: %d\n",g_source.offset);
+		// printf("Argument's Offset: %d\n",g_source.offset);
 		i = 0;
 		printf("count: %d\n",count);
 		g_head->arg = malloc((count + 1) * sizeof(char *));
 		// printf("%s\n",find_argument(cmd));
 		while (i < count)
 		{
-			g_head->arg[i] = find_argument(cmd);
+			g_head->arg[i] = find_argument(cmd, g_source.offset);
 			i++;
 		}
 		g_head->arg[i] = NULL;
@@ -155,18 +158,16 @@ void	ms_loop()
 		//echo "\hello\\\""
 		//echo "hello\\
 	//echo "helloa" 'aqeq
+	//echo ' "ab" '
 
 	
-
-
-
 		// if (g_find.foundPipe == 1)
 		// {
 		// 	i = 0;
 		// 	while (cmd[i] != '\0')
 		// 	{
 		// 			finding_quotes(cmd,i);
-		// 		if (cmd[i] == '|' && g_dQuotes == 0)
+		// 		if (cmd[i] == '|' && g_dquotes == 0)
 		// 		{
 		// 			i++;
 		// 			while (cmd[i] == ' ')

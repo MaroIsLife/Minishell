@@ -2,42 +2,46 @@
 
 int finding_quotes_cmd(char *s,int i)
 {
-	if (s[i] == '\"')
+	if (s[i] == '\"' && i == 0)
+		g_dquotes = 1;
+	else if (s[i] == '\'' && i == 0 && g_dquotes == 0)
+		g_squotes = 1;
+	else if (s[i] == '\"' && s[i - 1] != '\\')
 		{
-			if (g_dQuotes == 0)
+			if (g_dquotes == 0)
 			{
-				g_dQuotes = 1;
+				g_dquotes = 1;
 			}
 			else
-				g_dQuotes = 0;
+				g_dquotes = 0;
 		}
-		else if (s[i] == '\'' && g_dQuotes == 0)
+		else if (s[i] == '\'' && g_dquotes == 0 && s[i - 1] != '\\')
 		{
-			if (g_sQuotes == 0)
-				g_sQuotes = 1;
+			if (g_squotes == 0)
+				g_squotes = 1;
 			else
-				g_sQuotes = 0;
+				g_squotes = 0;
 		}
 	return 0;
 }
 
 int finding_quotes(char *s,int i)
 {
-	if (s[i] == '\"' && s[i - 1] != '\\')
+	if (s[i] == '\"' && s[i - 1] != '\\') //ADDED g_squotes??
 		{
-			if (g_dQuotes == 0)
+			if (g_dquotes == 0)
 			{
-				g_dQuotes = 1;
+				g_dquotes = 1;
 			}
 			else
-				g_dQuotes = 0;
+				g_dquotes = 0;
 		}
-		else if (s[i] == '\'' && g_dQuotes == 0 && s[i - 1] != '\\')
+		else if (s[i] == '\'' && g_dquotes == 0 && s[i - 1] != '\\')
 		{
-			if (g_sQuotes == 0)
-				g_sQuotes = 1;
+			if (g_squotes == 0)
+				g_squotes = 1;
 			else
-				g_sQuotes = 0;
+				g_squotes = 0;
 		}
 	return 0;
 }
@@ -58,50 +62,46 @@ void	find_for_split(char *cmd)
 	char **token;
 
 	i = 0;
-	g_find.foundDQuotes = 0;
+	g_find.founddquotes = 0;
 	g_find.foundPipe = 0;
 	g_find.foundSemiColons = 0;
-	g_find.foundSQuotes = 0;
-	g_dQuotes = 0;
-	g_sQuotes = 0;
+	g_find.foundsquotes = 0;
+	g_dquotes = 0;
+	g_squotes = 0;
 	while (cmd[i] != '\0')
 	{
 		finding_quotes_cmd(cmd,i);
-		if (cmd[i] == ';' && g_dQuotes == 0)
+		if (cmd[i] == ';' && g_dquotes == 0)
 		{
 			g_find.foundSemiColons = 1;
 			g_find.nSemiColons++;
 		}
-		else if (cmd[i] == '|' && g_dQuotes == 0)
+		else if (cmd[i] == '|' && g_dquotes == 0)
 		{
 			g_find.foundPipe = 1;
 			g_find.nPipe++;
 		}
-		 else if (cmd[i] == '\'' && g_dQuotes == 0)
-		 {
-			// g_find.foundSQuotes = 1;
-			g_find.nSQuotes++;
-		 }
+		 else if (cmd[i] == '\'' && g_dquotes == 0)
+			g_find.nsquotes++;
+
 		 else if (cmd[i] == '\"')
-		 {
-			// g_find.foundDQuotes = 1;
-			g_find.nDQuotes++;
-		 }
+			g_find.ndquotes++;
 		i++;
 	}
-
-	// printf("%d\n",g_find.nDQuotes); //Bugged to fix later
+	if (g_dquotes == 1 || g_squotes == 1)
+		g_find.founderror = 1;
+	// printf("%d\n",g_find.ndquotes); //Bugged to fix later
 }
 
-char	*find_command(char *s)
+char	*find_command(char *s, int offset)
 {
 	int i;
 	int start;
 	int length;
 	char *s1;
 
-	i = 0;
-	if (s[0] == ' ')
+	i = offset;
+	if (s[offset] == ' ')
 	{
 		while(s[i] == ' ')
 			i++;
@@ -127,7 +127,7 @@ char	*find_command(char *s)
 		return (s1);
 }
 
-char	*find_argument(char *s)
+char	*find_argument(char *s, int offset)
 {
 	int i;
 	int b;
@@ -135,43 +135,53 @@ char	*find_argument(char *s)
 
 
 	b = 0;
-	i = g_source.offset;
+	i = offset;
 	while (s[i] == ' ')
 		i++;
 	g_source.offset = i;
 	i = g_source.offset;
 	re = malloc((1024) * sizeof(char));
 	b = 0;
-	while (s[i] != '\0' && s[i] != '|')
+	while (s[i] != '\0')
 	{
 		if (s[i] == ' ')
 		{
-			if (s[i] == ' ' && (g_dQuotes == 1 || g_sQuotes == 1))
+			if (s[i] == ' ' && (g_dquotes == 1 || g_squotes == 1))
 			{
 				re[b++] = s[i];
 			}
-			else if (s[i] == ' ' && (g_dQuotes == 0 || g_sQuotes == 0))
+			else if (s[i] == ' ' && (g_dquotes == 0 || g_squotes == 0))
 			{
 				g_source.offset = i;
 				re[b] = '\0';
 				return (re);
 			}
-			while (s[i + 1] == ' ' && g_dQuotes == 0)
+			while (s[i + 1] == ' ' && g_dquotes == 0)
 				i++;
+		}
+		else if ((s[i] == '|' || s[i] == ';') && (g_dquotes == 0))
+		{
+			if (g_squotes == 1)
+				re[b++] = s[i];
+			else {	
+				g_source.offset = i;
+				re[b] = '\0';
+				return (re);
+			}
 		}
 		else if (s[i] == '\"' && s[i - 1] != '\\')
 		{
-			if (g_dQuotes == 0)
-				g_dQuotes = 1;
+			if (g_dquotes == 0)
+				g_dquotes = 1;
 			else
-				g_dQuotes = 0;
+				g_dquotes = 0;
 		}
-		else if (s[i] == '\'' && g_dQuotes == 0 && s[i - 1] != '\\')
+		else if (s[i] == '\'' && g_dquotes == 0 && s[i - 1] != '\\')
 		{
-			if (g_sQuotes == 0)
-				g_sQuotes = 1;
+			if (g_squotes == 0)
+				g_squotes = 1;
 			else
-				g_sQuotes = 0;
+				g_squotes = 0;
 		}
 		else if (s[i] == '\\' && g_aSlash == 0)
 		{
@@ -188,9 +198,8 @@ char	*find_argument(char *s)
 			re[b++] = s[i];
 		i++;
 	}
-	if (g_dQuotes == 1)
+	if (g_dquotes == 1 || g_squotes == 1)
 		printf("Error\n");
-	printf("Slash: %d\n",g_aSlash);
 	g_source.offset = i;
 	re[b] = '\0';
 	return (re);
