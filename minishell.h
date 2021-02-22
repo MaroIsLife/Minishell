@@ -61,6 +61,7 @@ char	*find_command(char *s);
 char	*find_argument(char *s);
 void	find_for_split(char *cmd);
 int 	finding_quotes(char *s, int i);
+int 	finding_quotes_cmd(char *s, int i);
 void	finding_aslash(char *s, int i);
 void	clear();
 void	print_prompt1();
