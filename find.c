@@ -34,15 +34,12 @@ int finding_quotes(char *s,int i)
 
 void	finding_aslash(char *s, int i)
 {
-		if (s[i] == '\\' && (s[i + 1] != '\"' || s[i + 1] != '\'') && s[i + 1] != '\\')
+		if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\'' || s[i + 1] == '\\'))
 		{
-			if (g_aSlash == 0)
-			{
 				g_aSlash = 1;
-			}
+		}
 			else
 				g_aSlash = 0;
-		}
 }
 
 void	find_for_split(char *cmd)
@@ -134,20 +131,20 @@ char	*find_argument(char *s)
 	while (s[i] == ' ')
 		i++;
 	g_source.offset = i;
-	while (s[i] != '\0' && i <= g_source.cmdlen)
-	{
-		i++;
+	// while (s[i] != '\0' && i <= g_source.cmdlen)
+	// {
+	// 	i++;
 
-		// if (s[i - 1] != '\\' && s[i] == '\"')
-		// 	b--;
-		b++; //b = size of Argument
-	}
+	// 	// if (s[i - 1] != '\\' && s[i] == '\"')
+	// 	// 	b--;
+	// 	b++; //b = size of Argument
+	// }
 	i = g_source.offset;
 	re = malloc((1024) * sizeof(char));
 	b = 0;
 	while (s[i] != '\0' && s[i] != '|' && i <= g_source.cmdlen)
 	{
-		finding_aslash(s, i);
+		// finding_aslash(s, i);
 		if (s[i] == ' ')
 		{
 			if (s[i] == ' ' && (g_dQuotes == 1 || g_sQuotes == 1))
@@ -171,17 +168,32 @@ char	*find_argument(char *s)
 			else
 				g_dQuotes = 0;
 		}
-		else if (s[i] == '\'' && g_dQuotes == 0)
+		else if (s[i] == '\'' && g_dQuotes == 0 && s[i - 1] != '\\')
 		{
 			if (g_sQuotes == 0)
 				g_sQuotes = 1;
 			else
 				g_sQuotes = 0;
 		}
-		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\'' || s[i + 1] == '\\'))
+		else if (s[i] == '\\' && g_aSlash == 0)
 		{
-			;
+			finding_aslash(s,i);
+			if (g_aSlash == 0)
+			{
+				re[b] = s[i];
+				b++;
+			}
 		}
+		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\') && g_aSlash == 1)
+		{
+			re[b] = s[i];
+			b++;
+			g_aSlash = 0;
+		}
+		// else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\'' || s[i + 1] == '\\'))
+		// {
+		// 	;
+		// }
 		else
 		{
 			re[b] = s[i];
