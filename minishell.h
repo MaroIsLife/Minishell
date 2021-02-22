@@ -41,24 +41,24 @@ typedef struct	s_find
 	int	nPipe;
 	int	foundSemiColons;
 	int	nSemiColons;
-	int	foundDQuotes;
-	int	nDQuotes;
-	int	foundSQuotes;
-	int	nSQuotes;
-	int	foundError;
+	int	founddquotes;
+	int	ndquotes;
+	int	foundsquotes;
+	int	nsquotes;
+	int	founderror;
 }				t_find;
 
 t_source	g_source;
 t_find		g_find;
 t_node		*g_head;
 t_node		*g_first;
-int			g_dQuotes;
-int			g_sQuotes;
+int			g_dquotes;
+int			g_squotes;
 int			g_aSlash;
 
 
-char	*find_command(char *s);
-char	*find_argument(char *s);
+char	*find_command(char *s, int offset);
+char	*find_argument(char *s, int offset);
 void	find_for_split(char *cmd);
 int 	finding_quotes(char *s, int i);
 int 	finding_quotes_cmd(char *s, int i);
