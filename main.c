@@ -61,11 +61,14 @@ int count_argument(char *s, int offset)
 	count = 0;
 	while (s[i] != '\0')
 	{
-		finding_quotes(s, i);
+		if (s[i] == '\"' && i == 0)
+			g_dQuotes = 1;
+		else if (s[i] == '\'' && i == 0)
+			g_sQuotes = 1;
+		else
+			finding_quotes(s, i);
 		if ((s[i] == ';' || s[i] == '|') && (g_dQuotes == 0))
-		{
 			return (count);
-		}
 		if (s[i] == ' ' && g_dQuotes == 0)
 		{
 			count++;
@@ -114,10 +117,12 @@ void	ms_loop()
 		g_head->pipe->next = NULL;
 		g_first = g_head;
 
-		find_for_split(cmd);
-		count = count_argument(cmd,0);
+		// find_for_split(cmd);
 		g_head->cmd = find_command(cmd);
+		count = count_argument(cmd,0);
+		printf("Found Error: %d\n",g_find.foundError);
 		printf("Command: %s\n",g_head->cmd);
+		printf("Argument's Offset: %d\n",g_source.offset);
 		i = 0;
 		printf("count: %d\n",count);
 		g_head->arg = malloc((count + 1) * sizeof(char *));
