@@ -52,7 +52,7 @@ void	push(char *cmd, char *arg, int num)
 	g_head = tmp;
 }
 
-int count_argument(char *s, int offset) //CONVERT TO SPLIT?
+int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 {
 	int i;
 	int count;
@@ -62,18 +62,18 @@ int count_argument(char *s, int offset) //CONVERT TO SPLIT?
 	while (s[i] != '\0')
 	{
 		if (s[i] == '\"' && i == 0)
-			g_dquotes = 1;
+			src->dquotes = 1;
 		else if (s[i] == '\'' && i == 0)
-			g_squotes = 1;
+			src->squotes = 1;
 		else
-			finding_quotes(s, i);
-		if ((s[i] == ';' || s[i] == '|') && (g_dquotes == 0 && g_squotes == 0))
+			finding_quotes(s, i, src);
+		if ((s[i] == ';' || s[i] == '|') && (src->dquotes == 0 && src->squotes == 0))
 			return (count);
-		if (s[i] == ' ' && g_dquotes == 0 && g_squotes == 0)
+		if (s[i] == ' ' && src->dquotes == 0 && src->squotes == 0)
 		{
 			while (s[i] == ' ')
 				i++;
-			if ((s[i] == '|' || s[i] == ';') && g_dquotes == 0 && g_squotes == 0)
+			if ((s[i] == '|' || s[i] == ';') && src->dquotes == 0 && src->squotes == 0)
 				return (count);
 			count++;
 		}
@@ -82,20 +82,20 @@ int count_argument(char *s, int offset) //CONVERT TO SPLIT?
 	}
 	return(count);
 }
-void init()
+void init(t_source *src)
 {
 	g_find.founderror = 0;
 	g_find.foundPipe = 0;
-	g_source.offset = 0;
-	g_source.cmdlen = 0;
-	g_source.isPipe = 0;
-	g_dquotes = 0;
-	g_dquotes = 0;
-	g_aSlash = 0;
+	src->offset = 0;
+	// g_source.cmdlen = 0;
+	// g_source.isPipe = 0;
+	src->dquotes = 0;
+	src->aslash = 0;
+	src->offset = 0;
 }
 
 
-void	ms_loop()
+void	ms_loop(t_source *src)
 {
 	char *cmd;
 	int count;
@@ -118,7 +118,7 @@ void	ms_loop()
 		// 	execve("/bin/cat","path.txt",)
 		// }
 
-		init();
+		init(src);
 
 		// push(12);
 		// push(31);
@@ -128,24 +128,23 @@ void	ms_loop()
 		g_head->pipe->next = NULL;
 		g_first = g_head;
 
-		find_for_split(cmd);
-		g_dquotes = 0;
-		g_squotes = 0;
-		g_head->cmd = find_command(cmd, g_source.offset);
-		count = count_argument(cmd,0);
-		printf("S: %d\n",g_dquotes);
-		g_dquotes = 0;
-		g_squotes = 0;
+		find_for_split(cmd, src);
+		src->dquotes = 0;
+		src->squotes = 0;
+		g_head->cmd = find_command(cmd, src->offset, src);
+		count = count_argument(cmd,0,src);
+		src->dquotes = 0;
+		src->squotes = 0;
 		printf("Found Error: %d\n",g_find.founderror);
 		printf("Command: %s\n",g_head->cmd);
-		// printf("Argument's Offset: %d\n",g_source.offset);
+		// printf("Argument's Offset: %d\n",src->offset);
 		i = 0;
-		printf("count: %d\n",count);
+		printf("Number of args: %d\n",count);
 		g_head->arg = malloc((count + 1) * sizeof(char *));
-		// printf("%s\n",find_argument(cmd,g_source.offset));
+		// printf("%s\n",find_argument(cmd,src->offset));
 		while (i < count)
 		{
-			g_head->arg[i] = find_argument(cmd, g_source.offset);
+			g_head->arg[i] = find_argument(cmd, src->offset, src);
 			i++;
 		}
 		g_head->arg[i] = NULL;
@@ -162,6 +161,8 @@ void	ms_loop()
 		//echo "hello\\"  FIX THIS
 		//echo "hello\"
 		//echo hello\"
+		//ls | grep "file" < file
+		//> file ls
 	//echo ' "ab" '
 
 	
@@ -189,7 +190,7 @@ void	ms_loop()
 		// 	}
 		// }
 
-		g_source.offset = 0;
+		src->offset = 0;
 		// free(command);
 		// free(cmd);
 		// free(argument);
@@ -207,10 +208,10 @@ void print_env(char **envp)
 
 int     main(int argc, char **argv, char **envp)
 {
-
+	t_source src;
 	// clear();
 	// print_env(envp);
-	ms_loop();
+	ms_loop(&src);
 
 	return (0);
 }

@@ -17,6 +17,9 @@ typedef struct	s_source
 	int		cmdlen;
 	int		isPipe;
 	int		offset;
+	int		dquotes;
+	int		squotes;
+	int		aslash;
 }				t_source;
 
 typedef struct s_pipe {
@@ -48,21 +51,18 @@ typedef struct	s_find
 	int	founderror;
 }				t_find;
 
-t_source	g_source;
+// t_source	g_source;
 t_find		g_find;
 t_node		*g_head;
 t_node		*g_first;
-int			g_dquotes;
-int			g_squotes;
-int			g_aSlash;
 
 
-char	*find_command(char *s, int offset);
-char	*find_argument(char *s, int offset);
-void	find_for_split(char *cmd);
-int 	finding_quotes(char *s, int i);
-int 	finding_quotes_cmd(char *s, int i);
-void	finding_aslash(char *s, int i);
+char	*find_command(char *s, int offset, t_source *src);
+char	*find_argument(char *s, int offset, t_source *src);
+void	find_for_split(char *cmd, t_source *src);
+int 	finding_quotes(char *s, int i, t_source *src);
+int 	finding_quotes_cmd(char *s, int i, t_source *src);
+void	finding_aslash(char *s, int i, t_source *src);
 void	clear();
 void	print_prompt1();
 void	print_prompt2();
