@@ -6,7 +6,7 @@ int finding_quotes_cmd(char *s,int i)
 		g_dquotes = 1;
 	else if (s[i] == '\'' && i == 0 && g_dquotes == 0)
 		g_squotes = 1;
-	else if (s[i] == '\"' && s[i - 1] != '\\')
+	else if (s[i] == '\"' && g_aSlash == 0)
 		{
 			if (g_dquotes == 0)
 			{
@@ -15,19 +15,19 @@ int finding_quotes_cmd(char *s,int i)
 			else
 				g_dquotes = 0;
 		}
-		else if (s[i] == '\'' && g_dquotes == 0 && s[i - 1] != '\\')
+		else if (s[i] == '\'' && g_dquotes == 0 && g_aSlash == 0)
 		{
 			if (g_squotes == 0)
 				g_squotes = 1;
 			else
 				g_squotes = 0;
 		}
+		finding_aslash(s, i);
 	return 0;
 }
 
 int finding_quotes(char *s,int i)
 {
-	finding_aslash(s, i);
 	if (s[i] == '\"' && g_squotes == 0 && g_aSlash == 0) //ADDED g_squotes??
 	{
 			if (g_dquotes == 0)
@@ -42,21 +42,20 @@ int finding_quotes(char *s,int i)
 			if (g_squotes == 0)
 			{
 				g_squotes = 1;
-				printf("Here");
 			}
 			else
 				g_squotes = 0;
 	}
+	finding_aslash(s, i);
 	return 0;
 }
 
 void	finding_aslash(char *s, int i)
 {
-		if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\'' || s[i + 1] == '\\'))
+		if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\'' || s[i + 1] == '\\') && g_aSlash == 0)
 				g_aSlash = 1;
 		else
 				g_aSlash = 0;
-
 				//convert to return 0 or 1 for norminette?
 }
 
@@ -75,12 +74,12 @@ void	find_for_split(char *cmd)
 	while (cmd[i] != '\0')
 	{
 		finding_quotes_cmd(cmd,i);
-		if (cmd[i] == ';' && g_dquotes == 0)
+		if (cmd[i] == ';' && g_dquotes == 0 && g_squotes == 0)
 		{
 			g_find.foundSemiColons = 1;
 			g_find.nSemiColons++;
 		}
-		else if (cmd[i] == '|' && g_dquotes == 0)
+		else if (cmd[i] == '|' && g_dquotes == 0 && g_squotes == 0)
 		{
 			g_find.foundPipe = 1;
 			g_find.nPipe++;
