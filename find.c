@@ -1,65 +1,63 @@
 #include "minishell.h"
 
-int finding_quotes_cmd(char *s,int i)
+int finding_quotes_cmd(char *s,int i, t_source *src)
 {
 	if (s[i] == '\"' && i == 0)
-		g_dquotes = 1;
-	else if (s[i] == '\'' && i == 0 && g_dquotes == 0)
-		g_squotes = 1;
-	else if (s[i] == '\"' && g_aSlash == 0)
+		src->dquotes = 1;
+	else if (s[i] == '\'' && i == 0 && src->dquotes == 0)
+		src->squotes = 1;
+	else if (s[i] == '\"' && src->aslash == 0)
 		{
-			if (g_dquotes == 0)
+			if (src->dquotes == 0)
 			{
-				g_dquotes = 1;
+				src->dquotes = 1;
 			}
 			else
-				g_dquotes = 0;
+				src->dquotes = 0;
 		}
-		else if (s[i] == '\'' && g_dquotes == 0 && g_aSlash == 0)
+		else if (s[i] == '\'' && src->dquotes == 0 && src->aslash == 0)
 		{
-			if (g_squotes == 0)
-				g_squotes = 1;
+			if (src->squotes == 0)
+				src->squotes = 1;
 			else
-				g_squotes = 0;
+				src->squotes = 0;
 		}
-		finding_aslash(s, i);
+		finding_aslash(s, i, src);
 	return 0;
 }
 
-int finding_quotes(char *s,int i)
+int finding_quotes(char *s,int i, t_source *src)
 {
-	if (s[i] == '\"' && g_squotes == 0 && g_aSlash == 0) //ADDED g_squotes??
+	if (s[i] == '\"' && src->squotes == 0 && src->aslash == 0) //ADDED src->squotes??
 	{
-			if (g_dquotes == 0)
+			if (src->dquotes == 0)
+			src->dquotes = 1;
+			else
+				src->dquotes = 0;
+	}
+	else if (s[i] == '\'' && src->dquotes == 0 && src->aslash == 0)
+	{
+			if (src->squotes == 0)
 			{
-				g_dquotes = 1;
+				src->squotes = 1;
 			}
 			else
-				g_dquotes = 0;
+				src->squotes = 0;
 	}
-	else if (s[i] == '\'' && g_dquotes == 0 && g_aSlash == 0)
-	{
-			if (g_squotes == 0)
-			{
-				g_squotes = 1;
-			}
-			else
-				g_squotes = 0;
-	}
-	finding_aslash(s, i);
+	finding_aslash(s, i, src);
 	return 0;
 }
 
-void	finding_aslash(char *s, int i)
+void	finding_aslash(char *s, int i, t_source *src)
 {
-		if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\'' || s[i + 1] == '\\') && g_aSlash == 0)
-				g_aSlash = 1;
+		if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\'' || s[i + 1] == '\\') && src->aslash == 0)
+				src->aslash = 1;
 		else
-				g_aSlash = 0;
+				src->aslash = 0;
 				//convert to return 0 or 1 for norminette?
 }
 
-void	find_for_split(char *cmd)
+void	find_for_split(char *cmd, t_source *src)
 {
 	int i;
 	char **token;
@@ -69,34 +67,34 @@ void	find_for_split(char *cmd)
 	g_find.foundPipe = 0;
 	g_find.foundSemiColons = 0;
 	g_find.foundsquotes = 0;
-	g_dquotes = 0;
-	g_squotes = 0;
+	src->dquotes = 0;
+	src->squotes = 0;
 	while (cmd[i] != '\0')
 	{
-		finding_quotes_cmd(cmd,i);
-		if (cmd[i] == ';' && g_dquotes == 0 && g_squotes == 0)
+		finding_quotes_cmd(cmd,i, src);
+		if (cmd[i] == ';' && src->dquotes == 0 && src->squotes == 0)
 		{
 			g_find.foundSemiColons = 1;
 			g_find.nSemiColons++;
 		}
-		else if (cmd[i] == '|' && g_dquotes == 0 && g_squotes == 0)
+		else if (cmd[i] == '|' && src->dquotes == 0 && src->squotes == 0)
 		{
 			g_find.foundPipe = 1;
 			g_find.nPipe++;
 		}
-		 else if (cmd[i] == '\'' && g_dquotes == 0)
+		 else if (cmd[i] == '\'' && src->dquotes == 0)
 			g_find.nsquotes++;
 
 		 else if (cmd[i] == '\"')
 			g_find.ndquotes++;
 		i++;
 	}
-	if (g_dquotes == 1 || g_squotes == 1)
+	if (src->dquotes == 1 || src->squotes == 1)
 		g_find.founderror = 1;
 	// printf("%d\n",g_find.ndquotes); //Bugged to fix later
 }
 
-char	*find_command(char *s, int offset)
+char	*find_command(char *s, int offset, t_source *src)
 {
 	int i;
 	int start;
@@ -126,11 +124,11 @@ char	*find_command(char *s, int offset)
 	}
 	s1 = ft_substr(s,start,length);
 	s1 = ft_strtrim(s1," ");
-	g_source.offset = i + 1;
+	src->offset = i + 1;
 		return (s1);
 }
 
-char	*find_argument(char *s, int offset)
+char	*find_argument(char *s, int offset, t_source *src)
 {
 	int i;
 	int b;
@@ -141,67 +139,67 @@ char	*find_argument(char *s, int offset)
 	i = offset;
 	while (s[i] == ' ')
 		i++;
-	g_source.offset = i;
-	i = g_source.offset;
+	src->offset = i;
+	i = src->offset;
 	re = malloc((1024) * sizeof(char));
 	b = 0;
 	while (s[i] != '\0')
 	{
 		if (s[i] == ' ')
 		{
-			if (s[i] == ' ' && (g_dquotes == 1 || g_squotes == 1))
+			if (s[i] == ' ' && (src->dquotes == 1 || src->squotes == 1))
 				re[b++] = s[i];
-			else if (s[i] == ' ' && (g_dquotes == 0 || g_squotes == 0))
+			else if (s[i] == ' ' && (src->dquotes == 0 || src->squotes == 0))
 			{
-				g_source.offset = i;
+				src->offset = i;
 				re[b] = '\0';
 				return (re);
 			}
-			while (s[i + 1] == ' ' && g_dquotes == 0)
+			while (s[i + 1] == ' ' && src->dquotes == 0)
 				i++;
 		}
-		else if ((s[i] == '|' || s[i] == ';') && (g_dquotes == 0))
+		else if ((s[i] == '|' || s[i] == ';') && (src->dquotes == 0))
 		{
-			if (g_squotes == 1)
+			if (src->squotes == 1)
 				re[b++] = s[i];
 			else {	
-				g_source.offset = i;
+				src->offset = i;
 				re[b] = '\0';
 				return (re);
 			}
 		}
-		else if (s[i] == '\"' && g_squotes == 0 && g_aSlash == 0)
+		else if (s[i] == '\"' && src->squotes == 0 && src->aslash == 0)
 		{
-			if (g_dquotes == 0)
-				g_dquotes = 1;
+			if (src->dquotes == 0)
+				src->dquotes = 1;
 			else
-				g_dquotes = 0;
+				src->dquotes = 0;
 		}
-		else if (s[i] == '\'' && g_dquotes == 0 && s[i - 1] != '\\')
+		else if (s[i] == '\'' && src->dquotes == 0 && s[i - 1] != '\\')
 		{
-			if (g_squotes == 0)
-				g_squotes = 1;
+			if (src->squotes == 0)
+				src->squotes = 1;
 			else
-				g_squotes = 0;
+				src->squotes = 0;
 		}
-		else if (s[i] == '\\' && g_aSlash == 0)
+		else if (s[i] == '\\' && src->aslash == 0)
 		{
-			finding_aslash(s,i);
-			if (g_aSlash == 0)
+			finding_aslash(s,i, src);
+			if (src->aslash == 0)
 				re[b++] = s[i];
 		}
-		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\') && g_aSlash == 1)
+		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\') && src->aslash == 1)
 		{
 			re[b++] = s[i];
-			g_aSlash = 0;
+			src->aslash = 0;
 		}
 		else
 			re[b++] = s[i];
 		i++;
 	}
-	if (g_dquotes == 1 || g_squotes == 1)
+	if (src->dquotes == 1 || src->squotes == 1)
 		printf("Error\n");
-	g_source.offset = i;
+	src->offset = i;
 	re[b] = '\0';
 	return (re);
 }
