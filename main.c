@@ -128,10 +128,14 @@ void	ms_loop()
 		g_head->pipe->next = NULL;
 		g_first = g_head;
 
-		// find_for_split(cmd);
+		find_for_split(cmd);
+		g_dquotes = 0;
+		g_squotes = 0;
 		g_head->cmd = find_command(cmd, g_source.offset);
 		count = count_argument(cmd,0);
 		printf("S: %d\n",g_dquotes);
+		g_dquotes = 0;
+		g_squotes = 0;
 		printf("Found Error: %d\n",g_find.founderror);
 		printf("Command: %s\n",g_head->cmd);
 		// printf("Argument's Offset: %d\n",g_source.offset);
@@ -156,6 +160,8 @@ void	ms_loop()
 		//echo "\hello\\\""
 		//echo "hello\\
 		//echo "hello\\"  FIX THIS
+		//echo "hello\"
+		//echo hello\"
 	//echo ' "ab" '
 
 	
@@ -191,10 +197,19 @@ void	ms_loop()
 	}
 }
 
-int     main()
+
+void print_env(char **envp)
+{
+	int i = 0;
+	while (envp[i] != NULL)
+		printf("%s\n",envp[i++]);
+}
+
+int     main(int argc, char **argv, char **envp)
 {
 
 	// clear();
+	// print_env(envp);
 	ms_loop();
 
 	return (0);
