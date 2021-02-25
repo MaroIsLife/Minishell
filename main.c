@@ -17,47 +17,47 @@ void clearScreen()
 }
 
 
-void	print_list() {
+// void	print_list() {
    
-   t_node *first;
+//    t_node *first;
 
-   first = g_head;
-	while(g_head != NULL)
-	{
-		printf("%d\n",g_head->number);
-		g_head = g_head->next;
-	}
-	g_head = first;
-    // while (g_head != NULL) {
-    //     printf("%d\n", g_head->number);
-    //     g_head = g_head->next;
-    // }
-}
+//    first = head;
+// 	while(head != NULL)
+// 	{
+// 		printf("%d\n",head->number);
+// 		head = head->next;
+// 	}
+// 	head = first;
+//     // while (head != NULL) {
+//     //     printf("%d\n", head->number);
+//     //     head = head->next;
+//     // }
+// }
 
-void	push(char *cmd, char *arg, int num) 
-{
-	t_node		*tmp;
+// void	push(char *cmd, char *arg, int num) 
+// {
+// 	t_node		*tmp;
 	
-	tmp = g_head;
-    while (g_head->next != NULL) {
-        g_head = g_head->next;
-    }
+// 	tmp = head;
+//     while (head->next != NULL) {
+//         head = head->next;
+//     }
 
-    g_head->next = (t_node *) malloc(sizeof(t_node));
-    g_head->next->number = num;
-	// g_head->next->arg = arg;
-    g_head->next->cmd = cmd;
-    // g_head->next->pipe = num;
-    g_head->next->next = NULL;
-	g_head = tmp;
-}
+//     head->next = (t_node *) malloc(sizeof(t_node));
+//     head->next->number = num;
+// 	// head->next->arg = arg;
+//     head->next->cmd = cmd;
+//     // head->next->pipe = num;
+//     head->next->next = NULL;
+// 	head = tmp;
+// }
 
 int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 {
 	int i;
 	int count;
 
-	i = 0;
+	i = src->offset - 1;
 	count = 0;
 	while (s[i] != '\0')
 	{
@@ -100,6 +100,9 @@ void	ms_loop(t_source *src)
 	char *cmd;
 	int count;
 	int i = 0;
+	t_node *head;
+	t_node *first;
+	char **pipe;
 
 	while(1)
 	{
@@ -117,43 +120,52 @@ void	ms_loop(t_source *src)
 		// {
 		// 	execve("/bin/cat","path.txt",)
 		// }
+		pipe = ft_split(cmd,';');
+		int c = 0;
 
 		init(src);
 
 		// push(12);
 		// push(31);
-		g_head = (t_node *) malloc(sizeof(t_node));
-		g_head->next = NULL;
-		g_head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
-		g_head->pipe->next = NULL;
-		g_first = g_head;
 
-		find_for_split(cmd, src);
-		src->dquotes = 0;
-		src->squotes = 0;
-		g_head->cmd = find_command(cmd, src->offset, src);
-		count = count_argument(cmd,0,src);
-		src->dquotes = 0;
-		src->squotes = 0;
-		printf("Found Error: %d\n",g_find.founderror);
-		printf("Command: %s\n",g_head->cmd);
-		// printf("Argument's Offset: %d\n",src->offset);
-		i = 0;
-		printf("Number of args: %d\n",count);
-		g_head->arg = malloc((count + 1) * sizeof(char *));
-		// printf("%s\n",find_argument(cmd,src->offset));
-		while (i < count)
+		while (pipe[c] != NULL)
 		{
-			g_head->arg[i] = find_argument(cmd, src->offset, src);
-			i++;
+			head = (t_node *) malloc(sizeof(t_node));
+			head->next = NULL;
+			head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
+			head->pipe->next = NULL;
+			first = head;
+			find_for_split(cmd, src);
+			src->dquotes = 0;
+			src->squotes = 0;
+			
+			head->cmd = find_command(cmd, src->offset, src);
+			count = count_argument(cmd,src->offset,src);
+			src->dquotes = 0;
+			src->squotes = 0;
+
+			printf("Number of Pipes: %d\n",g_find.nPipe);
+			printf("Command: %s\n",head->cmd);
+			// printf("Argument's Offset: %d\n",src->offset);
+			i = i^i;
+			head->arg = malloc((count + 1) * sizeof(char *));
+			// printf("%s\n",find_argument(cmd,src->offset));
+			while (i < count)
+			{
+				head->arg[i] = find_argument(cmd, src->offset, src);
+				i++;
+			}
+			head->arg[i] = NULL;
+			i = i^i;
+			while (head->arg[i] != NULL)
+			{
+				printf("Argument %d : %s\n",i,head->arg[i]);
+				i++;
+			}
+			printf("Found Error: %d\n",g_find.founderror);
+			c++;
 		}
-		g_head->arg[i] = NULL;
-		i = 0;
-		while (g_head->arg[i] != NULL)
-		{
-			printf("Argument %d : %s\n",i,g_head->arg[i]);
-			i++;
-		}
+			src->offset = 0;
 
 		//FIX "echo" "hello" !!!
 		//echo "\hello\\\""
@@ -163,6 +175,15 @@ void	ms_loop(t_source *src)
 		//echo hello\"
 		//ls | grep "file" < file
 		//> file ls
+		//\e\c\h\o \e\a\c
+		//"e""c""h""o" hi
+		//                            echo bye FIX THIS
+		//e\c\h\o b\y\e FIX THIS
+		// echo bye; FIX THIS
+		// echo "hello"\a\c FIX THIS
+		//echo "'jjj'"'""\'
+		// echo '"'"ll'\'" FOUND ERROR = 1
+		//echo "$USERJJJJJ$PATH$SHELL"
 	//echo ' "ab" '
 
 	
@@ -190,7 +211,6 @@ void	ms_loop(t_source *src)
 		// 	}
 		// }
 
-		src->offset = 0;
 		// free(command);
 		// free(cmd);
 		// free(argument);

@@ -23,13 +23,8 @@ while ((cmdlen = read(0,&buf,1024)) != 0)
 	}
 	if (cmd[cmdlen - 1] == '\n')
 	{
-		if (cmdlen == 1 || cmd[cmdlen - 2] != '\\')
-		{
 			cmd[cmdlen] = '\0';
 			return cmd;
-		}
-		cmd[cmdlen - 1] = '\0';
-		print_prompt2();
 	}
 }
 	 return (0);
