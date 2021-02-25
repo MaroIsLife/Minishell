@@ -6,7 +6,7 @@ int finding_quotes_cmd(char *s,int i, t_source *src)
 		src->dquotes = 1;
 	else if (s[i] == '\'' && i == 0 && src->dquotes == 0)
 		src->squotes = 1;
-	else if (s[i] == '\"' && src->aslash == 0)
+	else if (s[i] == '\"' && src->squotes == 0 && src->aslash == 0)
 		{
 			if (src->dquotes == 0)
 			{
@@ -15,7 +15,7 @@ int finding_quotes_cmd(char *s,int i, t_source *src)
 			else
 				src->dquotes = 0;
 		}
-		else if (s[i] == '\'' && src->dquotes == 0 && src->aslash == 0)
+		else if (s[i] == '\'' && src->dquotes == 0)
 		{
 			if (src->squotes == 0)
 				src->squotes = 1;
@@ -28,7 +28,7 @@ int finding_quotes_cmd(char *s,int i, t_source *src)
 
 int finding_quotes(char *s,int i, t_source *src)
 {
-	if (s[i] == '\"' && src->squotes == 0 && src->aslash == 0) //ADDED src->squotes??
+	if (s[i] == '\"' && src->squotes == 0 && src->aslash == 0)
 	{
 			if (src->dquotes == 0)
 			src->dquotes = 1;
@@ -48,13 +48,20 @@ int finding_quotes(char *s,int i, t_source *src)
 	return 0;
 }
 
-void	finding_aslash(char *s, int i, t_source *src)
+int		finding_aslash(char *s, int i, t_source *src)
 {
-		if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\'' || s[i + 1] == '\\') && src->aslash == 0)
-				src->aslash = 1;
+		if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\') && src->aslash == 0 && src->dquotes == 1)
+			src->aslash = 1;
+		else if (s[i] == '\\' && (src->dquotes == 0 && src->squotes == 0))
+		{
+			if (ft_isalpha(s[i + 1]) == 0 && ft_isdigit(s[i + 1]) == 0)
+				g_find.founderror = 1;
+			else
+				return (1);
+		}
 		else
-				src->aslash = 0;
-				//convert to return 0 or 1 for norminette?
+			src->aslash = 0; //convert to return 0 or 1 for norminette?
+	return 0;
 }
 
 void	find_for_split(char *cmd, t_source *src)
@@ -107,23 +114,27 @@ char	*find_command(char *s, int offset, t_source *src)
 		while(s[i] == ' ')
 			i++;
 	}
-	while (s[i] == '\"' || s[i] == '\'')
+	while (s[i] == '\"' || s[i] == '\'' || s[i] == ';' || s[i] == ' ')
 	{
 		i++;
 	}
 	start = i;
 	length = 0;
-	while ((s[i] != '\"' && s[i] != ' ' && s[i] != '\''))
+	s1 = malloc(1024 * sizeof(char));
+	while (s[i] != ' ')
 	{
 		if (s[i] == '\n')
 			break;
 		
-		if (s[i] != '\"' && s[i] != '\'')
+		if (s[i] != '\"' && s[i] != '\'' && s[i] != '\\')
+		{
+			s1[length] = s[i];
 			length++;
+		}
 		i++;
 	}
-	s1 = ft_substr(s,start,length);
-	s1 = ft_strtrim(s1," ");
+	s1[length] = '\0';
+	// s1 = ft_strtrim(s1," ");
 	src->offset = i + 1;
 		return (s1);
 }
@@ -140,7 +151,6 @@ char	*find_argument(char *s, int offset, t_source *src)
 	while (s[i] == ' ')
 		i++;
 	src->offset = i;
-	i = src->offset;
 	re = malloc((1024) * sizeof(char));
 	b = 0;
 	while (s[i] != '\0')
@@ -175,7 +185,7 @@ char	*find_argument(char *s, int offset, t_source *src)
 			else
 				src->dquotes = 0;
 		}
-		else if (s[i] == '\'' && src->dquotes == 0 && s[i - 1] != '\\')
+		else if (s[i] == '\'' && src->dquotes == 0)
 		{
 			if (src->squotes == 0)
 				src->squotes = 1;
@@ -184,11 +194,14 @@ char	*find_argument(char *s, int offset, t_source *src)
 		}
 		else if (s[i] == '\\' && src->aslash == 0)
 		{
-			finding_aslash(s,i, src);
-			if (src->aslash == 0)
+			offset = finding_aslash(s,i, src);
+			if (src->aslash == 0 && offset != 1)
+			{
 				re[b++] = s[i];
+				offset = 0;
+			}
 		}
-		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\') && src->aslash == 1)
+		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\') && src->aslash == 1 && src->dquotes == 1)
 		{
 			re[b++] = s[i];
 			src->aslash = 0;

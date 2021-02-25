@@ -106,11 +106,13 @@ char		*ftt_substr(char *s, unsigned int start, size_t len)
 	c = start;
 	while (s[c] != '\0' && i < len)
 	{
-		s1[i] = s[c];
+		if (s1[i] != '\\' && s1[i] != '\"' && s1[i] != '\'')
+		{
+			s1[i] = s[c];
+			c++;
+		}
 		i++;
-		c++;
 	}
 	s1[i] = '\0';
-	free(s);
 	return (s1);
 }
