@@ -141,8 +141,8 @@ void	ms_loop(t_source *src, char **envp)
 		// push(12);
 		// push(31);
 
-		while (pipe[c] != NULL)
-		{
+		// while (pipe[c] != NULL)
+		// {
 			head = (t_node *) malloc(sizeof(t_node));
 			head->next = NULL;
 			head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
@@ -177,7 +177,7 @@ void	ms_loop(t_source *src, char **envp)
 			}
 			printf("Found Error: %d\n",g_find.founderror);
 			c++;
-		}
+		// }
 			src->offset = 0;
 
 		//FIX "echo" "hello" !!!
@@ -196,6 +196,9 @@ void	ms_loop(t_source *src, char **envp)
 		//echo \"
 		//echo \\
 		//echo \'
+
+		//echo \;
+		//echo \|
 
 
 
