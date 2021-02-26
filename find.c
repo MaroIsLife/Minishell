@@ -52,11 +52,11 @@ int		finding_aslash(char *s, int i, t_source *src)
 {
 		if (s[i] == '\\' && s[i + 1] == '\'' && src->dquotes == 1)
 			src->aslash = 0;
-		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'') && src->aslash == 0)
+		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'' || s[i + 1] == ';' || s[i + 1] == '|') && src->aslash == 0)
 			src->aslash = 1;
 		else if (s[i] == '\\' && (src->dquotes == 0 && src->squotes == 0))
 		{
-			if (ft_isalpha(s[i + 1]) == 0 && ft_isdigit(s[i + 1]) == 0)
+			if (ft_isascii(s[i + 1]) == 0)
 				g_find.founderror = 1;
 			else
 				return (1);
@@ -170,7 +170,7 @@ char	*find_argument(char *s, int offset, t_source *src)
 			while (s[i + 1] == ' ' && src->dquotes == 0)
 				i++;
 		}
-		else if ((s[i] == '|' || s[i] == ';') && (src->dquotes == 0))
+		else if ((s[i] == '|' || s[i] == ';') && (src->dquotes == 0 && src->aslash == 0 ))
 		{
 			if (src->squotes == 1)
 				re[b++] = s[i];
@@ -203,7 +203,7 @@ char	*find_argument(char *s, int offset, t_source *src)
 				offset = 0;
 			}
 		}
-		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\') && src->aslash == 1)
+		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\' || s[i] == ';' || s[i] == '|') && src->aslash == 1)
 		{
 			re[b++] = s[i];
 			src->aslash = 0;

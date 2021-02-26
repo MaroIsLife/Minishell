@@ -13,3 +13,5 @@ parse.c
 path.txt
 read.c
 test.c
+hi
+bye
