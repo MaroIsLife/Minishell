@@ -66,6 +66,6 @@ void	clear();
 void	print_prompt1();
 void	print_prompt2();
 char	*read_line();
-void	ms_loop(t_source *src);
+void	ms_loop(t_source *src, char **envp);
 
 #endif
