@@ -17,6 +17,16 @@ void clearScreen()
 }
 
 
+void print_env(char **envp)
+{
+	int i;
+	
+	i = 0;
+	while (envp[i] != NULL)
+		printf("%s\n",envp[i++]);
+}
+
+
 // void	print_list() {
    
 //    t_node *first;
@@ -95,7 +105,7 @@ void init(t_source *src)
 }
 
 
-void	ms_loop(t_source *src)
+void	ms_loop(t_source *src, char **envp)
 {
 	char *cmd;
 	int count;
@@ -110,6 +120,9 @@ void	ms_loop(t_source *src)
 		cmd = read_line();
 		if (ft_strncmp(cmd,"print",5) == 0)
 			printf("Hello\n");
+		
+		if (ft_strncmp(cmd,"env",3) == 0)
+			print_env(envp);
 
 		if (ft_strncmp(cmd,"exit",4) == 0)
 			exit(0);
@@ -177,13 +190,26 @@ void	ms_loop(t_source *src)
 		//> file ls
 		//\e\c\h\o \e\a\c
 		//"e""c""h""o" hi
-		//                            echo bye FIX THIS
+
+
+		//echo \' FIX THIS
+		//echo \"
+		//echo \\
+		//echo \'
+
+
+
+
+
+
+
+
 		//e\c\h\o b\y\e FIX THIS
 		// echo bye; FIX THIS
 		// echo "hello"\a\c FIX THIS
 		//echo "'jjj'"'""\'
 		// echo '"'"ll'\'" FOUND ERROR = 1
-		//echo "$USERJJJJJ$PATH$SHELL"
+		//echo "$USERjjjjj$SHLVL"
 	//echo ' "ab" '
 
 	
@@ -219,19 +245,11 @@ void	ms_loop(t_source *src)
 }
 
 
-void print_env(char **envp)
-{
-	int i = 0;
-	while (envp[i] != NULL)
-		printf("%s\n",envp[i++]);
-}
-
 int     main(int argc, char **argv, char **envp)
 {
 	t_source src;
 	// clear();
-	// print_env(envp);
-	ms_loop(&src);
+	ms_loop(&src, envp);
 
 	return (0);
 }

@@ -50,7 +50,9 @@ int finding_quotes(char *s,int i, t_source *src)
 
 int		finding_aslash(char *s, int i, t_source *src)
 {
-		if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\') && src->aslash == 0 && src->dquotes == 1)
+		if (s[i] == '\\' && s[i + 1] == '\'' && src->dquotes == 1)
+			src->aslash = 0;
+		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'') && src->aslash == 0)
 			src->aslash = 1;
 		else if (s[i] == '\\' && (src->dquotes == 0 && src->squotes == 0))
 		{
@@ -185,7 +187,7 @@ char	*find_argument(char *s, int offset, t_source *src)
 			else
 				src->dquotes = 0;
 		}
-		else if (s[i] == '\'' && src->dquotes == 0)
+		else if (s[i] == '\'' && src->dquotes == 0 && src->aslash == 0)
 		{
 			if (src->squotes == 0)
 				src->squotes = 1;
@@ -201,7 +203,7 @@ char	*find_argument(char *s, int offset, t_source *src)
 				offset = 0;
 			}
 		}
-		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\') && src->aslash == 1 && src->dquotes == 1)
+		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\') && src->aslash == 1)
 		{
 			re[b++] = s[i];
 			src->aslash = 0;
