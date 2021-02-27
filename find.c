@@ -123,7 +123,7 @@ char	*find_command(char *s, int offset, t_source *src)
 	start = i;
 	length = 0;
 	s1 = malloc(1024 * sizeof(char));
-	while (s[i] != ' ')
+	while (s[i] != ' ' && s[i] != '\0')
 	{
 		if (s[i] == '\n')
 			break;

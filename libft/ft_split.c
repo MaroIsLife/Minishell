@@ -12,65 +12,62 @@
 
 #include "libft.h"
 #include "../gnl/get_next_line.h"
+#include "../minishell.h"
 
-static	size_t	delimc(const char *s, char c)
+int		delimc(char *s, char c, t_source *src)
 {
-	size_t i;
-	size_t n;
+	int i;
+	int n;
 
 	i = 0;
 	n = 0;
-	if (s == 0)
-		return (0);
 	while (s[i] != '\0')
 	{
-		while ((s[i] != c && s[i] != '\0'))
+		while (s[i] != c && s[i] != '\0')
 		{
-			while (s[i] != c && s[i] != '\0')
-			{
-				i++;
-			}
-			n++;
+			finding_quotes(s, i, src);
+			i++;
 		}
-		while (s[i] && s[i] == c)
+		if (s[i] == '\0')
+			break ;
+		if (s[i] == c && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
+			n++;
 			i++;
 	}
 	return (n);
 }
 
-static	char	**ft_free(char **p, int j)
+char		**ft_split(char *s, char c, t_source *src)
 {
-	while (--j)
-		free(&p[j]);
-	free(p);
-	return (NULL);
-}
+	int		j;
+	int		len;
+	int		start;
+	int		k;
+	char	**p;
 
-char			**ft_split(char *s, char c)
-{
-	size_t		j;
-	size_t		len;
-	size_t		start;
-	size_t		k;
-	char		**p;
-
-	if (s == 0)
-		return (0);
-	j = delimc(s, c) + 1;
+	j = delimc(s, c, src) + 2;
+	printf("Del: %d\n",j);
 	if (!(p = (char **)malloc(j * sizeof(char *))))
 		return (NULL);
 	k = 0;
 	len = 0;
 	while (k < j - 1)
 	{
-		while (s[len] && s[len] == c)
+		while (s[len] != '\0' && s[len] == c && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
+		{
+			finding_quotes(s, len, src);
 			len++;
+		}
 		start = len;
-		while (s[len] != c && s[len])
+		while (s[len] != '\0')
+		{
+			if (s[len] == c && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
+				break ;
+			finding_quotes(s, len, src);
 			len++;
-		if (!(p[k++] = ft_substr(s, start, (len - start))))
-			return (ft_free(p, j));
+		}
+		p[k++] = ft_substr(s, start, (len - start));
 	}
-	p[k] = 0;
+	p[k] = NULL;
 	return (p);
 }
