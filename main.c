@@ -26,6 +26,17 @@ void print_env(char **envp)
 		printf("%s\n",envp[i++]);
 }
 
+void push_env(char **envp, char *s)
+{
+	int i;
+	
+	i = 0;
+	while (envp[i] != NULL)
+		i++;
+	
+	envp[i] = "abc";
+	envp[++i] = NULL;
+}
 
 // void	print_list() {
    
@@ -124,6 +135,9 @@ void	ms_loop(t_source *src, char **envp)
 		if (ft_strncmp(cmd,"env",3) == 0)
 			print_env(envp);
 
+		if (ft_strncmp(cmd,"push",4) == 0)
+			push_env(envp, "abc");
+
 		if (ft_strncmp(cmd,"exit",4) == 0)
 			exit(0);
 		if (ft_strncmp(cmd,"clear",5) == 0)
@@ -133,8 +147,10 @@ void	ms_loop(t_source *src, char **envp)
 		// {
 		// 	execve("/bin/cat","path.txt",)
 		// }
-		pipe = ft_split(cmd,';');
+		pipe = ft_split(cmd,';', src);
 		int c = 0;
+		while (pipe[c] != NULL)
+			printf("%s\n",pipe[c++]);
 
 		init(src);
 
@@ -157,8 +173,8 @@ void	ms_loop(t_source *src, char **envp)
 			src->dquotes = 0;
 			src->squotes = 0;
 
-			printf("Number of Pipes: %d\n",g_find.nPipe);
-			printf("Command: %s\n",head->cmd);
+			// printf("Number of Pipes: %d\n",g_find.nPipe);
+			// printf("Command: %s\n",head->cmd);
 			// printf("Argument's Offset: %d\n",src->offset);
 			i = i^i;
 			head->arg = malloc((count + 1) * sizeof(char *));
@@ -172,10 +188,10 @@ void	ms_loop(t_source *src, char **envp)
 			i = i^i;
 			while (head->arg[i] != NULL)
 			{
-				printf("Argument %d : %s\n",i,head->arg[i]);
+				// printf("Argument %d : %s\n",i,head->arg[i]);
 				i++;
 			}
-			printf("Found Error: %d\n",g_find.founderror);
+			// printf("Found Error: %d\n",g_find.founderror);
 			c++;
 		// }
 			src->offset = 0;
