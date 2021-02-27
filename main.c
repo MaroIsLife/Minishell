@@ -94,7 +94,9 @@ int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 		{
 			while (s[i] == ' ')
 				i++;
-			if ((s[i] == '|' || s[i] == ';') && src->dquotes == 0 && src->squotes == 0)
+			// if ((s[i] == '|' || s[i] == ';') && src->dquotes == 0 && src->squotes == 0)
+			// 	return (count);
+			if (s[i] == '\0')
 				return (count);
 			count++;
 		}
@@ -149,52 +151,52 @@ void	ms_loop(t_source *src, char **envp)
 		// }
 		pipe = ft_split(cmd,';', src);
 		int c = 0;
-		while (pipe[c] != NULL)
-			printf("%s\n",pipe[c++]);
+		// while (pipe[c] != NULL)
+		// 	printf("%s\n",pipe[c++]);
 
 		init(src);
 
 		// push(12);
 		// push(31);
 
-		// while (pipe[c] != NULL)
-		// {
+		while (pipe[c] != NULL)
+		{
 			head = (t_node *) malloc(sizeof(t_node));
 			head->next = NULL;
 			head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
 			head->pipe->next = NULL;
 			first = head;
-			find_for_split(cmd, src);
+			find_for_split(pipe[c], src);
 			src->dquotes = 0;
 			src->squotes = 0;
 			
-			head->cmd = find_command(cmd, src->offset, src);
-			count = count_argument(cmd,src->offset,src);
+			head->cmd = find_command(pipe[c], src->offset, src);
+			count = count_argument(pipe[c],src->offset,src);
 			src->dquotes = 0;
 			src->squotes = 0;
 
 			// printf("Number of Pipes: %d\n",g_find.nPipe);
-			// printf("Command: %s\n",head->cmd);
+			printf("#%d Command: %s\n",c,head->cmd);
 			// printf("Argument's Offset: %d\n",src->offset);
+			printf("Count: %d\n",count);
 			i = i^i;
 			head->arg = malloc((count + 1) * sizeof(char *));
-			// printf("%s\n",find_argument(cmd,src->offset));
 			while (i < count)
 			{
-				head->arg[i] = find_argument(cmd, src->offset, src);
+				head->arg[i] = find_argument(pipe[c], src->offset, src);
 				i++;
 			}
 			head->arg[i] = NULL;
 			i = i^i;
 			while (head->arg[i] != NULL)
 			{
-				// printf("Argument %d : %s\n",i,head->arg[i]);
+				printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
 				i++;
 			}
 			// printf("Found Error: %d\n",g_find.founderror);
 			c++;
-		// }
 			src->offset = 0;
+		}
 
 		//FIX "echo" "hello" !!!
 		//echo "\hello\\\""
