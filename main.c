@@ -149,12 +149,12 @@ void	ms_loop(t_source *src, char **envp)
 		// {
 		// 	execve("/bin/cat","path.txt",)
 		// }
+		init(src);
 		pipe = ft_split(cmd,';', src);
 		int c = 0;
 		// while (pipe[c] != NULL)
 		// 	printf("%s\n",pipe[c++]);
 
-		init(src);
 
 		// push(12);
 		// push(31);
@@ -208,7 +208,7 @@ void	ms_loop(t_source *src, char **envp)
 		//> file ls
 		//\e\c\h\o \e\a\c
 		//"e""c""h""o" hi
-
+		
 
 		//echo \' FIX THIS
 		//echo \"
@@ -220,7 +220,7 @@ void	ms_loop(t_source *src, char **envp)
 
 
 
-
+		//command "\'"
 
 
 

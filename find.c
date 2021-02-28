@@ -116,23 +116,36 @@ char	*find_command(char *s, int offset, t_source *src)
 		while(s[i] == ' ')
 			i++;
 	}
-	while (s[i] == '\"' || s[i] == '\'' || s[i] == ';' || s[i] == ' ')
-	{
-		i++;
-	}
+	// while (s[i] == '\"' || s[i] == '\'' || s[i] == ';' || s[i] == ' ')
+	// 	i++;
 	start = i;
 	length = 0;
 	s1 = malloc(1024 * sizeof(char));
-	while (s[i] != ' ' && s[i] != '\0')
+	while (s[i] != ' ' && s[i] != '\n' && s[i] != '\0')
 	{
-		if (s[i] == '\n')
-			break;
-		
-		if (s[i] != '\"' && s[i] != '\'' && s[i] != '\\')
+		finding_quotes(s, i, src);
+		if (s[i] == '\'')
 		{
-			s1[length] = s[i];
-			length++;
+			if (src->dquotes == 1)
+				s1[length++] = s[i];
 		}
+		else if (s[i] == '\"')
+		{
+			if (src->squotes == 1)
+				s1[length++] = s[i];
+		}
+		else if (s[i] == '\\' && ft_isascii(s[i + 1]) == 1 && src->dquotes == 0 && src->squotes == 0)
+			s1[length++] = s[++i];
+		else if (s[i] == '\\' && src->aslash == 1)
+		{
+			if (s[i + 1] != '\\')
+			{
+				s1[length++] = s[i++];
+				s1[length++] = s[i];
+			}				
+		}
+		else 
+			s1[length++] = s[i];
 		i++;
 	}
 	s1[length] = '\0';
@@ -155,7 +168,7 @@ char	*find_argument(char *s, int offset, t_source *src)
 	src->offset = i;
 	re = malloc((1024) * sizeof(char));
 	b = 0;
-	while (s[i] != '\0')
+	while (s[i] != '\n' && s[i] != '\0')
 	{
 		if (s[i] == ' ')
 		{
