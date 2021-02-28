@@ -16,16 +16,6 @@ void clearScreen()
   free(CLEAR_SCREEN_ANSI);
 }
 
-
-void print_env(char **envp)
-{
-	int i;
-	
-	i = 0;
-	while (envp[i] != NULL)
-		printf("%s\n",envp[i++]);
-}
-
 void push_env(char **envp, char *s)
 {
 	int i;
@@ -127,6 +117,7 @@ void	ms_loop(t_source *src, char **envp)
 	t_node *first;
 	char **pipe;
 
+	src->lastenv = 0;
 	while(1)
 	{
 		print_prompt1();
@@ -134,8 +125,13 @@ void	ms_loop(t_source *src, char **envp)
 		if (ft_strncmp(cmd,"print",5) == 0)
 			printf("Hello\n");
 		
-		if (ft_strncmp(cmd,"env",3) == 0)
-			print_env(envp);
+		while (envp[i] != NULL)
+		{
+			src->lastenv++;
+			i++;
+		}
+		
+
 
 		if (ft_strncmp(cmd,"push",4) == 0)
 			push_env(envp, "abc");
@@ -176,9 +172,9 @@ void	ms_loop(t_source *src, char **envp)
 			src->squotes = 0;
 
 			// printf("Number of Pipes: %d\n",g_find.nPipe);
-			printf("#%d Command: %s\n",c,head->cmd);
+			// printf("#%d Command: %s\n",c,head->cmd);
 			// printf("Argument's Offset: %d\n",src->offset);
-			printf("Count: %d\n",count);
+			// printf("Count: %d\n",count);
 			i = i^i;
 			head->arg = malloc((count + 1) * sizeof(char *));
 			while (i < count)
@@ -190,13 +186,21 @@ void	ms_loop(t_source *src, char **envp)
 			i = i^i;
 			while (head->arg[i] != NULL)
 			{
-				printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
+				// printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
 				i++;
 			}
 			// printf("Found Error: %d\n",g_find.founderror);
 			c++;
 			src->offset = 0;
+
+		if (ft_strncmp(head->cmd,"echo",4) == 0)
+			ft_echo(head, src);
+		else if (ft_strncmp(cmd, "env", 3) == 0)
+			print_env(head, src, envp);
+		else if (ft_strncmp(cmd, "export", 6) == 0)
+			ft_export(head, src, envp);
 		}
+
 
 		//FIX "echo" "hello" !!!
 		//echo "\hello\\\""
@@ -234,29 +238,6 @@ void	ms_loop(t_source *src, char **envp)
 	//echo ' "ab" '
 
 	
-		// if (g_find.foundPipe == 1)
-		// {
-		// 	i = 0;
-		// 	while (cmd[i] != '\0')
-		// 	{
-		// 			finding_quotes(cmd,i);
-		// 		if (cmd[i] == '|' && g_dquotes == 0)
-		// 		{
-		// 			i++;
-		// 			while (cmd[i] == ' ')
-		// 			{
-		// 				i++;
-		// 			}
-		// 			int start = i;
-		// 			while (cmd[i] != ' ')
-		// 			{
-		// 				i++;
-		// 			}
-		// 			command = ft_substr(cmd,start,i - start);
-		// 		}
-		// 			i++;
-		// 	}
-		// }
 
 		// free(command);
 		// free(cmd);

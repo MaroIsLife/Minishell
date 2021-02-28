@@ -46,7 +46,6 @@ char		**ft_split(char *s, char c, t_source *src)
 	char	**p;
 
 	j = delimc(s, c, src) + 2;
-	printf("Del: %d\n",j);
 	if (!(p = (char **)malloc(j * sizeof(char *))))
 		return (NULL);
 	k = 0;
