@@ -18,10 +18,8 @@ void ft_cd(t_node *head)
 	int sign;
 
 	sign = chdir(head->arg[0]);
-
 	if (sign != 0)
-		printf (" No such file or directory\n");
-	// printf ("%s\n", head->arg[0]);
+		printf ("Error: %s\n", strerror(errno));
 }
 void clearScreen()
 {
