@@ -13,6 +13,16 @@ void ft_pwd (void)
 	printf ("%s\n",getcwd(s, 100));
 	free (s);
 }
+void ft_cd(t_node *head)
+{
+	int sign;
+
+	sign = chdir(head->arg[0]);
+
+	if (sign != 0)
+		printf (" No such file or directory\n");
+	// printf ("%s\n", head->arg[0]);
+}
 void clearScreen()
 {
   char *CLEAR_SCREEN_ANSI;
@@ -202,6 +212,8 @@ void	ms_loop(t_source *src, char **envp)
 				ft_export(head, src, envp);
 			else if (ft_strncmp(cmd, "pwd", 3) == 0)
 				ft_pwd();
+			else if (ft_strncmp(cmd, "cd", 2) == 0)
+				ft_cd(head);
 		}
 
 
