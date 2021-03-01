@@ -118,21 +118,17 @@ void	ms_loop(t_source *src, char **envp)
 	char **pipe;
 
 	src->lastenv = 0;
+		while (envp[i] != NULL)
+		{
+			src->lastenv++;
+			i++;
+		}
 	while(1)
 	{
 		print_prompt1();
 		cmd = read_line();
 		if (ft_strncmp(cmd,"print",5) == 0)
 			printf("Hello\n");
-		
-		while (envp[i] != NULL)
-		{
-			src->lastenv++;
-			i++;
-		}
-		
-
-
 		if (ft_strncmp(cmd,"push",4) == 0)
 			push_env(envp, "abc");
 
@@ -192,13 +188,12 @@ void	ms_loop(t_source *src, char **envp)
 			// printf("Found Error: %d\n",g_find.founderror);
 			c++;
 			src->offset = 0;
-
-		if (ft_strncmp(head->cmd,"echo",4) == 0)
-			ft_echo(head, src);
-		else if (ft_strncmp(cmd, "env", 3) == 0)
-			print_env(head, src, envp);
-		else if (ft_strncmp(cmd, "export", 6) == 0)
-			ft_export(head, src, envp);
+			if (ft_strncmp(head->cmd,"echo",4) == 0)
+				ft_echo(head, src);
+			else if (ft_strncmp(cmd, "env", 3) == 0)
+				print_env(head, src, envp);
+			else if (ft_strncmp(cmd, "export", 6) == 0)
+				ft_export(head, src, envp);
 		}
 
 
