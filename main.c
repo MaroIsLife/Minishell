@@ -6,7 +6,12 @@
 #include <string.h>
 #include "minishell.h"
 
+void ft_pwd (void)
+{
+	char s[100];
 
+	printf ("%s\n",getcwd(s, 100));
+}
 void clearScreen()
 {
   char *CLEAR_SCREEN_ANSI;
@@ -194,6 +199,8 @@ void	ms_loop(t_source *src, char **envp)
 				print_env(head, src, envp);
 			else if (ft_strncmp(cmd, "export", 6) == 0)
 				ft_export(head, src, envp);
+			else if (ft_strncmp(cmd, "pwd", 3) == 0)
+				ft_pwd();
 		}
 
 
