@@ -8,9 +8,10 @@
 
 void ft_pwd (void)
 {
-	char s[100];
+	char* s = malloc (100);
 
 	printf ("%s\n",getcwd(s, 100));
+	free (s);
 }
 void clearScreen()
 {
