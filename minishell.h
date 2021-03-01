@@ -64,6 +64,7 @@ int 	finding_quotes(char *s, int i, t_source *src);
 int 	finding_quotes_cmd(char *s, int i, t_source *src);
 int		finding_aslash(char *s, int i, t_source *src);
 
+
 char	**ft_split(char *s, char c, t_source *src);
 void	clear();
 void	print_prompt1();
@@ -72,8 +73,10 @@ char	*read_line();
 void	ms_loop(t_source *src, char **envp);
 
 
-void ft_echo(t_node *head, t_source *src);
-void print_env(t_node *head, t_source *src, char **envp);
-void ft_export(t_node *head, t_source *src, char **envp);
+void	ft_echo(t_node *head, t_source *src);
+void	print_env(t_node *head, t_source *src, char **envp);
+void	ft_export(t_node *head, t_source *src, char **envp);
+char	*get_env_value(t_node *head, t_source *src, char **envp, int offset);
+char	*get_env_name(t_node *head, t_source *src, char **envp, int offset);
 
 #endif
