@@ -105,24 +105,42 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 {
 	int		i;
 	char	*name;
-	char	*value;
+	int		length;
+	int		c;
 
 	i = 0;
+	length = 0;
 	if (head->arg[i] == NULL)
 		ft_putstr_fd("Printing export",1);
 	else 
 	{
 		while (head->arg[i] != NULL)
 		{	
-			value = get_env_value(head, src, envp, i);
 			name = get_env_name(head, src, envp, i);
-			printf("%s %s\n",value,name);
-			envp[src->lastenv] = head->arg[i];
-			src->lastenv++;
-			envp[src->lastenv] = NULL;
-			i++;
+			if (name != 0)
+			{
+				c = 0;
+				while (head->arg[i][length] != '=' && head->arg[i][length] != '\0')
+					length++;
+				while (envp[c] != NULL)
+				{
+					if (ft_strncmp(envp[c],head->arg[i], length) == 0)
+					{
+						envp[c] = head->arg[i];
+						if (c == src->lastenv)
+							envp[c] = NULL;
+					}
+					c++;
+				}
+			}
+			else
+			{
+				envp[src->lastenv] = head->arg[i];
+				src->lastenv++;
+				envp[src->lastenv] = NULL;
+			}
+				i++;
 		}
-			// free(value);
-			// free(name);
+			free(name);
 	}
 }
