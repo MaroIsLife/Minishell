@@ -6,6 +6,23 @@
 #include <string.h>
 #include "minishell.h"
 
+char *where_home(char **envp)
+{
+	int i = 0;
+	char *home;
+	
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], "HOME=", 5) == 0)
+		{
+			home = malloc (ft_strlen(envp[i] + 5) + 1);
+			ft_strlcpy(home, envp[i] + 5, ft_strlen(envp[i] + 5) + 1);
+			return (home);
+		}
+	i++;
+	}
+	return (0);
+}
 void ft_pwd (void)
 {
 	char* s = malloc (100);
@@ -13,11 +30,18 @@ void ft_pwd (void)
 	printf ("%s\n",getcwd(s, 100));
 	free (s);
 }
-void ft_cd(t_node *head)
+void ft_cd(t_node *head, char *home)
 {
 	int sign;
 
-	sign = chdir(head->arg[0]);
+	sign = 0;
+	if (!head->arg[0])
+		{
+			chdir(home);
+			free(home);
+		}
+	else
+		sign = chdir(head->arg[0]);
 	if (sign != 0)
 		printf ("Error: %s\n", strerror(errno));
 }
@@ -196,7 +220,7 @@ void	ms_loop(t_source *src, char **envp)
 			i = i^i;
 			while (head->arg[i] != NULL)
 			{
-				// printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
+				printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
 				i++;
 			}
 			// printf("Found Error: %d\n",g_find.founderror);
@@ -211,7 +235,8 @@ void	ms_loop(t_source *src, char **envp)
 			else if (ft_strncmp(cmd, "pwd", 3) == 0)
 				ft_pwd();
 			else if (ft_strncmp(cmd, "cd", 2) == 0)
-				ft_cd(head);
+				ft_cd(head, where_home(envp));
+				// where_home(envp);
 		}
 
 

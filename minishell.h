@@ -64,7 +64,7 @@ int 	finding_quotes(char *s, int i, t_source *src);
 int 	finding_quotes_cmd(char *s, int i, t_source *src);
 int		finding_aslash(char *s, int i, t_source *src);
 
-
+// char		**ft_split_normal(char const *s, char c);
 char	**ft_split(char *s, char c, t_source *src);
 void	clear();
 void	print_prompt1();
