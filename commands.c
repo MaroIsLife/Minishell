@@ -109,7 +109,6 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 	int		c;
 
 	i = 0;
-	length = 0;
 	if (head->arg[i] == NULL)
 		ft_putstr_fd("Printing export",1);
 	else 
@@ -117,15 +116,17 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 		while (head->arg[i] != NULL)
 		{	
 			name = get_env_name(head, src, envp, i);
+			length = 0;
+			while (head->arg[i][length] != '=' && head->arg[i][length] != '\0')
+				length++;
 			if (name != 0)
 			{
 				c = 0;
-				while (head->arg[i][length] != '=' && head->arg[i][length] != '\0')
-					length++;
 				while (envp[c] != NULL)
 				{
-					if (ft_strncmp(envp[c],head->arg[i], length) == 0)
+					if (ft_strncmp(envp[c],head->arg[i], length) == 0 && head->arg[i][length == '='])
 					{
+						printf("Made it here");
 						envp[c] = head->arg[i];
 						if (c == src->lastenv)
 							envp[c] = NULL;
@@ -135,9 +136,12 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 			}
 			else
 			{
-				envp[src->lastenv] = head->arg[i];
-				src->lastenv++;
-				envp[src->lastenv] = NULL;
+				if (head->arg[i][length] == '=')
+				{
+					envp[src->lastenv] = head->arg[i];
+					src->lastenv++;
+					envp[src->lastenv] = NULL;
+				}
 			}
 				i++;
 		}
