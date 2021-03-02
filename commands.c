@@ -110,7 +110,9 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 
 	i = 0;
 	if (head->arg[i] == NULL)
-		ft_putstr_fd("Printing export",1);
+		ft_putexpostr_fd("Printing export\n",1);
+		//write normal until you reach '=' then add ""
+		//store garbage to print here
 	else 
 	{
 		while (head->arg[i] != NULL)
@@ -142,6 +144,7 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 					src->lastenv++;
 					envp[src->lastenv] = NULL;
 				}
+
 			}
 				i++;
 		}
