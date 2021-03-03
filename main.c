@@ -220,7 +220,7 @@ void	ms_loop(t_source *src, char **envp)
 			i = i^i;
 			while (head->arg[i] != NULL)
 			{
-				printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
+				// printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
 				i++;
 			}
 			// printf("Found Error: %d\n",g_find.founderror);
@@ -228,13 +228,13 @@ void	ms_loop(t_source *src, char **envp)
 			src->offset = 0;
 			if (ft_strncmp(head->cmd,"echo",4) == 0)
 				ft_echo(head, src);
-			else if (ft_strncmp(cmd, "env", 3) == 0)
+			else if (ft_strncmp(head->cmd, "env", 3) == 0)
 				print_env(head, src, envp);
-			else if (ft_strncmp(cmd, "export", 6) == 0)
+			else if (ft_strncmp(head->cmd, "export", 6) == 0)
 				ft_export(head, src, envp);
-			else if (ft_strncmp(cmd, "pwd", 3) == 0)
+			else if (ft_strncmp(head->cmd, "pwd", 3) == 0)
 				ft_pwd();
-			else if (ft_strncmp(cmd, "cd", 2) == 0)
+			else if (ft_strncmp(head->cmd, "cd", 2) == 0)
 				ft_cd(head, where_home(envp));
 				// where_home(envp);
 		}
