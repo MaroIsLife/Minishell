@@ -78,7 +78,6 @@ void	ms_loop(t_source *src, char **envp);
 void	ft_echo(t_node *head, t_source *src);
 void	print_env(t_node *head, t_source *src, char **envp);
 void	ft_export(t_node *head, t_source *src, char **envp);
-char	*get_env_value(t_node *head, t_source *src, char **envp, int offset);
-char	*get_env_name(t_node *head, t_source *src, char **envp, int offset);
+char	*search_env(t_node *head, t_source *src, char **envp, int offset);
 
 #endif
