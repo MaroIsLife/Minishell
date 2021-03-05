@@ -272,6 +272,7 @@ void	ms_loop(t_source *src, char **envp)
 
 		//command "\'"
 
+		//FIX '\' = EVERYTHING INSIDE '' is written and not escaped
 
 
 
