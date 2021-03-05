@@ -52,7 +52,7 @@ int		finding_aslash(char *s, int i, t_source *src)
 {
 		if (s[i] == '\\' && s[i + 1] == '\'' && src->dquotes == 1)
 			src->aslash = 0;
-		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'' || s[i + 1] == ';' || s[i + 1] == '|') && src->aslash == 0)
+		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'' || s[i + 1] == ';' || s[i + 1] == '|') && src->aslash == 0 && src->squotes == 0)
 			src->aslash = 1;
 		else if (s[i] == '\\' && (src->dquotes == 0 && src->squotes == 0))
 		{
