@@ -21,6 +21,8 @@ typedef struct	s_source
 	int		squotes;
 	int		aslash;
 	int		lastenv;
+	char 	*export[1024];
+	int		lastexp;
 }				t_source;
 
 typedef struct s_pipe {
