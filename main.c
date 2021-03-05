@@ -161,6 +161,14 @@ void	ms_loop(t_source *src, char **envp)
 			src->lastenv++;
 			i++;
 		}
+	src->lastexp = src->lastenv;
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		src->export[i] = envp[i];
+		i++;
+	}
+	src->export[i] = NULL;
 	while(1)
 	{
 		print_prompt1();

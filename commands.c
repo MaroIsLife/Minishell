@@ -100,7 +100,36 @@ char	*get_env_value(t_node *head, t_source *src, char **envp, int offset)
 	}
 	return (NULL);
 }
+void ft_wr_eq(char *s)
+{
+	int i = 0;
+	int sign = 0;
+	while (s[i])
+	{
+		if (s[i] == '=')
+			{
+				sign = 1;
+				write(1,&s[i++], 1);
+				write(1,"\"",1);
+			}
+		write(1,&s[i], 1);
+	i++;
+		if (!s[i] && sign == 1)
+				write(1,"\"",1);
+	}
 
+}
+void em_export (t_source *src)
+{
+
+	int i = 0;
+	while (src->export[i] != NULL)
+		{
+			write (1, "declare -x ", 11);
+			ft_wr_eq(src->export[i++]);
+			write(1,"\n",1);
+		}
+}
 void	ft_export(t_node *head, t_source *src, char **envp)
 {
 	int		i;
@@ -110,8 +139,7 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 
 	i = 0;
 	if (head->arg[i] == NULL)
-		;
-		// ft_putexpostr_fd("Printing export\n",1);
+		em_export( src);
 
 		//write normal until you reach '=' then add ""
 		//store garbage to print here
@@ -130,7 +158,6 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 				{
 					if (ft_strncmp(envp[c],head->arg[i], length) == 0 && head->arg[i][length == '='])
 					{
-						printf("Made it here");
 						envp[c] = head->arg[i];
 						if (c == src->lastenv)
 							envp[c] = NULL;
@@ -143,10 +170,18 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 				if (head->arg[i][length] == '=')
 				{
 					envp[src->lastenv] = head->arg[i];
+					src->export[src->lastexp] = head->arg[i];
 					src->lastenv++;
+					src->lastexp++;
 					envp[src->lastenv] = NULL;
 				}
-
+				else 
+				{
+					src->export[src->lastexp] = head->arg[i];
+					src->lastexp++;
+					src->export[src->lastexp] = NULL;
+				}
+				// else head got to export
 			}
 				i++;
 		}
