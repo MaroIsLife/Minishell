@@ -100,6 +100,30 @@ char	*get_env_value(t_node *head, t_source *src, char **envp, int offset)
 	}
 	return (NULL);
 }
+
+void 	ft_sort(t_source *src)
+{
+	//sorting using strcmp with additiong to the counter i
+
+	char *swap;
+	int i = 0;
+	int j;
+	while (i < src->lastexp)
+	{
+		j = i + 1;
+		while(j < src->lastexp)
+		{
+			if (src->export[i][0] > src->export[j][0])
+			{
+				swap = src->export[i];
+				src->export[i] = src->export[j];
+				src->export[j] = swap;
+			}
+			j++;
+		}
+		i++;
+	}
+}
 void ft_wr_eq(char *s)
 {
 	int i = 0;
@@ -123,6 +147,7 @@ void em_export (t_source *src)
 {
 
 	int i = 0;
+	ft_sort(src);
 	while (src->export[i] != NULL)
 		{
 			write (1, "declare -x ", 11);
