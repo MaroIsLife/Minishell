@@ -53,10 +53,7 @@ typedef struct	s_find
 	int	founderror;
 }				t_find;
 
-// t_source	g_source;
 t_find		g_find;
-// t_node		*g_head;
-// t_node		*g_first;
 
 
 char	*find_command(char *s, int offset, t_source *src);

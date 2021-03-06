@@ -144,7 +144,28 @@ void init(t_source *src)
 	src->aslash = 0;
 	src->offset = 0;
 }
+void init_env(t_source *src,char **envp)
+{
+	int i;
 
+	i = 0;
+	src->lastenv = 0;
+	while (envp[i] != NULL)
+	{
+		src->lastenv++;
+		i++;
+	}
+	src->lastexp = src->lastenv;
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		src->export[i] = envp[i];
+		i++;
+	}
+	src->export[i] = NULL;
+
+	
+}
 
 void	ms_loop(t_source *src, char **envp)
 {
@@ -154,21 +175,7 @@ void	ms_loop(t_source *src, char **envp)
 	t_node *head;
 	t_node *first;
 	char **pipe;
-
-	src->lastenv = 0;
-		while (envp[i] != NULL)
-		{
-			src->lastenv++;
-			i++;
-		}
-	src->lastexp = src->lastenv;
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		src->export[i] = envp[i];
-		i++;
-	}
-	src->export[i] = NULL;
+	init_env(src,envp);
 	while(1)
 	{
 		print_prompt1();
@@ -299,6 +306,7 @@ void	ms_loop(t_source *src, char **envp)
 int     main(int argc, char **argv, char **envp)
 {
 	t_source src;
+	t_find	find;
 	// clear();
 	ms_loop(&src, envp);
 
