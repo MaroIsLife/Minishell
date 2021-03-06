@@ -188,10 +188,8 @@ int		ft_unset(t_node *head, t_source *src, char **envp)
 	int c;
 	int b;
 
-
 	i = 0;
 	c = 0;
-
 	while (head->arg[i] != NULL)
 	{
 		c = 0;
@@ -201,9 +199,7 @@ int		ft_unset(t_node *head, t_source *src, char **envp)
 			while (envp[c][b] != '=' && envp[c][b] != '\0')
 				b++;
 			if ((ft_strncmp(envp[c],head->arg[i], b)) == 0)
-			{
 				envp[c][0] = '\0';
-			}
 			c++;
 		}
 		c = 0;
@@ -213,9 +209,7 @@ int		ft_unset(t_node *head, t_source *src, char **envp)
 			while (src->export[c][b] != '=' && src->export[c][b] != '\0')
 				b++;
 			if ((ft_strncmp(src->export[c],head->arg[i], b)) == 0)
-			{
 				src->export[c][0] = '\0';
-			}
 			c++;
 		}
 		i++;
