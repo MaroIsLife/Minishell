@@ -77,6 +77,7 @@ void 	ft_sort(t_source *src)
 	char *swap;
 	int i = 0;
 	int j;
+	int n;
 	while (i < src->lastexp)
 	{
 		j = i + 1;
@@ -87,6 +88,20 @@ void 	ft_sort(t_source *src)
 				swap = src->export[i];
 				src->export[i] = src->export[j];
 				src->export[j] = swap;
+			}
+			if (src->export[i][0] == src->export[j][0])
+			{
+				n = 1;
+				while (src->export[i][n])
+				{
+					if (src->export[i][n] > src->export[j][n])
+					{
+						swap = src->export[i];
+						src->export[i] = src->export[j];
+						src->export[j] = swap;
+					}
+					n++;
+				}
 			}
 			j++;
 		}
