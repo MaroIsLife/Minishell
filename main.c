@@ -244,6 +244,8 @@ void	ms_loop(t_source *src, char **envp)
 				ft_pwd();
 			else if (ft_strncmp(head->cmd, "cd", 2) == 0)
 				ft_cd(head, where_home(envp));
+			else if (ft_strncmp(head->cmd, "unset", 5) == 0)
+				ft_unset(head, src, envp);
 				// where_home(envp);
 		}
 

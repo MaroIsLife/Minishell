@@ -33,8 +33,10 @@ void	print_env(t_node *head, t_source *src, char **envp)
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		ft_putstr_fd(envp[i++], 1);
-		ft_putstr_fd("\n", 1);
+		ft_putstr_fd(envp[i], 1);
+		if (envp[i][0] != '\0')
+			ft_putstr_fd("\n", 1);
+		i++;
 	}
 }
 
@@ -110,7 +112,7 @@ void ft_wr_eq(char *s)
 	}
 
 }
-void em_export (t_source *src)
+void	em_export(t_source *src)
 {
 
 	int i = 0;
@@ -118,8 +120,10 @@ void em_export (t_source *src)
 	while (src->export[i] != NULL)
 		{
 			write (1, "declare -x ", 11);
-			ft_wr_eq(src->export[i++]);
-			write(1,"\n",1);
+			ft_wr_eq(src->export[i]);
+			if (src->export[i][0] != '\0')
+				write(1,"\n",1);
+			i++;
 		}
 }
 void	ft_export(t_node *head, t_source *src, char **envp)
@@ -131,10 +135,7 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 
 	i = 0;
 	if (head->arg[i] == NULL)
-		em_export( src);
-
-		//write normal until you reach '=' then add ""
-		//store garbage to print here
+		em_export(src);
 	else 
 	{
 		while (head->arg[i] != NULL)
@@ -173,10 +174,51 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 					src->lastexp++;
 					src->export[src->lastexp] = NULL;
 				}
-				// else head got to export
 			}
 				i++;
 		}
 			free(name);
 	}
+}
+
+
+int		ft_unset(t_node *head, t_source *src, char **envp)
+{
+	int i;
+	int c;
+	int b;
+
+
+	i = 0;
+	c = 0;
+
+	while (head->arg[i] != NULL)
+	{
+		c = 0;
+		while (envp[c] != NULL)
+		{
+			b = 0;
+			while (envp[c][b] != '=' && envp[c][b] != '\0')
+				b++;
+			if ((ft_strncmp(envp[c],head->arg[i], b)) == 0)
+			{
+				envp[c][0] = '\0';
+			}
+			c++;
+		}
+		c = 0;
+		while (src->export[c] != '\0')
+		{
+			b = 0;
+			while (src->export[c][b] != '=' && src->export[c][b] != '\0')
+				b++;
+			if ((ft_strncmp(src->export[c],head->arg[i], b)) == 0)
+			{
+				src->export[c][0] = '\0';
+			}
+			c++;
+		}
+		i++;
+	}
+	return (0);
 }
