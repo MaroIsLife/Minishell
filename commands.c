@@ -78,10 +78,10 @@ void 	ft_sort(t_source *src)
 	int i = 0;
 	int j;
 	int n;
-	while (i < src->lastexp)
+	while (i < src->lastexp && src->export[i] != NULL)
 	{
 		j = i + 1;
-		while(j < src->lastexp)
+		while(j < src->lastexp &&  src->export[j] != NULL)
 		{
 			if (src->export[i][0] > src->export[j][0])
 			{
@@ -110,22 +110,23 @@ void 	ft_sort(t_source *src)
 }
 void ft_wr_eq(char *s)
 {
-	int i = 0;
-	int sign = 0;
-	while (s[i])
-	{
-		if (s[i] == '=')
-			{
-				sign = 1;
-				write(1,&s[i++], 1);
-				write(1,"\"",1);
-			}
-		write(1,&s[i], 1);
-	i++;
-		if (!s[i] && sign == 1)
-				write(1,"\"",1);
+	if (s != NULL)
+	{	int i = 0;
+		int sign = 0;
+		while (s[i] != 0)
+		{
+			if (s[i] == '=')
+				{
+					sign = 1;
+					write(1,&s[i++], 1);
+					write(1,"\"",1);
+				}
+			write(1,&s[i], 1);
+		i++;
+			if (!s[i] && sign == 1)
+					write(1,"\"",1);
+		}
 	}
-
 }
 void	em_export(t_source *src)
 {
@@ -151,7 +152,7 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 	i = 0;
 	if (head->arg[i] == NULL)
 		em_export(src);
-	else 
+	else
 	{
 		while (head->arg[i] != NULL)
 		{	
@@ -182,6 +183,7 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 					src->lastenv++;
 					src->lastexp++;
 					envp[src->lastenv] = NULL;
+					src->export[src->lastexp] = NULL;
 				}
 				else 
 				{
