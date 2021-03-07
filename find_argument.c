@@ -1,7 +1,22 @@
 #include "minishell.h"
 
+int		find_equal_length(char **envp,int c, int b)
+{
+	int length;
 
-int		get_env_value(char *s, char **envp, t_source *src, int i)
+	length = 0;
+
+	while (envp[c][b] != '=' && envp[c][b] != '\0')
+	{
+		b++;
+		length++;
+	}
+	
+	return length; 
+}
+
+
+int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 {
 	char	*temp;
 	int		b;
@@ -21,9 +36,8 @@ int		get_env_value(char *s, char **envp, t_source *src, int i)
 	b = 0;
 	while (envp[c] != NULL)
 	{
-		if (ft_strncmp(envp[c],temp,ft_strlen(temp)) == 0)
+		if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
 		{
-			printf("Made it here\n");
 			while (envp[c][b] != '=' && envp[c][b] != '\0')
 				b++;
 				while (envp[c][++b] != '\0')
@@ -87,9 +101,7 @@ char	*find_argument(char *s, int offset, t_source *src, char **envp)
 				src->squotes = 0;
 		}
 		else if (s[i] == '$' && src->aslash == 0 && ft_isalpha(s[i + 1]) == 1 && src->squotes == 0)
-		{
-			i = get_env_value(s, envp, src, i) - 1;
-		}
+			i = get_env_value_arg(s, envp, src, i) - 1;
 		else if (s[i] == '\\' && src->aslash == 0)
 		{
 			offset = finding_aslash(s,i, src);

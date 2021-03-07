@@ -25,6 +25,8 @@ typedef struct	s_source
 	char 	*export[1024];
 	char 	*re;
 	int		re_b;
+	char	*ra;
+	int		ra_b;
 	int		lastexp;
 }				t_source;
 
@@ -65,6 +67,8 @@ void	find_for_split(char *cmd, t_source *src);
 int 	finding_quotes(char *s, int i, t_source *src);
 int 	finding_quotes_cmd(char *s, int i, t_source *src);
 int		finding_aslash(char *s, int i, t_source *src);
+int		get_env_value(char *s, char **envp, t_source *src, int i);
+int		find_equal_length(char **envp,int c, int b);
 
 // char		**ft_split_normal(char const *s, char c);
 char	**ft_split(char *s, char c, t_source *src);

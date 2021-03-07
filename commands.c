@@ -165,7 +165,7 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 				c = 0;
 				while (envp[c] != NULL)
 				{
-					if (ft_strncmp(envp[c],head->arg[i], length) == 0 && head->arg[i][length == '='])
+					if (ft_strncmp(envp[c],head->arg[i], length) == 0 && head->arg[i][length] == '=')
 					{
 						envp[c] = head->arg[i];
 						if (c == src->lastenv)
