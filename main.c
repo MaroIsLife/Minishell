@@ -138,6 +138,7 @@ void init(t_source *src)
 	g_find.founderror = 0;
 	g_find.foundPipe = 0;
 	src->offset = 0;
+	src->dollar = 0;
 	// g_source.cmdlen = 0;
 	// g_source.isPipe = 0;
 	src->dquotes = 0;
@@ -215,7 +216,7 @@ void	ms_loop(t_source *src, char **envp)
 			src->dquotes = 0;
 			src->squotes = 0;
 			
-			head->cmd = find_command(pipe[c], src->offset, src);
+			head->cmd = find_command(pipe[c], src->offset, src, envp);
 			count = count_argument(pipe[c],src->offset,src);
 			src->dquotes = 0;
 			src->squotes = 0;
@@ -228,16 +229,16 @@ void	ms_loop(t_source *src, char **envp)
 			head->arg = malloc((count + 1) * sizeof(char *));
 			while (i < count)
 			{
-				head->arg[i] = find_argument(pipe[c], src->offset, src);
+				head->arg[i] = find_argument(pipe[c], src->offset, src, envp);
 				i++;
 			}
 			head->arg[i] = NULL;
 			i = i^i;
-			while (head->arg[i] != NULL)
-			{
-				// printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
-				i++;
-			}
+			// while (head->arg[i] != NULL)
+			// {
+			// 	// printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
+			// 	i++;
+			// }
 			// printf("Found Error: %d\n",g_find.founderror);
 			c++;
 			src->offset = 0;
@@ -267,6 +268,8 @@ void	ms_loop(t_source *src, char **envp)
 		//> file ls
 		//\e\c\h\o \e\a\c
 		//"e""c""h""o" hi
+
+		//echo 'a    b      c ' FIX THIS
 		
 
 		//echo \' FIX THIS

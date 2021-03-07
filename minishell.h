@@ -21,7 +21,10 @@ typedef struct	s_source
 	int		squotes;
 	int		aslash;
 	int		lastenv;
+	int		dollar;
 	char 	*export[1024];
+	char 	*re;
+	int		re_b;
 	int		lastexp;
 }				t_source;
 
@@ -56,8 +59,8 @@ typedef struct	s_find
 t_find		g_find;
 
 
-char	*find_command(char *s, int offset, t_source *src);
-char	*find_argument(char *s, int offset, t_source *src);
+char	*find_command(char *s, int offset, t_source *src, char **envp);
+char	*find_argument(char *s, int offset, t_source *src, char **envp);
 void	find_for_split(char *cmd, t_source *src);
 int 	finding_quotes(char *s, int i, t_source *src);
 int 	finding_quotes_cmd(char *s, int i, t_source *src);
