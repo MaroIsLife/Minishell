@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*find_command(char *s, int offset, t_source *src)
+char	*find_command(char *s, int offset, t_source *src, char **envp)
 {
 	int i;
 	int start;
