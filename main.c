@@ -108,10 +108,14 @@ int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 
 	i = src->offset - 1;
 	count = 0;
+	if (s[0] == '\n')
+		return 0;
 	while (s[i] != '\0')
 	{
 		if (s[i] == '\"' && i == 0)
+		{
 			src->dquotes = 1;
+		}
 		else if (s[i] == '\'' && i == 0)
 			src->squotes = 1;
 		else
@@ -217,12 +221,13 @@ void	ms_loop(t_source *src, char **envp)
 			src->squotes = 0;
 			
 			head->cmd = find_command(pipe[c], src->offset, src, envp);
+			// head->cmd = find_argument(pipe[c], src->offset, src, envp);
 			count = count_argument(pipe[c],src->offset,src);
 			src->dquotes = 0;
 			src->squotes = 0;
 
 			// printf("Number of Pipes: %d\n",g_find.nPipe);
-			// printf("#%d Command: %s\n",c,head->cmd);
+			printf("#%d Command: %s\n",c,head->cmd);
 			// printf("Argument's Offset: %d\n",src->offset);
 			// printf("Count: %d\n",count);
 			i = i^i;
@@ -236,7 +241,7 @@ void	ms_loop(t_source *src, char **envp)
 			i = i^i;
 			// while (head->arg[i] != NULL)
 			// {
-			// 	// printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
+			// 	printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
 			// 	i++;
 			// }
 			// printf("Found Error: %d\n",g_find.founderror);
@@ -256,7 +261,6 @@ void	ms_loop(t_source *src, char **envp)
 				ft_unset(head, src, envp);
 				// where_home(envp);
 		}
-
 
 		//FIX "echo" "hello" !!!
 		//echo "\hello\\\""
@@ -294,7 +298,7 @@ void	ms_loop(t_source *src, char **envp)
 		//echo "'jjj'"'""\'
 		// echo '"'"ll'\'" FOUND ERROR = 1
 		//echo "$USERjjjjj$SHLVL"
-	//echo ' "ab" '
+		//echo ' "ab" '
 
 	
 
