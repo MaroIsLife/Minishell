@@ -29,7 +29,7 @@ then
 	echo "\n${green}Deleting Cache...${reset}"
     rm -rf ~/Library/Caches | 2>/dev/null
 fi
-echo "\n" 
+echo "\n"
 read -n1 -p "${green}Delete The Download folder? [${red}Y${green}/${red}N${green}]${reset}" key
 if [ "$key" = "y" ]; 
 then

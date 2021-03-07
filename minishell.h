@@ -67,7 +67,8 @@ void	find_for_split(char *cmd, t_source *src);
 int 	finding_quotes(char *s, int i, t_source *src);
 int 	finding_quotes_cmd(char *s, int i, t_source *src);
 int		finding_aslash(char *s, int i, t_source *src);
-int		get_env_value(char *s, char **envp, t_source *src, int i);
+int		get_env_value_cmd(char *s, char **envp, t_source *src, int i);
+int		get_env_value_arg(char *s, char **envp, t_source *src, int i);
 int		find_equal_length(char **envp,int c, int b);
 
 // char		**ft_split_normal(char const *s, char c);

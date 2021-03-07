@@ -69,10 +69,7 @@ char	*find_command(char *s, int offset, t_source *src, char **envp)
 		else if (s[i] == '\\' && ft_isascii(s[i + 1]) == 1 && src->dquotes == 0 && src->squotes == 0)
 			src->ra[src->ra_b++] = s[++i];
 		else if (s[i] == '$' && src->squotes == 0 && ft_isalpha(s[i + 1]) == 1 && src->aslash == 0)
-		{
 			i = get_env_value_cmd(s, envp, src, i) - 1;
-			printf("%d\n",i);
-		}
 		else if (s[i] == '\\' && src->aslash == 1)
 		{
 			if (s[i + 1] != '\\')

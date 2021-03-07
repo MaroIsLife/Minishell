@@ -227,7 +227,7 @@ void	ms_loop(t_source *src, char **envp)
 			src->squotes = 0;
 
 			// printf("Number of Pipes: %d\n",g_find.nPipe);
-			printf("#%d Command: %s\n",c,head->cmd);
+			// printf("#%d Command: %s\n",c,head->cmd);
 			// printf("Argument's Offset: %d\n",src->offset);
 			// printf("Count: %d\n",count);
 			i = i^i;
@@ -262,6 +262,9 @@ void	ms_loop(t_source *src, char **envp)
 				// where_home(envp);
 		}
 
+
+	//	echo 'hello         a'  bye
+	
 		//FIX "echo" "hello" !!!
 		//echo "\hello\\\""
 		//echo "hello\\

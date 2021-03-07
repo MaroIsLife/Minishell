@@ -102,3 +102,56 @@ void	find_for_split(char *cmd, t_source *src)
 		g_find.founderror = 1;
 	// printf("%d\n",g_find.ndquotes); //Bugged to fix later
 }
+
+int		find_equal_length(char **envp,int c, int b)
+{
+	int length;
+
+	length = 0;
+
+	while (envp[c][b] != '=' && envp[c][b] != '\0')
+	{
+		b++;
+		length++;
+	}
+	
+	return length; 
+}
+
+
+int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
+{
+	char	*temp;
+	int		b;
+	int		c;
+
+	i = i + 1;
+	b = 0;
+	c = 0;
+	temp = malloc(1024 * sizeof(char));
+	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
+	{
+		temp[b++] = s[i++];
+		if (ft_isalpha(s[i]) != 1)
+			break ;
+	}
+	temp[b] = '\0';
+	b = 0;
+	while (envp[c] != NULL)
+	{
+		if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
+		{
+			while (envp[c][b] != '=' && envp[c][b] != '\0')
+				b++;
+				while (envp[c][++b] != '\0')
+					src->re[src->re_b++] = envp[c][b];
+				break ;
+		}
+		c++;
+	}
+	free(temp);
+	return (i);
+}
+
+
+

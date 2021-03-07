@@ -8,7 +8,8 @@ char    *read_line()
 
 
 cmd = malloc(1024 * sizeof(char));
-while ((cmdlen = read(0,&buf,1024)) != 0)
+cmdlen = read(0,&buf,1024);
+while (cmdlen != 0)
 {
 	if (cmdlen == -1)
 	{
@@ -26,6 +27,7 @@ while ((cmdlen = read(0,&buf,1024)) != 0)
 			cmd[cmdlen] = '\0';
 			return cmd;
 	}
+	cmdlen = read(0,&buf,1024);
 }
 	 return (0);
 }
