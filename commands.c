@@ -40,35 +40,37 @@ void	print_env(t_node *head, t_source *src, char **envp)
 	}
 }
 
-char	*search_env(t_node *head, t_source *src, char **envp, int offset)
-{
-	int i;
-	int c;
-	char *s;
+// char	*search_env(t_node *head, t_source *src, char **envp, int offset)
+// {
+// 	int i;
+// 	int c;
+// 	char *s;
 
-	c = 0;
-	i = 0;
+// 	c = 0;
+// 	i = 0;
 
-	s = malloc(1024 * sizeof(char));
-	while (envp[i] != NULL)
-	{
-		if (envp[i][0] == head->arg[offset][0])
-		{
-			while (envp[i][c] == head->arg[offset][c])
-			{
-				if (head->arg[offset][c] == '=')
-				{	
-					s[c] = '\0';
-					return (s);
-				}
-				s[c] = head->arg[offset][c];
-				c++;
-			}
-		}
-		i++;
-	}
-	return (NULL);
-}
+// 	s = malloc(1024 * sizeof(char));
+// 	while (envp[i] != NULL)
+// 	{
+// 		if (envp[i][0] == head->arg[offset][0])
+// 		{
+// 			while (envp[i][c] == head->arg[offset][c])
+// 			{
+// 				if (head->arg[offset][c] == '=')
+// 				{	
+// 					s[c] = '\0';
+// 					return (s);
+// 				}
+// 				s[c] = head->arg[offset][c];
+// 				c++;
+// 			}
+// 		}
+// 		i++;
+// 	}
+// 	return (NULL);
+// }
+
+
 
 void 	ft_sort(t_source *src)
 {
@@ -92,7 +94,7 @@ void 	ft_sort(t_source *src)
 			if (src->export[i][0] == src->export[j][0])
 			{
 				n = 1;
-				while (src->export[i][n])
+				while (src->export[i][n] != '\0')
 				{
 					if (src->export[i][n] > src->export[j][n])
 					{
@@ -142,13 +144,71 @@ void	em_export(t_source *src)
 			i++;
 		}
 }
+int ft_strlen_eq(char *src)
+{
+	int i;
+
+	i = -1;
+	while (src[++i])
+		if (src[i]== '=')
+			break ;
+	return (i);
+}
+
+int found_eq(char *src)
+{
+	int i;
+
+	i = -1;
+	while (src[++i])
+		if (src[i]== '=')
+			return(1);
+	return (0);
+}
+int ft_search(t_source *src, char *value, int size)
+{
+	int i;
+
+	i = 0;
+	while (src->export[i] != NULL)
+	{
+		if (ft_strncmp(src->export[i], value, size) == 0)
+			return(1);
+		i++;
+	}
+	return (0);
+}
+
+void	replace_env(char **envp, t_source *src, char *value, int size)
+{
+	int i;
+	int del;
+
+	del = 0;
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		if (ft_strncmp(envp[i], value, size) == 0)
+			{
+				del = 1;
+				envp[i] = value;
+				break ;
+			}
+		i++;
+	}
+	if (!del)
+	{
+		envp[src->lastenv++] = value;
+		envp[src->lastenv] = NULL;
+	}
+}
 void	ft_export(t_node *head, t_source *src, char **envp)
 {
 	int		i;
-	char	*name;
+	int		j;
+	int		found;
 	int		length;
-	int		c;
-
+	
 	i = 0;
 	if (head->arg[i] == NULL)
 		em_export(src);
@@ -156,45 +216,42 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 	{
 		while (head->arg[i] != NULL)
 		{	
-			name = search_env(head, src, envp, i);
-			length = 0;
-			while (head->arg[i][length] != '=' && head->arg[i][length] != '\0')
-				length++;
-			if (name != 0)
-			{
-				c = 0;
-				while (envp[c] != NULL)
+			length = ft_strlen_eq(head->arg[i]);
+			found = ft_search(src,head->arg[i], length);
+			if (found)
+			 {
+				 j = 0;
+				while (src->export[j] != NULL)
 				{
-					if (ft_strncmp(envp[c],head->arg[i], length) == 0 && head->arg[i][length] == '=')
+					if (ft_strncmp(src->export[j], head->arg[i], length) == 0)
 					{
-						envp[c] = head->arg[i];
-						if (c == src->lastenv)
-							envp[c] = NULL;
+						src->export[j] = head->arg[i];
+						replace_env(envp, src, head->arg[i], length);
+						if (j == src->lastexp)
+							src->export[++j] = NULL;
 					}
-					c++;
+					j++;
 				}
-			}
+			 
+			 }
 			else
 			{
-				if (head->arg[i][length] == '=')
+
+				if (found_eq(head->arg[i]))
 				{
-					envp[src->lastenv] = head->arg[i];
-					src->export[src->lastexp] = head->arg[i];
-					src->lastenv++;
-					src->lastexp++;
-					envp[src->lastenv] = NULL;
+					envp[src->lastenv++] = head->arg[i];
+					src->export[src->lastexp++] = head->arg[i];
 					src->export[src->lastexp] = NULL;
+					envp[src->lastenv] = NULL;
 				}
-				else 
+				else
 				{
-					src->export[src->lastexp] = head->arg[i];
-					src->lastexp++;
+					src->export[src->lastexp++] = head->arg[i];
 					src->export[src->lastexp] = NULL;
 				}
 			}
 				i++;
 		}
-			free(name);
 	}
 }
 

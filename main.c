@@ -128,7 +128,7 @@ int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 				i++;
 			// if ((s[i] == '|' || s[i] == ';') && src->dquotes == 0 && src->squotes == 0)
 			// 	return (count);
-			if (s[i] == '\0')
+			if (s[i] == '\0' || s[i] == '\n')
 				return (count);
 			count++;
 		}
@@ -321,4 +321,4 @@ int     main(int argc, char **argv, char **envp)
 	ms_loop(&src, envp);
 
 	return (0);
-}
+} 
