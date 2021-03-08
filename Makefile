@@ -18,4 +18,4 @@ fclean : clean
 
 re : fclean all
 
-.PHONY : all clean fclean re $(NAME)9  
+.PHONY : all clean fclean re $(NAME)
