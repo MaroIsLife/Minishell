@@ -185,6 +185,11 @@ void	ms_loop(t_source *src, char **envp)
 	{
 		print_prompt1();
 		cmd = read_line();
+		if (cmd == NULL)
+		{
+			write(1,"\n",1);
+			continue ;
+		}
 		if (ft_strncmp(cmd,"print",5) == 0)
 			printf("Hello\n");
 		if (ft_strncmp(cmd,"push",4) == 0)
