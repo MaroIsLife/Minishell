@@ -186,7 +186,7 @@ void	ms_loop(t_source *src, char **envp)
 		print_prompt1();
 		cmd = read_line();
 		if (cmd == NULL)
-			exit(0);
+			exit(0); // CLTR + D Terminat the Shell/ CLTR + C don't 
 		if (ft_strncmp(cmd,"print",5) == 0)
 			printf("Hello\n");
 		if (ft_strncmp(cmd,"push",4) == 0)
@@ -227,11 +227,6 @@ void	ms_loop(t_source *src, char **envp)
 			count = count_argument(pipe[c],src->offset,src);
 			src->dquotes = 0;
 			src->squotes = 0;
-
-			// printf("Number of Pipes: %d\n",g_find.nPipe);
-			// printf("#%d Command: %s\n",c,head->cmd);
-			// printf("Argument's Offset: %d\n",src->offset);
-			// printf("Count: %d\n",count);
 			i = i^i;
 			head->arg = malloc((count + 1) * sizeof(char *));
 			while (i < count)
