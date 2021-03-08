@@ -264,6 +264,7 @@ void	ms_loop(t_source *src, char **envp)
 
 
 	//	echo 'hello         a'  bye
+	////echo "\$ \| \; \" "
 	
 		//FIX "echo" "hello" !!!
 		//echo "\hello\\\""
