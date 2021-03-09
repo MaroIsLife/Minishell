@@ -47,11 +47,7 @@ void ft_cd(t_node *head, char *home)
 }
 void clearScreen()
 {
-  char *CLEAR_SCREEN_ANSI;
-  CLEAR_SCREEN_ANSI = malloc(1024 * sizeof(char));
-  CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J";
-  write(1, CLEAR_SCREEN_ANSI, 12);
-  free(CLEAR_SCREEN_ANSI);
+  write(1, "\e[1;1H\e[2J", 10);
 }
 
 void push_env(char **envp, char *s)
@@ -172,6 +168,15 @@ void init_env(t_source *src,char **envp)
 	
 }
 
+void handler(int c)
+{
+
+	write(1,"\b\b \b\b",4);
+	write(1,"\n",1);
+	print_prompt1();
+
+}
+
 void	ms_loop(t_source *src, char **envp)
 {
 	char *cmd;
@@ -184,9 +189,13 @@ void	ms_loop(t_source *src, char **envp)
 	while(1)
 	{
 		print_prompt1();
+		signal(SIGINT,handler);
 		cmd = read_line();
 		if (cmd == NULL)
-			exit(0); // CLTR + D Terminat the Shell/ CLTR + C don't 
+		{
+			write(1,"\n",1);
+			continue ;
+		} // CLTR + D Terminat the Shell/ CLTR + C don't 
 		if (ft_strncmp(cmd,"print",5) == 0)
 			printf("Hello\n");
 		if (ft_strncmp(cmd,"push",4) == 0)
@@ -195,7 +204,8 @@ void	ms_loop(t_source *src, char **envp)
 		if (ft_strncmp(cmd,"exit",4) == 0)
 			exit(0);
 		if (ft_strncmp(cmd,"clear",5) == 0)
-			system("clear");
+			clearScreen();
+			// system("clear");
 
 		// if (ft_strncmp(command,"cat",3) == 0)
 		// {
