@@ -168,15 +168,6 @@ void init_env(t_source *src,char **envp)
 	
 }
 
-void handler(int c)
-{
-
-	write(1,"\b\b \b\b",4);
-	write(1,"\n",1);
-	print_prompt1();
-
-}
-
 void	ms_loop(t_source *src, char **envp)
 {
 	char *cmd;
@@ -189,13 +180,14 @@ void	ms_loop(t_source *src, char **envp)
 	while(1)
 	{
 		print_prompt1();
-		signal(SIGINT,handler);
+		signal(SIGINT,handler); // ^C
+		// signal(SIGQUIT,handler2); // ^/
 		cmd = read_line();
-		if (cmd == NULL)
+		if (cmd == NULL) // ^D
 		{
-			write(1,"\n",1);
-			continue ;
-		} // CLTR + D Terminat the Shell/ CLTR + C don't 
+			write(1,"exit\n",6);
+			exit(0);
+		}
 		if (ft_strncmp(cmd,"print",5) == 0)
 			printf("Hello\n");
 		if (ft_strncmp(cmd,"push",4) == 0)

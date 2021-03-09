@@ -4,6 +4,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h>
+# include <signal.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <fcntl.h>
@@ -86,5 +87,11 @@ void	print_env(t_node *head, t_source *src, char **envp);
 void	ft_export(t_node *head, t_source *src, char **envp);
 char	*search_env(t_node *head, t_source *src, char **envp, int offset);
 int		ft_unset(t_node *head, t_source *src, char **envp);
+
+
+//Signals
+void ft_signal();
+void handler(int c);
+void handler2(int c);
 
 #endif
