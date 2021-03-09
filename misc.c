@@ -7,11 +7,5 @@ void clear()
 
 void    print_prompt1()
 {
-		write(1,"Maro-$ ",sizeof("Maro-$ "));
-}
-
-
-void    print_prompt2()
-{
-		write(1,"> ",sizeof("> "));
+		write(1,"\033[0;32mMaro-$ \033[0;39m",sizeof("\033[0;32mMaro-$ \033[0;39m"));
 }
