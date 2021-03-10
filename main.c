@@ -138,10 +138,10 @@ void init(t_source *src)
 	g_find.founderror = 0;
 	g_find.foundPipe = 0;
 	src->offset = 0;
-	src->dollar = 0;
 	// g_source.cmdlen = 0;
 	// g_source.isPipe = 0;
 	src->dquotes = 0;
+	src->squotes = 0;
 	src->aslash = 0;
 	src->offset = 0;
 }
@@ -206,13 +206,9 @@ void	ms_loop(t_source *src, char **envp)
 		init(src);
 		pipe = ft_split(cmd,';', src);
 		int c = 0;
-		// while (pipe[c] != NULL)
-		// 	printf("%s\n",pipe[c++]);
 
-
-		// push(12);
-		// push(31);
-
+		
+		c = 0;
 		while (pipe[c] != NULL)
 		{
 			head = (t_node *) malloc(sizeof(t_node));
@@ -260,7 +256,6 @@ void	ms_loop(t_source *src, char **envp)
 				ft_unset(head, src, envp);
 				// where_home(envp);
 		}
-
 
 	//	echo 'hello         a'  bye
 	////echo "\$ \| \; \" "
