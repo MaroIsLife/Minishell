@@ -38,6 +38,7 @@ void	print_env(t_node *head, t_source *src, char **envp)
 			ft_putstr_fd("\n", 1);
 		i++;
 	}
+
 }
 
 // char	*search_env(t_node *head, t_source *src, char **envp, int offset)
