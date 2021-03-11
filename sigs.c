@@ -6,7 +6,7 @@ void handler(int c)
 	write(2,"\b\b  \b\b",5);
 	write(2,"\n",1);
 	print_prompt1();
-	//return 130
+	//return 1
 
 }
 

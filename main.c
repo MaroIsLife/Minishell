@@ -242,15 +242,16 @@ void	ms_loop(t_source *src, char **envp)
 			// printf("Found Error: %d\n",g_find.founderror);
 			c++;
 			src->offset = 0;
-			if (ft_strncmp(head->cmd, "cd", 2) == 0)
-				ft_cd(head, where_home(envp));
-			int id = fork();
-			int ge_id;
+			
+			// int id = fork();
+			// int ge_id;
 
-			if (id == 0)
-			{
-				printf ("child %d\n", getpid());
-				if (ft_strncmp(head->cmd,"echo",4) == 0)
+			// if (id == 0)
+			// {
+				// printf ("child %d\n", getpid());
+				if (ft_strncmp(head->cmd, "cd", 2) == 0)
+					ft_cd(head, where_home(envp));
+				else if (ft_strncmp(head->cmd,"echo",4) == 0)
 					ft_echo(head, src);
 				else if (ft_strncmp(head->cmd, "env", 3) == 0)
 					print_env(head, src, envp);
@@ -260,14 +261,14 @@ void	ms_loop(t_source *src, char **envp)
 					ft_pwd();
 				else if (ft_strncmp(head->cmd, "unset", 5) == 0)
 					ft_unset(head, src, envp);
-				exit(0);
-			}
-			else 
-			{
-				wait(&ge_id);
-				printf ("parent %d\n", getpid());
+				//exit(0);
+			// }
+			// else 
+			// {
+			// 	wait(&ge_id);
+			// 	printf ("parent %d\n", getpid());
 
-			}
+			// }
 				// where_home(envp);
 		}
 
