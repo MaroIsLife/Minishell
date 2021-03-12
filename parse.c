@@ -9,7 +9,8 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 
 	head->cmd = find_command(pipe[src->c], src->offset, src, envp);
 	count = count_argument(pipe[src->c],src->offset,src);
-    src->dquotes = 0;
+    src->count = count;
+	src->dquotes = 0;
 	src->squotes = 0;
 	head->arg = malloc((count + 1) * sizeof(char *));
 	while (i < count)
@@ -19,10 +20,10 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 	}
 	head->arg[i] = NULL;
 	i = 0;
-	printf ("=======================================\n");
-	while (head->arg[i])
-		printf("arg %d : %s\n", i, head->arg[i++]);
-	printf ("=======================================\n");
+	// printf ("=======================================\n");
+	// while (head->arg[i])
+	// 	printf("arg %d : %s\n", i, head->arg[i++]);
+	// printf ("=======================================\n");
 	p = head->pipe;
 	if (src->foundpipe == 1)
 	{
