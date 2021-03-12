@@ -1,12 +1,28 @@
 #include "minishell.h"
-
+char **ft_valide_args(t_node *head, int count)
+{
+    char **varg = malloc (sizeof(char*) * (count + 2));
+    int i = 1;
+   varg[0] = head->cmd;
+    while (i < (count + 1))
+    {
+        varg[i] = ft_strdup(head->arg[i - 1]);
+        i++;
+    }
+    varg[i] = NULL;
+    return (varg);
+}
 void    ft_execute (t_node *head, t_source *src, char **envp)
 {
     int id;
     id = fork ();
-    char **var;
+    char **varg;
+    varg = ft_valide_args(head, src->count);
+    // int i = 0;
+    // while (varg[i])
+    //     puts(varg[i++]);
     if (id == 0)
-        execve(ft_strjoin("/bin/", head->arg[0]),head->arg, NULL);
+        execve(ft_strjoin("/bin/", varg[0]),varg, NULL);
     else
         wait(&id);
 

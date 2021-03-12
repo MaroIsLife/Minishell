@@ -33,6 +33,7 @@ typedef struct	s_source
 	char	*ra;
 	int		ra_b;
 	int		lastexp;
+	int 	count;
 }				t_source;
 
 typedef struct s_pipe {
