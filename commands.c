@@ -41,6 +41,46 @@ void	print_env(t_node *head, t_source *src, char **envp)
 
 }
 
+char	*where_home(char **envp)
+{
+	int i = 0;
+	char *home;
+	
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], "HOME=", 5) == 0)
+		{
+			home = malloc (ft_strlen(envp[i] + 5) + 1);
+			ft_strlcpy(home, envp[i] + 5, ft_strlen(envp[i] + 5) + 1);
+			return (home);
+		}
+	i++;
+	}
+	return (0);
+}
+void	ft_pwd (void)
+{
+	char* s = malloc (100);
+
+	printf ("%s\n",getcwd(s, 100));
+	free (s);
+}
+void	ft_cd(t_node *head, char *home)
+{
+	int sign;
+
+	sign = 0;
+	if (!head->arg[0])
+		{
+			chdir(home);
+			free(home);
+		}
+	else
+		sign = chdir(head->arg[0]);
+	if (sign != 0)
+		printf ("Error: %s\n", strerror(errno));
+}
+
 // char	*search_env(t_node *head, t_source *src, char **envp, int offset)
 // {
 // 	int i;
