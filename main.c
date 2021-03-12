@@ -97,46 +97,10 @@ void push_env(char **envp, char *s)
 // 	head = tmp;
 // }
 
-int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
-{
-	int i;
-	int count;
 
-	i = src->offset - 1;
-	count = 0;
-	if (s[0] == '\n')
-		return 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == '\"' && i == 0)
-		{
-			src->dquotes = 1;
-		}
-		else if (s[i] == '\'' && i == 0)
-			src->squotes = 1;
-		else
-			finding_quotes(s, i, src);
-		if ((s[i] == ';' || s[i] == '|') && (src->dquotes == 0 && src->squotes == 0))
-			return (count);
-		if (s[i] == ' ' && src->dquotes == 0 && src->squotes == 0)
-		{
-			while (s[i] == ' ')
-				i++;
-			// if ((s[i] == '|' || s[i] == ';') && src->dquotes == 0 && src->squotes == 0)
-			// 	return (count);
-			if (s[i] == '\0' || s[i] == '\n')
-				return (count);
-			count++;
-		}
-		else
-			i++;
-	}
-	return(count);
-}
 void init(t_source *src)
 {
-	g_find.founderror = 0;
-	g_find.foundPipe = 0;
+	src->founderror = 0;
 	src->offset = 0;
 	// g_source.cmdlen = 0;
 	// g_source.isPipe = 0;
@@ -167,6 +131,7 @@ void init_env(t_source *src,char **envp)
 
 	
 }
+
 
 void	ms_loop(t_source *src, char **envp)
 {
@@ -201,14 +166,15 @@ void	ms_loop(t_source *src, char **envp)
 
 		// if (ft_strncmp(command,"cat",3) == 0)
 		// {
-		// 	execve("/bin/cat","path.txt",)
+		// 	execve("/bin/cat","path.txt",envp)
 		// }
-		init(src);
+		init(src); // MOVE INIT() TO WHILE PIPE != NULL??
 		pipe = ft_split(cmd,';', src);
 		int c = 0;
 
 		
 		c = 0;
+		char **realpipes;
 		while (pipe[c] != NULL)
 		{
 			head = (t_node *) malloc(sizeof(t_node));
@@ -219,29 +185,41 @@ void	ms_loop(t_source *src, char **envp)
 			find_for_split(pipe[c], src);
 			src->dquotes = 0;
 			src->squotes = 0;
+
 			
-			head->cmd = find_command(pipe[c], src->offset, src, envp);
-			// head->cmd = find_argument(pipe[c], src->offset, src, envp);
-			count = count_argument(pipe[c],src->offset,src);
-			src->dquotes = 0;
-			src->squotes = 0;
 			i = i^i;
-			head->arg = malloc((count + 1) * sizeof(char *));
-			while (i < count)
-			{
-				head->arg[i] = find_argument(pipe[c], src->offset, src, envp);
-				i++;
-			}
-			head->arg[i] = NULL;
+			// while (realpipes[i] != NULL)
+			// {
+			// 	printf("%s\n",realpipes[i]);
+			// 	i++;
+			// }
+			
+			
+			// head->cmd = find_command(pipe[c], src->offset, src, envp);
+			// // head->cmd = find_argument(pipe[c], src->offset, src, envp);
+			// count = count_argument(pipe[c],src->offset,src);
+			// src->dquotes = 0;
+			// src->squotes = 0;
+			// i = i^i;
+			// head->arg = malloc((count + 1) * sizeof(char *));
+			// while (i < count)
+			// {
+			// 	head->arg[i] = find_argument(pipe[c], src->offset, src, envp);
+			// 	i++;
+			// }
+			// head->arg[i] = NULL;
+			src->c = c;
+			init_parse(src, head, envp, pipe);
 			i = i^i;
+			src->offset = 0;
+			// printf("Command: %s\n",head->cmd);
 			// while (head->arg[i] != NULL)
 			// {
 			// 	printf("#%d Argument %d : %s\n",c,i,head->arg[i]);
 			// 	i++;
 			// }
-			// printf("Found Error: %d\n",g_find.founderror);
-			c++;
-			src->offset = 0;
+			// printf("%s",pipe[c]);
+			// printf("%c\n",pipe[c][src->offset + 1]);
 			
 			// int id = fork();
 			// int ge_id;
@@ -249,6 +227,8 @@ void	ms_loop(t_source *src, char **envp)
 			// if (id == 0)
 			// {
 				// printf ("child %d\n", getpid());
+			if (src->foundpipe == 0)
+			{
 				if (ft_strncmp(head->cmd, "cd", 2) == 0)
 					ft_cd(head, where_home(envp));
 				else if (ft_strncmp(head->cmd,"echo",4) == 0)
@@ -261,7 +241,8 @@ void	ms_loop(t_source *src, char **envp)
 					ft_pwd();
 				else if (ft_strncmp(head->cmd, "unset", 5) == 0)
 					ft_unset(head, src, envp);
-				//exit(0);
+			}
+			//exit(0);
 			// }
 			// else 
 			// {
@@ -270,6 +251,7 @@ void	ms_loop(t_source *src, char **envp)
 
 			// }
 				// where_home(envp);
+			c++;
 		}
 
 	//	echo 'hello         a'  bye
@@ -326,7 +308,6 @@ void	ms_loop(t_source *src, char **envp)
 int     main(int argc, char **argv, char **envp)
 {
 	t_source src;
-	t_find	find;
 	// clear();
 	ms_loop(&src, envp);
 

@@ -11,6 +11,44 @@ int		arg_if_space(char *s,int *i, t_source *src)
 }
 
 
+int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
+{
+	int i;
+	int count;
+
+	i = src->offset - 1;
+	count = 0;
+	if (s[0] == '\n')
+		return 0;
+	while (s[i] != '\0')
+	{
+		if (s[i] == '\"' && i == 0)
+		{
+			src->dquotes = 1;
+		}
+		else if (s[i] == '\'' && i == 0)
+			src->squotes = 1;
+		else
+			finding_quotes(s, i, src);
+		if ((s[i] == ';' || s[i] == '|') && (src->dquotes == 0 && src->squotes == 0 && src->aslash == 0))
+			return (count);
+		if (s[i] == ' ' && src->dquotes == 0 && src->squotes == 0)
+		{
+			while (s[i] == ' ')
+				i++;
+			if ((s[i] == '|' || s[i] == ';') && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
+				return (count);
+			if (s[i] == '\0' || s[i] == '\n')
+				return (count);
+			count++;
+		}
+		else
+			i++;
+	}
+	return(count);
+}
+
+
 char	*find_argument(char *s, int offset, t_source *src, char **envp)
 {
 	int i;
