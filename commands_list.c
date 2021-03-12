@@ -31,7 +31,7 @@ void    ft_execute (t_node *head, t_source *src, char **envp)
 void command_list(t_node *head, t_source *src, char **envp)
 {
     if (ft_strncmp(head->cmd, "cd", 2) == 0)
-        ft_cd(head, where_home(envp));
+        ft_cd(head, where_home(envp),envp);
     else if (ft_strncmp(head->cmd,"echo",4) == 0)
         ft_echo(head, src);
     else if (ft_strncmp(head->cmd, "env", 3) == 0)
