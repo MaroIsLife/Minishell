@@ -22,6 +22,10 @@ typedef struct	s_source
 	int		squotes;
 	int		aslash;
 	int		lastenv;
+	int		foundpipe;
+	int		founderror;
+	int		c;
+	int		npipe;
 	int		dollar;
 	char 	*export[1024];
 	char 	*re;
@@ -34,36 +38,27 @@ typedef struct	s_source
 typedef struct s_pipe {
 	char			*cmd;
 	char			**arg;
-    struct s_node	*next;
+    struct s_pipe	*next;
 }	t_pipe;
 
 typedef struct s_node {
     char			*cmd;
 	char			**arg;
-	int				foundPipe;
 	int				number;
 	t_pipe			*pipe;
     struct s_node	*next;
 }   t_node;
 
-typedef struct	s_find
-{
-	int	foundPipe;
-	int	nPipe;
-	int	foundSemiColons;
-	int	nSemiColons;
-	int	founddquotes;
-	int	ndquotes;
-	int	foundsquotes;
-	int	nsquotes;
-	int	founderror;
-}				t_find;
-
-t_find		g_find;
 
 
+
+
+
+//Parsing
+void	init_parse(t_source *src, t_node *head, char **envp, char **pipe);
 char	*find_command(char *s, int offset, t_source *src, char **envp);
 char	*find_argument(char *s, int offset, t_source *src, char **envp);
+int		count_argument(char *s, int offset, t_source *src);
 void	find_for_split(char *cmd, t_source *src);
 int 	finding_quotes(char *s, int i, t_source *src);
 int 	finding_quotes_cmd(char *s, int i, t_source *src);
@@ -90,8 +85,8 @@ int		ft_unset(t_node *head, t_source *src, char **envp);
 
 
 //Signals
-void ft_signal();
-void handler(int c);
-void handler2(int c);
+void	ft_signal();
+void	handler(int c);
+void	handler2(int c);
 
 #endif
