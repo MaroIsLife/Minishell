@@ -51,8 +51,7 @@ typedef struct s_node {
 }   t_node;
 
 
-
-
+int g_return;
 
 
 //Parsing
@@ -84,7 +83,8 @@ void	print_env(t_node *head, t_source *src, char **envp);
 void	ft_export(t_node *head, t_source *src, char **envp);
 char	*search_env(t_node *head, t_source *src, char **envp, int offset);
 int		ft_unset(t_node *head, t_source *src, char **envp);
-void	ft_cd(t_node *head, char *home);
+void	ft_cd(t_node *head, char *home, char **envp);
+void	change_pwd_env(char **envp);
 void	ft_pwd (void);
 char	*where_home(char **envp);
 

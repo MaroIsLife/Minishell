@@ -67,6 +67,7 @@ void	ms_loop(t_source *src, char **envp)
 	while(1)
 	{
 		print_prompt1();
+		// printf("\U0001F600"); //Useless Emoji
 		signal(SIGINT,handler); // ^C
 		// signal(SIGQUIT,handler2); // ^/
 		cmd = read_line();
@@ -119,6 +120,18 @@ void	ms_loop(t_source *src, char **envp)
 			}	
 			c++;
 		}
+
+
+		//Use Stat to find Paths and get the paths from Environement
+		//
+
+	//export abc=123
+	//export abc
+	// then env
+	//echo $HOMEHA
+
+
+
 	//	echo 'hello         a'  bye
 	////echo "\$ \| \; \" "
 		//FIX "echo" "hello" !!!
@@ -142,7 +155,7 @@ void	ms_loop(t_source *src, char **envp)
 		//FIX '\' = EVERYTHING INSIDE '' is written and not escaped
 		//e\c\h\o b\y\e FIX THIS
 		// echo bye; FIX THIS
-		// echo "hello"\a\c FIX THIS
+		// echo "hello"\a\c FIX THIS	
 		//echo "'jjj'"'""\'
 		// echo '"'"ll'\'" FOUND ERROR = 1
 		//echo "$USERjjjjj$SHLVL"

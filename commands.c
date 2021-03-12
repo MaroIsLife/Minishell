@@ -65,7 +65,7 @@ void	ft_pwd (void)
 	printf ("%s\n",getcwd(s, 100));
 	free (s);
 }
-void	ft_cd(t_node *head, char *home)
+void	ft_cd(t_node *head, char *home, char **envp)
 {
 	int sign;
 
@@ -79,6 +79,7 @@ void	ft_cd(t_node *head, char *home)
 		sign = chdir(head->arg[0]);
 	if (sign != 0)
 		printf ("Error: %s\n", strerror(errno));
+	change_pwd_env(envp);
 }
 
 // char	*search_env(t_node *head, t_source *src, char **envp, int offset)
