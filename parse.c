@@ -18,6 +18,11 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 		i++;
 	}
 	head->arg[i] = NULL;
+	i = 0;
+	printf ("=======================================\n");
+	while (head->arg[i])
+		printf("arg %d : %s\n", i, head->arg[i++]);
+	printf ("=======================================\n");
 	p = head->pipe;
 	if (src->foundpipe == 1)
 	{
