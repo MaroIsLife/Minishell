@@ -121,6 +121,7 @@ int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 {
 	char	*temp;
 	int		b;
+	int 	length;
 	int		c;
 
 	i = i + 1;
@@ -130,14 +131,16 @@ int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
 	{
 		temp[b++] = s[i++];
-		if (ft_isalpha(s[i]) != 1)
+		if (ft_isdollar(s[i]) != 1)
 			break ;
 	}
 	temp[b] = '\0';
 	b = 0;
+	length = ft_strlen(temp);
 	while (envp[c] != NULL)
 	{
-		if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
+		// if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
+		if (ft_strncmp(envp[c], temp, length) == 0 && envp[c][length] == '=')
 		{
 			while (envp[c][b] != '=' && envp[c][b] != '\0')
 				b++;

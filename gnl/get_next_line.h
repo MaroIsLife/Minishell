@@ -21,11 +21,12 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <sys/types.h>
+#include "../libft/libft.h"
 
 char	*ft_substr(char *s, unsigned int start, size_t len);
 char	*ftt_substr(char *s, unsigned int start, size_t len);
 char	*ft_strjoin(char *dst, char *src);
 char	*ft_strdup(const char *s1);
-size_t	ft_strlen(const char *str);
+// size_t	ft_strlen(const char *str);
 int		get_next_line(int fd, char **line);
 #endif

@@ -10,16 +10,32 @@ void clearScreen()
   write(1, "\e[1;1H\e[2J", 10);
 }
 
-void push_env(char **envp, char *s)
+void	get_user_env(char **envp, t_source *src)
 {
 	int i;
-	
+	int b;
+	int c;
+
+	b = 0;
+	c = 0;
 	i = 0;
 	while (envp[i] != NULL)
+	{
+		if (ft_strncmp(envp[i], "USER", 4) == 0)
+		{
+			while (envp[i][b + 5] != '\0')
+				b++;
+			src->user = malloc((b + 1) * sizeof(char));
+			b = 5;
+			while (envp[i][b] != '\0')
+			{
+				src->user[c++] = envp[i][b++];
+			}
+			src->user[c] = '\0';
+			break ;
+		}
 		i++;
-	
-	envp[i] = "abc";
-	envp[++i] = NULL;
+	}
 }
 
 void init(t_source *src)
@@ -64,6 +80,7 @@ void	ms_loop(t_source *src, char **envp)
 	t_node *first;
 	char **pipe;
 	init_env(src,envp);
+	get_user_env(envp, src); // This Retrieves the USER's logname and stores it in src->user
 	while(1)
 	{
 		print_prompt1();
@@ -86,7 +103,6 @@ void	ms_loop(t_source *src, char **envp)
 		pipe = ft_split(cmd,';', src);
 		int c = 0;
 
-		
 		c = 0;
 		while (pipe[c] != NULL)
 		{
@@ -103,7 +119,6 @@ void	ms_loop(t_source *src, char **envp)
 			init_parse(src, head, envp, pipe);
 			i = i^i;
 			src->offset = 0;
-			
 			if (src->foundpipe == 0)
 				command_list(head, src, envp);
 			else {

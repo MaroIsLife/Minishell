@@ -24,6 +24,7 @@ typedef struct	s_source
 	int		lastenv;
 	int		foundpipe;
 	int		founderror;
+	char	*user;
 	int		c;
 	int		npipe;
 	int		dollar;
@@ -86,6 +87,7 @@ int		ft_unset(t_node *head, t_source *src, char **envp);
 void	ft_cd(t_node *head, char *home, char **envp);
 void	change_pwd_env(char **envp);
 void	ft_pwd (void);
+int		ft_isdollar(int c);
 char	*where_home(char **envp);
 
 
