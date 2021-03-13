@@ -274,11 +274,9 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 					}
 					j++;
 				}
-			 
 			 }
 			else
 			{
-
 				if (found_eq(head->arg[i]))
 				{
 					envp[src->lastenv++] = head->arg[i];
@@ -296,7 +294,6 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 		}
 	}
 }
-
 
 int		ft_unset(t_node *head, t_source *src, char **envp)
 {

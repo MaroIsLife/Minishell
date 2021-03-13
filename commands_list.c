@@ -13,79 +13,70 @@ char **ft_valide_args(t_node *head, int count)
 	return (varg);
 }
 
-char	*get_env_path(char **envp, t_source *src)
+char	**get_env_path(char **envp, t_source *src)
 {
 	int		i;
-	int		b;
 	char	*s;
-	int		c;
+	char 	**paths;
 
 	i = 0;
-	b = 5;
-	src->tmp = 0;
 	while (envp[i] != NULL)
 	{
 		if (ft_strncmp(envp[i], "PATH", 4) == 0)
 		{
-			printf("Found Path\n");
-			printf("%s\n",strchr(envp[i],'=') + 1);
-			// while (envp[i][b] != '\0')
-			// {
-			// 	src->tmp++;
-			// 	b++;
-			// }
-			// s = malloc((src->tmp + 1) * sizeof(char));
-			// b = 5;
-			// src->tmp = 0;
-			// while (envp[i][b] != '\n' && envp[i][b] != '\0')
-			// {
-			// 	s[src->tmp++] = envp[i][b];
-			// 	b++;
-			// }
-			// s[src->tmp] = '\0';
-			// printf("%c %d\n",envp[i][b - 1],b);
-			// src->tmp = 0;
-			// return(s);
+			s = strchr(envp[i],'=') + 1; // SHOULD BE RECODED
+			// s = ft_strjoin(src->pwd, s);
+			// printf("%s\n",s);
+			paths = ft_split_normal(s, ':');
+			return(paths);
 		}
 		i++;
 	}
 	return (0);
 }
 
-void	find_path(char **envp, t_source *src)
+char	*get_correct_path(char **s, char **varg)
 {
-	char	*s;
-	char	**paths;
+	struct	stat sb;
+	char	*tmp;
+	char	*tmp2;
+	int		i; 
 
-	s = get_env_path(envp, src);
-	// printf("%s\n",s);
-	paths = ft_split_normal(s, ':');
-	
-	int i = 0;
-
-	// while (paths[i] != NULL)
-	// {
-	// 	printf("%s\n",paths[i++]);
-	// }
-	
-
+	i = 0;
+	while (s[i] != NULL)
+	{
+		tmp = ft_strjoin(s[i], "/");
+		tmp2 = ft_strjoin(tmp, varg[0]);
+		free(tmp);
+		if (stat(tmp2, &sb) != -1)
+			return (tmp2);
+		else 
+			free(tmp2);
+		i++;
+	}
+	return (0);
 }
 
-void    ft_execute (t_node *head, t_source *src, char **envp)
+void    ft_execute(t_node *head, t_source *src, char **envp)
 {
-	int id;
-	id = fork ();
-	char **varg;
-	varg = ft_valide_args(head, src->count);
-	// int i = 0;
-	// while (varg[i])
-	//     puts(varg[i++]);
-	find_path(envp, src);
-	if (id == 0)
-		execve(ft_strjoin("/bin/", varg[0]),varg, NULL);
-	else
-		wait(&id);
+	char	**s;
+	char	*path;
+	char	**varg;
 
+	varg = ft_valide_args(head, src->count);
+	s = get_env_path(envp, src);
+	path = get_correct_path(s, varg); // We should also add current PWD
+
+	// printf("%s\n",path);
+	
+	if (path != 0)
+	{
+		g_id = fork();
+		if (g_id == 0)
+			execve(ft_strjoin(path, varg[0]),varg, NULL);
+		else
+			wait(&g_id);
+	}
 }
 
 void command_list(t_node *head, t_source *src, char **envp)
