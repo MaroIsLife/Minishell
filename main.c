@@ -10,32 +10,34 @@ void clearScreen()
   write(1, "\e[1;1H\e[2J", 10);
 }
 
-void	get_user_env(char **envp, t_source *src)
+char	*get_x_env(char **envp, t_source *src, char *envv_name)
 {
-	int i;
-	int b;
-	int c;
+	int 	i;
+	int		b;
+	int		c;
+	char	*s;
 
 	b = 0;
 	c = 0;
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(envp[i], "USER", 4) == 0)
+		if (ft_strncmp(envp[i], envv_name, ft_strlen(envv_name)) == 0)
 		{
-			while (envp[i][b + 5] != '\0')
+			while (envp[i][b + ft_strlen(envv_name) + 1] != '\0')
 				b++;
-			src->user = malloc((b + 1) * sizeof(char));
+			s = malloc((b + 1) * sizeof(char));
 			b = 5;
 			while (envp[i][b] != '\0')
 			{
-				src->user[c++] = envp[i][b++];
+				s[c++] = envp[i][b++];
 			}
-			src->user[c] = '\0';
-			break ;
+			s[c] = '\0';
+			return (s);
 		}
 		i++;
 	}
+	return (0);
 }
 
 void init(t_source *src)
@@ -80,7 +82,8 @@ void	ms_loop(t_source *src, char **envp)
 	t_node *first;
 	char **pipe;
 	init_env(src,envp);
-	get_user_env(envp, src); // This Retrieves the USER's logname and stores it in src->user
+	src->user = get_x_env(envp, src, "USER");  // This Retrieves the USER's logname and stores it in src->user ALLOCATED
+	src->pwd = get_x_env(envp, src, "PWD");
 	while(1)
 	{
 		print_prompt1();
@@ -97,7 +100,6 @@ void	ms_loop(t_source *src, char **envp)
 			exit(0);
 		if (ft_strncmp(cmd,"clear",5) == 0)
 			clearScreen();
-			// system("clear");
 	
 		init(src); // MOVE INIT() TO WHILE PIPE != NULL??
 		pipe = ft_split(cmd,';', src);
@@ -135,8 +137,6 @@ void	ms_loop(t_source *src, char **envp)
 			}	
 			c++;
 		}
-
-
 		//Use Stat to find Paths and get the paths from Environement
 		//
 
@@ -186,6 +186,7 @@ void	ms_loop(t_source *src, char **envp)
 int     main(int argc, char **argv, char **envp)
 {
 	t_source src;
+	g_id = 2;
 	// clear();
 	ms_loop(&src, envp);
 

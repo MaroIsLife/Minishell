@@ -27,6 +27,8 @@ typedef struct	s_source
 	char	*user; // Contains User name
 	int		c;
 	int		npipe;
+	char	*pwd;
+	int		forkid; // fork ID to know if we're in Parent or Child process
 	char 	*export[1024];
 	char 	*re;
 	int		re_b;
@@ -35,6 +37,7 @@ typedef struct	s_source
 	int		ra_b;
 	int		lastexp;
 	int 	count;
+	int		return_value;
 }				t_source;
 
 typedef struct s_pipe {
@@ -52,7 +55,7 @@ typedef struct s_node {
 }   t_node;
 
 
-int g_return;
+int	g_id;
 
 
 //Parsing
