@@ -15,7 +15,7 @@
 
 typedef struct	s_source
 {
-	int		cmdlen;
+	int		cmdlen; // Contains input's length without counting \n
 	int		isPipe;
 	int		offset;
 	int		dquotes;
@@ -24,14 +24,14 @@ typedef struct	s_source
 	int		lastenv;
 	int		foundpipe;
 	int		founderror;
-	char	*user;
+	char	*user; // Contains User name
 	int		c;
 	int		npipe;
-	int		dollar;
 	char 	*export[1024];
 	char 	*re;
 	int		re_b;
 	char	*ra;
+	int		tmp; // Temp Variable to use on anything to avoid norminette
 	int		ra_b;
 	int		lastexp;
 	int 	count;
@@ -68,7 +68,7 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i);
 int		get_env_value_arg(char *s, char **envp, t_source *src, int i);
 int		find_equal_length(char **envp,int c, int b);
 
-// char		**ft_split_normal(char const *s, char c);
+char	**ft_split_normal(char *s, char c);
 char	**ft_split(char *s, char c, t_source *src);
 void	clear();
 void	print_prompt1();
