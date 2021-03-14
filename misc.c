@@ -1,9 +1,5 @@
 #include "minishell.h"
 
-void clear()
-{
-    system("clear");
-}
 
 void    print_prompt1()
 {

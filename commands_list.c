@@ -24,9 +24,7 @@ char	**get_env_path(char **envp, t_source *src)
 	{
 		if (ft_strncmp(envp[i], "PATH", 4) == 0)
 		{
-			s = strchr(envp[i],'=') + 1; // SHOULD BE RECODED
-			// s = ft_strjoin(src->pwd, s);
-			// printf("%s\n",s);
+			s = ft_strchr(envp[i],'=') + 1; // SHOULD BE RECODED
 			paths = ft_split_normal(s, ':');
 			return(paths);
 		}
@@ -61,22 +59,31 @@ void    ft_execute(t_node *head, t_source *src, char **envp)
 {
 	char	**s;
 	char	*path;
+	static int	i;
 	char	**varg;
 
 	varg = ft_valide_args(head, src->count);
 	s = get_env_path(envp, src);
 	path = get_correct_path(s, varg); // We should also add current PWD
-
-	// printf("%s\n",path);
 	
+	i = 2;
+	// STRCHR SHOULD BE PROTETED
+	// if (ft_strncmp(ft_strrchr(path,'/') + 1, "bash", sizeof("bash")) == 0)
+	// 	set_x_env(envp, src, "SHLVL", ft_itoa(++i));
 	if (path != 0)
 	{
 		g_id = fork();
 		if (g_id == 0)
-			execve(ft_strjoin(path, varg[0]),varg, NULL);
+		{
+			// signal(SIGINT,SIG_DFL);
+			// signal(SIGQUIT,SIG_DFL);
+			execve(path ,&varg[0], envp);
+		}
 		else
 			wait(&g_id);
 	}
+	else 
+		printf("bash: %s: command not found\n",varg[0]);
 }
 
 void command_list(t_node *head, t_source *src, char **envp)

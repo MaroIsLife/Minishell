@@ -99,4 +99,8 @@ void	ft_signal();
 void	handler(int c);
 void	handler2(int c);
 
+
+//Utils
+char	*get_x_env(char **envp, t_source *src, char *envv_name);
+void	set_x_env(char **envp, t_source *src, char *envv_name, char *value);
 #endif

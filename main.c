@@ -5,7 +5,7 @@
 # include <string.h>
 # include "minishell.h"
 
-void clearScreen()
+void	clearScreen()
 {
   write(1, "\e[1;1H\e[2J", 10);
 }
@@ -22,25 +22,39 @@ char	*get_x_env(char **envp, t_source *src, char *envv_name)
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(envp[i], envv_name, ft_strlen(envv_name)) == 0)
-		{
-			while (envp[i][b + ft_strlen(envv_name) + 1] != '\0')
-				b++;
-			s = malloc((b + 1) * sizeof(char));
-			b = 5;
-			while (envp[i][b] != '\0')
-			{
-				s[c++] = envp[i][b++];
-			}
-			s[c] = '\0';
-			return (s);
-		}
+		if (ft_strncmp(envp[i], envv_name, ft_strlen(envv_name)) == 0 && envp[i][ft_strlen(envv_name)] == '=')
+			return (ft_strrchr(envp[i],'=') + 1);
 		i++;
 	}
 	return (0);
 }
+void	set_x_env(char **envp, t_source *src, char *envv_name, char *value)
+{
+	int 	i;
+	int		b;
+	int		c;
+	char	*s;
 
-void init(t_source *src)
+	b = 0;
+	c = 0;
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		if (ft_strncmp(envp[i], envv_name, ft_strlen(envv_name)) == 0 && envp[i][ft_strlen(envv_name)] == '=')
+		{
+			while (envp[i][c] != '=' && envp[i][c] != '\0')
+				c++;
+			c++;
+			while (value[b] != '\0')
+				envp[i][c++] = value[b++];
+			envp[i][c] = '\0';
+			break ;
+		}
+		i++;
+	}
+}
+
+void	init(t_source *src)
 {
 	src->founderror = 0;
 	src->offset = 0;
@@ -75,21 +89,23 @@ void init_env(t_source *src,char **envp)
 
 void	ms_loop(t_source *src, char **envp)
 {
-	char *cmd;
-	int count;
-	int i = 0;
-	t_node *head;
-	t_node *first;
-	char **pipe;
+	char	*cmd;
+	int		count;
+	int		i = 0;
+	t_node	*head;
+	t_node	*first;
+	char	**pipe;
+
 	init_env(src,envp);
-	src->user = get_x_env(envp, src, "USER");  // This Retrieves the USER's logname and stores it in src->user ALLOCATED
+	src->user = get_x_env(envp, src, "USER");  // This Retrieves the USER's logname and stores it in src->user NOT ALLOCATED
 	src->pwd = get_x_env(envp, src, "PWD");
+	set_x_env(envp, src, "TESST", "test");
+	print_prompt1();
 	while(1)
 	{
-		print_prompt1();
 		// printf("\U0001F600"); //Useless Emoji
 		signal(SIGINT,handler); // ^C
-		// signal(SIGQUIT,handler2); // ^/
+		// signal(SIGQUIT,handler); // ^/
 		cmd = read_line();
 		if (cmd == NULL) // ^D
 		{
@@ -98,12 +114,12 @@ void	ms_loop(t_source *src, char **envp)
 		}
 		if (ft_strncmp(cmd,"exit",4) == 0)
 			exit(0);
-		if (ft_strncmp(cmd,"clear",5) == 0)
-			clearScreen();
+		// if (ft_strncmp(cmd,"clear",5) == 0)
+		// 	clearScreen();
 	
 		init(src); // MOVE INIT() TO WHILE PIPE != NULL??
 		pipe = ft_split(cmd,';', src);
-		int c = 0;
+		int c;
 
 		c = 0;
 		while (pipe[c] != NULL)
@@ -180,6 +196,8 @@ void	ms_loop(t_source *src, char **envp)
 		// free(cmd);
 		// free(argument);
 		// free(token);
+		write(1,"\r",1);
+		print_prompt1();
 	}
 }
 
