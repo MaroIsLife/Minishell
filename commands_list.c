@@ -55,7 +55,7 @@ char	*get_correct_path(char **s, char **varg)
 	return (0);
 }
 
-void    ft_execute(t_node *head, t_source *src, char **envp)
+int    ft_execute(t_node *head, t_source *src, char **envp)
 {
 	char	**s;
 	char	*path;
@@ -67,6 +67,11 @@ void    ft_execute(t_node *head, t_source *src, char **envp)
 		path = head->cmd;
 	else 
 	{
+		if (get_x_env(envp, src, "PATH") == 0)
+		{
+			printf("bash: %s: command not found\n",head->cmd);
+			return(0);
+		}
 		s = get_env_path(envp, src);
 		path = get_correct_path(s, varg); // We should also add current PWD
 	}
@@ -74,8 +79,6 @@ void    ft_execute(t_node *head, t_source *src, char **envp)
 	// STRCHR BELOW SHOULD BE PROCTED 
 	// if (ft_strncmp(ft_strrchr(path,'/') + 1, "bash", sizeof("bash")) == 0)
 	// 	set_x_env(envp, src, "SHLVL", ft_itoa(i++));
-
-	// printf("%s\n",path);
 
 	if (path != 0)
 	{
@@ -93,6 +96,7 @@ void    ft_execute(t_node *head, t_source *src, char **envp)
 	}
 	else 
 		printf("bash: %s: command not found\n",varg[0]);
+	return (0);	
 }
 
 void command_list(t_node *head, t_source *src, char **envp)
