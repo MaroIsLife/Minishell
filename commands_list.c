@@ -62,7 +62,6 @@ void    ft_execute(t_node *head, t_source *src, char **envp)
 	static int	i;
 	char	**varg;
 
-		
 	varg = ft_valide_args(head, src->count);
 	if (head->cmd[0] == '/' || (head->cmd[0] == '.' && head->cmd[1] == '/'))
 		path = head->cmd;
@@ -74,9 +73,9 @@ void    ft_execute(t_node *head, t_source *src, char **envp)
 	i = 2;
 	// STRCHR BELOW SHOULD BE PROCTED 
 	// if (ft_strncmp(ft_strrchr(path,'/') + 1, "bash", sizeof("bash")) == 0)
-	// 	set_x_env(envp, src, "SHLVL", ft_itoa(++i));
+	// 	set_x_env(envp, src, "SHLVL", ft_itoa(i++));
 
-	printf("%s\n",path);
+	// printf("%s\n",path);
 
 	if (path != 0)
 	{
@@ -110,6 +109,8 @@ void command_list(t_node *head, t_source *src, char **envp)
 		ft_pwd();
 	else if (ft_strncmp(head->cmd, "unset", 5) == 0 && head->cmd[5] == '\0')
 		ft_unset(head, src, envp);
+	else if (head->cmd[0] == '\0')
+		;
 	else
 		ft_execute(head, src, envp);
 }
