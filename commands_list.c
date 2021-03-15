@@ -22,7 +22,7 @@ char	**get_env_path(char **envp, t_source *src)
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(envp[i], "PATH", 4) == 0)
+		if (ft_strncmp(envp[i], "PATH", 4) == 0 && envp[i][4] == '=')
 		{
 			s = ft_strchr(envp[i],'=') + 1; // SHOULD BE RECODED
 			paths = ft_split_normal(s, ':');
@@ -62,22 +62,30 @@ void    ft_execute(t_node *head, t_source *src, char **envp)
 	static int	i;
 	char	**varg;
 
+		
 	varg = ft_valide_args(head, src->count);
-	s = get_env_path(envp, src);
-	path = get_correct_path(s, varg); // We should also add current PWD
-	
+	if (head->cmd[0] == '/' || (head->cmd[0] == '.' && head->cmd[1] == '/'))
+		path = head->cmd;
+	else 
+	{
+		s = get_env_path(envp, src);
+		path = get_correct_path(s, varg); // We should also add current PWD
+	}
 	i = 2;
-	// STRCHR SHOULD BE PROTETED
+	// STRCHR BELOW SHOULD BE PROCTED 
 	// if (ft_strncmp(ft_strrchr(path,'/') + 1, "bash", sizeof("bash")) == 0)
 	// 	set_x_env(envp, src, "SHLVL", ft_itoa(++i));
+
 	if (path != 0)
 	{
-		g_id = fork();
-		if (g_id == 0)
+		if ((g_id = fork()) == 0)
 		{
-			// signal(SIGINT,SIG_DFL);
-			// signal(SIGQUIT,SIG_DFL);
-			execve(path ,&varg[0], envp);
+			signal(SIGINT,SIG_DFL);
+			if (execve(path ,&varg[0], envp) == -1)
+			{
+				printf("bash: %s: %s\n",varg[0], strerror(errno));
+				exit(1);
+			}
 		}
 		else
 			wait(&g_id);
@@ -88,17 +96,17 @@ void    ft_execute(t_node *head, t_source *src, char **envp)
 
 void command_list(t_node *head, t_source *src, char **envp)
 {
-	if (ft_strncmp(head->cmd, "cd", 2) == 0)
+	if (ft_strncmp(head->cmd, "cd", 2) == 0 && head->cmd[2] == '\0')
 		ft_cd(head, where_home(envp),envp);
-	else if (ft_strncmp(head->cmd,"echo",4) == 0)
+	else if (ft_strncmp(head->cmd,"echo",4) == 0 && head->cmd[4] == '\0')
 		ft_echo(head, src);
-	else if (ft_strncmp(head->cmd, "env", 3) == 0)
+	else if (ft_strncmp(head->cmd, "env", 3) == 0 && head->cmd[3] == '\0')
 		print_env(head, src, envp);
-	else if (ft_strncmp(head->cmd, "export", 6) == 0)
+	else if (ft_strncmp(head->cmd, "export", 6) == 0 && head->cmd[6] == '\0')
 		ft_export(head, src, envp);
-	else if (ft_strncmp(head->cmd, "pwd", 3) == 0)
+	else if (ft_strncmp(head->cmd, "pwd", 3) == 0 && head->cmd[3] == '\0')
 		ft_pwd();
-	else if (ft_strncmp(head->cmd, "unset", 5) == 0)
+	else if (ft_strncmp(head->cmd, "unset", 5) == 0 && head->cmd[5] == '\0')
 		ft_unset(head, src, envp);
 	else
 		ft_execute(head, src, envp);
