@@ -5,6 +5,7 @@ void handler(int c)
 
 	if (g_id != 0)
 	{
+		write(1,"\b\b  \b\b",6);
 		write(1,"\r\n",2);
 		print_prompt1();
 	}

@@ -58,15 +58,13 @@ void	init(t_source *src)
 {
 	src->founderror = 0;
 	src->offset = 0;
-	// g_source.cmdlen = 0;
-	// g_source.isPipe = 0;
 	src->dquotes = 0;
 	src->squotes = 0;
 	src->aslash = 0;
 	src->offset = 0;
 }
 
-void init_env(t_source *src,char **envp)
+void	init_env(t_source *src,char **envp)
 {
 	int i;
 
@@ -196,7 +194,8 @@ void	ms_loop(t_source *src, char **envp)
 		// free(cmd);
 		// free(argument);
 		// free(token);
-		write(1,"\r",1);
+		// write(1,"\b\b  \b\b",6);
+		// write(1,"\r",1);
 		print_prompt1();
 	}
 }

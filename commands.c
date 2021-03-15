@@ -9,7 +9,7 @@ void    ft_echo(t_node *head, t_source *src)
 	i = 0;
 	while (head->arg[i] != NULL)
 	{
-		if (ft_strncmp(head->arg[0], "-n", 2) == 0)
+		if (ft_strncmp(head->arg[0], "-n", 2) == 0 && head->arg[0][2] == '\0')
 		{
 			i++;
 			newline = 1;
@@ -38,7 +38,6 @@ void	print_env(t_node *head, t_source *src, char **envp)
 			ft_putstr_fd("\n", 1);
 		i++;
 	}
-
 }
 
 char	*where_home(char **envp)
