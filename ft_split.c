@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "../gnl/get_next_line.h"
-#include "../minishell.h"
+#include "libft/libft.h"
+#include "gnl/get_next_line.h"
+#include "minishell.h"
 
 int		delimc(char *s, char c, t_source *src)
 {
