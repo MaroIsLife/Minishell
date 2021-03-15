@@ -76,6 +76,8 @@ void    ft_execute(t_node *head, t_source *src, char **envp)
 	// if (ft_strncmp(ft_strrchr(path,'/') + 1, "bash", sizeof("bash")) == 0)
 	// 	set_x_env(envp, src, "SHLVL", ft_itoa(++i));
 
+	printf("%s\n",path);
+
 	if (path != 0)
 	{
 		if ((g_id = fork()) == 0)
