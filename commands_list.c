@@ -1,5 +1,18 @@
 #include "minishell.h"
-char **ft_valide_args(t_node *head, int count)
+
+
+void	red_open(char *filename)
+{
+	int fd;
+	int fd2;
+
+	fd = open(filename, O_WRONLY | O_CREAT, 0777);
+	if (fd == -1)
+		strerror(errno);
+	dup2(fd, 1);
+	close(fd);
+}
+char	**ft_valide_args(t_node *head, int count)
 {
 	char **varg = malloc (sizeof(char*) * (count + 2));
 	int i = 1;
@@ -62,7 +75,7 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 	static int	i;
 	char	**varg;
 
-	varg = ft_valide_args(head, src->count);
+  	varg = ft_valide_args(head, src->count);
 	if (head->cmd[0] == '/' || (head->cmd[0] == '.' && head->cmd[1] == '/'))
 		path = head->cmd;
 	else 
@@ -75,16 +88,13 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 		s = get_env_path(envp, src);
 		path = get_correct_path(s, varg); // We should also add current PWD
 	}
-	i = 2;
-	// STRCHR BELOW SHOULD BE PROCTED 
-	// if (ft_strncmp(ft_strrchr(path,'/') + 1, "bash", sizeof("bash")) == 0)
-	// 	set_x_env(envp, src, "SHLVL", ft_itoa(i++));
 
 	if (path != 0)
 	{
 		if ((g_id = fork()) == 0)
 		{
 			signal(SIGINT,SIG_DFL);
+			// red_open("test.txt");
 			if (execve(path ,&varg[0], envp) == -1)
 			{
 				printf("bash: %s: %s\n",varg[0], strerror(errno));

@@ -22,14 +22,18 @@ typedef struct	s_source
 	int		squotes;
 	int		aslash;
 	int		lastenv;
-	int		foundpipe;
-	int		founderror;
+	char 	**redsplit;
+	int		foundpipe; // Found Pipe
+	int		founderror; // Found Error
+	int		foundred; // Found Redirection
 	char	*user; // Contains User name
 	int		c;
-	int		npipe;
+	int		nred; // N Redireciton
+	int		npipe; // N pipe
 	char	*pwd;
+	char	**filename;
 	int		forkid; // fork ID to know if we're in Parent or Child process
-	char 	*export[1024];
+	char 	*export[1024]; // Should be Malloced !!!!!
 	char 	*re;
 	int		re_b;
 	char	*ra;
@@ -72,7 +76,7 @@ int		get_env_value_arg(char *s, char **envp, t_source *src, int i);
 int		find_equal_length(char **envp,int c, int b);
 
 char	**ft_split_normal(char *s, char c);
-char	**ft_split(char *s, char c, t_source *src);
+char	**my_ft_split(char *s, char c, t_source *src);
 void	clear();
 void	print_prompt1();
 void	print_prompt2();

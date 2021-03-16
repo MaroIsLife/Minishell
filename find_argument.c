@@ -10,7 +10,6 @@ int		arg_if_space(char *s,int *i, t_source *src)
 	return (*i);
 }
 
-
 int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 {
 	int i;

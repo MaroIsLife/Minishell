@@ -16,7 +16,7 @@ while (cmdlen != 0)
 		printf("Error: %s\n",strerror(errno));
 		exit(1);
 	}
-	strcpy(cmd,buf);
+	strcpy(cmd, buf);
 	if (cmd == NULL)
 	{
 		printf("Error: %s\n",strerror(errno));
