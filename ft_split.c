@@ -37,7 +37,7 @@ int		delimc(char *s, char c, t_source *src)
 	return (n);
 }
 
-char		**ft_split(char *s, char c, t_source *src)
+char		**my_ft_split(char *s, char c, t_source *src)
 {
 	int		j;
 	int		len;

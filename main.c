@@ -116,7 +116,7 @@ void	ms_loop(t_source *src, char **envp)
 		// 	clearScreen();
 	
 		init(src); // MOVE INIT() TO WHILE PIPE != NULL??
-		pipe = ft_split(cmd,';', src);
+		pipe = my_ft_split(cmd,';', src);
 		int c;
 
 		c = 0;
@@ -128,6 +128,23 @@ void	ms_loop(t_source *src, char **envp)
 			head->pipe->next = NULL;
 			first = head;
 			find_for_split(pipe[c], src);
+			char **test;
+			if (src->foundred == 1)
+				 src->redsplit = my_ft_split(pipe[c], '>', src);
+
+
+			i = 0;
+			// if (src->foundred == 1)
+			// {
+			// 	while (test[i] != NULL)
+			// 	{
+			// 		printf("%d %s",i,test[i]);
+			// 		i++;
+			// 	}
+			// }
+					
+			
+			
 			src->dquotes = 0;
 			src->squotes = 0;
 			i = i^i;
@@ -137,7 +154,8 @@ void	ms_loop(t_source *src, char **envp)
 			src->offset = 0;
 			if (src->foundpipe == 0)
 				command_list(head, src, envp);
-			else {
+			else 
+			{
 					int id = fork();
 					int ge_id;
 					if (id == 0)
@@ -159,6 +177,8 @@ void	ms_loop(t_source *src, char **envp)
 	// then env
 	//echo $HOMEHA
 
+
+		//echo hello > abc echo haha > abd (TRY IN BASH NOT ZSH)
 
 
 	//	echo 'hello         a'  bye

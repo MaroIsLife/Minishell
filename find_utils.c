@@ -78,7 +78,9 @@ void	find_for_split(char *cmd, t_source *src)
 	i = 0;
 	src->foundpipe = 0;
 	src->npipe = 0;
+	src->nred = 0;
 	src->dquotes = 0;
+	src->foundred = 0;
 	src->squotes = 0;
 
 	while (cmd[i] != '\0')
@@ -89,11 +91,11 @@ void	find_for_split(char *cmd, t_source *src)
 			src->foundpipe = 1;
 			src->npipe++;
 		}
-		// else if (cmd[i] == '>' && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
-		// {
-		// 	src->foundpipe = 1;
-		// 	src->npipe++;
-		// }
+		else if (cmd[i] == '>' && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
+		{
+			src->foundred = 1;
+			src->nred++;
+		}
 		i++;
 	}
 	if (src->dquotes == 1 || src->squotes == 1 || src->aslash == 1)
