@@ -122,6 +122,7 @@ void	ms_loop(t_source *src, char **envp)
 		c = 0;
 		while (pipe[c] != NULL)
 		{
+
 			head = (t_node *) malloc(sizeof(t_node));
 			head->next = NULL;
 			head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
@@ -130,8 +131,12 @@ void	ms_loop(t_source *src, char **envp)
 			find_for_split(pipe[c], src);
 			char **test;
 			if (src->foundred == 1)
-				 src->redsplit = my_ft_split(pipe[c], '>', src);
-
+			{
+				head->first_filename = (t_filename *) malloc(sizeof(t_filename));
+				head->first_filename->next = NULL;
+				src->p = head->first_filename;
+				// src->redsplit = my_ft_split(pipe[c], '>', src);
+			}
 
 			i = 0;
 			// if (src->foundred == 1)
@@ -228,4 +233,4 @@ int     main(int argc, char **argv, char **envp)
 	ms_loop(&src, envp);
 
 	return (0);
-} 
+}

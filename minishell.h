@@ -13,6 +13,10 @@
 # include "gnl/get_next_line.h"
 # include "libft/libft.h"
 
+typedef struct s_filename {
+	char				*filename;
+    struct s_filename	*next;
+}	t_filename;
 typedef struct	s_source
 {
 	int		cmdlen; // Contains input's length without counting \n
@@ -31,7 +35,6 @@ typedef struct	s_source
 	int		nred; // N Redireciton
 	int		npipe; // N pipe
 	char	*pwd;
-	char	**filename;
 	int		forkid; // fork ID to know if we're in Parent or Child process
 	char 	*export[1024]; // Should be Malloced !!!!!
 	char 	*re;
@@ -42,6 +45,7 @@ typedef struct	s_source
 	int		lastexp;
 	int 	count;
 	int		return_value;
+	t_filename	*p;
 }				t_source;
 
 typedef struct s_pipe {
@@ -50,11 +54,14 @@ typedef struct s_pipe {
     struct s_pipe	*next;
 }	t_pipe;
 
+
 typedef struct s_node {
     char			*cmd;
 	char			**arg;
 	int				number;
+	char			*filename;
 	t_pipe			*pipe;
+	t_filename		*first_filename;
     struct s_node	*next;
 }   t_node;
 
@@ -65,7 +72,7 @@ int	g_id;
 //Parsing
 void	init_parse(t_source *src, t_node *head, char **envp, char **pipe);
 char	*find_command(char *s, int offset, t_source *src, char **envp);
-char	*find_argument(char *s, int offset, t_source *src, char **envp);
+char	*find_argument(char *s, t_node *head, t_source *src, char **envp);
 int		count_argument(char *s, int offset, t_source *src);
 void	find_for_split(char *cmd, t_source *src);
 int 	finding_quotes(char *s, int i, t_source *src);

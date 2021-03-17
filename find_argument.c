@@ -13,10 +13,12 @@ int		arg_if_space(char *s,int *i, t_source *src)
 int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 {
 	int i;
+	int jump;
 	int count;
 
 	i = src->offset - 1;
 	count = 0;
+	jump = 0;
 	if (s[0] == '\n')
 		return 0;
 	while (s[i] != '\0')
@@ -39,7 +41,15 @@ int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 				return (count);
 			if (s[i] == '\0' || s[i] == '\n')
 				return (count);
-			count++;
+			if (s[i] != '>' && jump == 0)
+				count++;
+			else
+				jump = 0;
+		}
+		else if (s[i] == '>')
+		{
+			jump = 1;
+			i++;
 		}
 		else
 			i++;
@@ -47,14 +57,43 @@ int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 	return(count);
 }
 
-
-char	*find_argument(char *s, int offset, t_source *src, char **envp)
+char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 {
-	int i;
-	char *re;
+	int			b;
+	static int 	allocate;
+
+	(*i)++;
+	b = 0;
+	if (allocate == 1)
+	{
+		src->p->next = (t_filename *) malloc(sizeof(t_filename));
+		src->p->next->next = NULL;
+		src->p = src->p->next;
+	}
+	if (s[*i] == '>')
+		printf("another >\n"); //Variable of double Red should be 1 and *i should be incremented
+
+	while (s[*i] == ' ')
+		(*i)++;	
+	b = *i;
+	while (s[b] != ' ' && s[b] != '\0' && s[b] != '\n')
+		b++;
+	src->p->filename = malloc((b + 1) * sizeof(char));
+	b = 0;
+	while (s[*i] != ' ' && s[*i] != '\0' && s[*i] != '\n')
+		src->p->filename[b++] = s[(*i)++];
+	src->p->filename[b] = '\0';
+	allocate = 1;
+	return (0);
+}
+
+char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
+{
+	int		i;
+	char	*re;
 
 
-	i = offset;
+	i = src->offset;
 	while (s[i] == ' ')
 		i++;
 	src->re = malloc((1024) * sizeof(char));
@@ -83,14 +122,20 @@ char	*find_argument(char *s, int offset, t_source *src, char **envp)
 			i = get_env_value_arg(s, envp, src, i) - 1;
 		else if (s[i] == '\\' && src->aslash == 0)
 		{
-			offset = finding_aslash(s,i, src);
-			if (src->aslash == 0 && offset != 1)
+			src->tmp = finding_aslash(s,i, src);
+			if (src->aslash == 0 && src->tmp != 1)
 			{
 				src->re[src->re_b++] = s[i];
-				offset = 0;
+				src->tmp = 0;
 			}
 		}
-		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\' || s[i] == ';' || s[i] == '|' || s[i] == '$') && src->aslash == 1)
+		else if (s[i] == '>' && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
+		{
+			find_file_name(&i, s, src, head);
+			// printf("%s\n",src->p->filename);
+			continue ;
+		}
+		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\' || s[i] == ';' || s[i] == '|' || s[i] == '$' || s[i] == '>' || s[i] == '<') && src->aslash == 1)
 		{
 			src->re[src->re_b++] = s[i];
 			src->aslash = 0;
