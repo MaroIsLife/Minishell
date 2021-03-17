@@ -19,66 +19,36 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 	int count;
 	t_pipe *p;
 
-	if (src->foundred == 0)
-	{
+	// if (src->foundred == 0)
+	// {
 		head->cmd = find_command(pipe[src->c], src->offset, src, envp);
-		count = count_argument(pipe[src->c],src->offset,src);
+		count = count_argument(pipe[src->c], src->offset, src);
 		src->count = count;
 		src->dquotes = 0;
 		src->squotes = 0;
 		head->arg = malloc((count + 1) * sizeof(char *));
 		while (i < count)
 		{
-			head->arg[i] = find_argument(pipe[src->c], src->offset, src, envp);
+			head->arg[i] = find_argument(pipe[src->c], head, src, envp);
+		if (head->arg[i][0] != '\0')
 			i++;
 		}
 		head->arg[i] = NULL;
-	}
-	// else 
-	// {
-	// 	count = 0;
-	// 	head->cmd = find_command(src->redsplit[0], src->offset, src, envp);
-	// 	i = 0;
-	// 	while (src->redsplit[i] != NULL)
-	// 	{
-	// 		count = count + count_argument(src->redsplit[i], src->offset, src);
-	// 		i++;
-	// 	}
-	// 	i = 0;
-	// 	head->arg = malloc((count + 1) * sizeof(char *));
-	// 	// head->arg[i++] = find_argument(src->redsplit[0], src->offset, src, envp);
-	// 	// printf("%s\n",head->arg[0]);
-	// 	c = 0;
-	// 	printf("%d\n",count);
-	// 	while(src->redsplit[c] != NULL)
-	// 	{
-	// 		head->arg[i] = find_argument(src->redsplit[c], find_space(src, c), src, envp);
-	// 		printf("%s\n",head->arg[i]);
-	// 		i++;
-	// 		c++;
-	// 	}
-	// }
 	i = 0;
-	// printf("Found Red: %d, N: %d\n",src->foundred,src->nred);
-	// while (head->arg[i] != NULL)
-	// {
-	// 	printf("arg %d : %s\n", i, head->arg[i]);
-	// 	i++;
-	// }
 	p = head->pipe;
 	if (src->foundpipe == 1)
 	{
 		c = 0;
 		while (c < src->npipe)
 		{
-			src->offset = src->offset + 2;
+			src->offset = src->offset + 2; //Whie pipe[c][offset] == '|' offset ++    try putting two pipes near eachother
 			p->cmd = find_command(pipe[src->c], src->offset, src, envp);
 			count = count_argument(pipe[src->c],src->offset,src);
 			i = 0;
 			p->arg = malloc((count + 1) * sizeof(char *));
 			while (i < count)
 			{
-				p->arg[i] = find_argument(pipe[src->c], src->offset, src, envp);
+				p->arg[i] = find_argument(pipe[src->c], head, src, envp);
 				i++;
 			}
 			p->arg[i] = NULL;
