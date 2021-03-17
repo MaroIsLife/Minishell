@@ -110,7 +110,7 @@ void	ms_loop(t_source *src, char **envp)
 			write(1,"exit\n",6);
 			exit(0);
 		}
-		if (ft_strncmp(cmd,"exit",4) == 0)
+		if (ft_strncmp(cmd, "exit", 4) == 0)
 			exit(0);
 		// if (ft_strncmp(cmd,"clear",5) == 0)
 		// 	clearScreen();
