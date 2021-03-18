@@ -135,7 +135,7 @@ void 	ft_sort(t_source *src)
 			if (src->export[i][0] == src->export[j][0])
 			{
 				n = 1;
-				while (src->export[i][n] != '\0')
+				while (src->export[j][n] != '\0' && src->export[i][n] != '\0')
 				{
 					if (src->export[i][n] > src->export[j][n])
 					{
@@ -257,19 +257,24 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 	{
 		while (head->arg[i] != NULL)
 		{	
-			length = ft_strlen_eq(head->arg[i]);
+			 length = ft_strlen_eq(head->arg[i]);
 			found = ft_search(src,head->arg[i], length);
 			if (found)
 			 {
 				 j = 0;
 				while (src->export[j] != NULL)
 				{
+					length = ft_strlen_eq(src->export[j]);
 					if (ft_strncmp(src->export[j], head->arg[i], length) == 0)
 					{
-						src->export[j] = head->arg[i];
-						replace_env(envp, src, head->arg[i], length);
-						if (j == src->lastexp)
-							src->export[++j] = NULL;
+						if (length < ft_strlen(head->arg[i]))
+						{
+							src->export[j] = head->arg[i];
+							replace_env(envp, src, head->arg[i], length);
+							if (j == src->lastexp)
+								src->export[++j] = NULL;
+						}
+	
 					}
 					j++;
 				}
@@ -285,6 +290,7 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 				}
 				else
 				{
+					// if ()
 					src->export[src->lastexp++] = head->arg[i];
 					src->export[src->lastexp] = NULL;
 				}
