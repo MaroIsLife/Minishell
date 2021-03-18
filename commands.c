@@ -206,14 +206,15 @@ int found_eq(char *src)
 			return(1);
 	return (0);
 }
-int ft_search(t_source *src, char *value, int size)
+int ft_search(t_source *src, char *value)
 {
 	int i;
 
 	i = 0;
 	while (src->export[i] != NULL)
 	{
-		if (ft_strncmp(src->export[i], value, size) == 0)
+		
+		if (ft_strncmp(src->export[i], value,ft_strlen_eq(value)) == 0)
 			return(1);
 		i++;
 	}
@@ -257,8 +258,8 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 	{
 		while (head->arg[i] != NULL)
 		{	
-			 length = ft_strlen_eq(head->arg[i]);
-			found = ft_search(src,head->arg[i], length);
+			//  length = ft_strlen_eq(head->arg[i]);
+			found = ft_search(src,head->arg[i]);
 			if (found)
 			 {
 				 j = 0;

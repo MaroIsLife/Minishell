@@ -231,6 +231,6 @@ int     main(int argc, char **argv, char **envp)
 	g_id = 2;
 	// clear();
 	ms_loop(&src, envp);
-
+	
 	return (0);
 }
