@@ -1,17 +1,22 @@
 #include "minishell.h"
 
-
-void	red_open(char *filename)
+void	red_open(t_node *head)
 {
 	int fd;
 	int fd2;
-
-	fd = open(filename, O_WRONLY | O_CREAT, 0777);
-	if (fd == -1)
-		strerror(errno);
+	t_filename *p;
+	p = head->first_filename;
+	while (p->next != NULL)
+	{
+		fd = open(p->filename, O_WRONLY | O_CREAT, 0777);
+		if (fd == -1)
+			strerror(errno);
+		// close(fd);
+		p = p->next;
+	}
 	dup2(fd, 1);
-	close(fd);
 }
+
 char	**ft_valide_args(t_node *head, int count)
 {
 	char **varg = malloc (sizeof(char*) * (count + 2));
@@ -94,7 +99,8 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 		if ((g_id = fork()) == 0)
 		{
 			signal(SIGINT,SIG_DFL);
-			// red_open("test.txt");
+			if (src->foundred == 1)
+				red_open(head);
 			if (execve(path ,&varg[0], envp) == -1)
 			{
 				printf("bash: %s: %s\n",varg[0], strerror(errno));
@@ -117,10 +123,10 @@ void command_list(t_node *head, t_source *src, char **envp)
 		ft_echo(head, src);
 	else if (ft_strncmp(head->cmd, "env", 3) == 0 && head->cmd[3] == '\0')
 		print_env(head, src, envp);
-	else if (ft_strncmp(head->cmd, "export", 6) == 0 && head->cmd[6] == '\0')
-		ft_export(head, src, envp);
 	else if (ft_strncmp(head->cmd, "pwd", 3) == 0 && head->cmd[3] == '\0')
 		ft_pwd();
+	else if (ft_strncmp(head->cmd, "export", 6) == 0 && head->cmd[6] == '\0')
+		ft_export(head, src, envp);
 	else if (ft_strncmp(head->cmd, "unset", 5) == 0 && head->cmd[5] == '\0')
 		ft_unset(head, src, envp);
 	else if (head->cmd[0] == '\0')
