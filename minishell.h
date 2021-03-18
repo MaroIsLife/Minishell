@@ -26,7 +26,6 @@ typedef struct s_filename {
 typedef struct	s_source
 {
 	int		cmdlen; // Contains input's length without counting \n
-	int		isPipe;
 	int		offset;
 	int		dquotes;
 	int		squotes;

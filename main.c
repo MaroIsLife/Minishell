@@ -157,23 +157,23 @@ void	ms_loop(t_source *src, char **envp)
 			init_parse(src, head, envp, pipe);
 			i = i^i;
 			src->offset = 0;
-			if (src->foundpipe == 0)
-				command_list(head, src, envp);
-			else 
+			if (src->foundred == 0 && src->foundpipe == 0)
+				command_list(head , src,envp);
+			else
 			{
-					int id = fork();
-					int ge_id;
-					if (id == 0)
-					{
-						command_list(head, src, envp);
-					}
-					else 
-					{
-						wait(&ge_id);
-					}
+				int id = fork();
+				int ge_id;
+				if (id == 0)
+				{
+					command_list(head, src, envp);
+					exit(0);
+				}
+				else
+					wait(&ge_id);
 			}	
 			c++;
 		}
+
 		//Use Stat to find Paths and get the paths from Environement
 		//
 
