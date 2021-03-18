@@ -1,11 +1,9 @@
 #include "minishell.h"
-
 int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 {
 	char	*temp;
 	int		b;
 	int		c;
-
 	i = i + 1;
 	b = 0;
 	c = 0;
@@ -33,22 +31,37 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	free(temp);
 	return (i);
 }
-
-char	*find_command(char *s, int offset, t_source *src, char **envp)
+char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 {
 	int i;
 	int start;
-
-	i = offset;
+	int file_found;
+	file_found = 0;
+	i = src->offset;
 	while(s[i] == ' ')
 		i++;
 	start = i;
 	while (s[start] != '\0' && s[start] != '\n')
 	{
 		finding_quotes(s, start, src);
-		if (s[start] == ' ' && src->dquotes == 0 && src->squotes == 0)
+		if (s[start] == '>' || s[start] == '<') // to be changed later
+		{
+			if (s[start + 1] == '>')
+				start = start + 2;
+			else
+				start++;
+			while (s[start] == ' ')
+				start++;
+			while (s[start] != ' ' && s[start] != '\0')
+				start++;
+			file_found = 1;
+		}
+		if (s[start] == ' ' && src->dquotes == 0 && src->squotes == 0 && file_found == 0)
 			break ;
-		start++;
+		else
+			file_found = 0;
+		if (s[start] != '\0')
+			start++;
 	}
 	src->ra_b = 0;
 	// src->ra = malloc((start + 1) * sizeof(char));
@@ -70,6 +83,13 @@ char	*find_command(char *s, int offset, t_source *src, char **envp)
 			src->ra[src->ra_b++] = s[++i];
 		else if (s[i] == '$' && src->squotes == 0 && ft_isalpha(s[i + 1]) == 1 && src->aslash == 0)
 			i = get_env_value_cmd(s, envp, src, i) - 1;
+		else if (s[i] == '>' && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
+		{
+			find_file_name(&i, s, src, head);
+			i++;
+			// printf("%s\n",src->p->filename);
+			continue ;
+		}
 		else if (s[i] == '\\' && src->aslash == 1)
 		{
 			if (s[i + 1] != '\\')

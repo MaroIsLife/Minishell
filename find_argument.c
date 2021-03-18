@@ -1,21 +1,17 @@
 #include "minishell.h"
-
 int		arg_if_space(char *s,int *i, t_source *src)
 {
 	if (s[*i] == ' ' && (src->dquotes == 1 || src->squotes == 1))
 		src->re[src->re_b++] = s[*i];
 	while (s[*i + 1] == ' ' && !(src->dquotes == 0 || src->squotes == 0))
 		(*i)++;
-	
 	return (*i);
 }
-
 int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 {
 	int i;
 	int jump;
 	int count;
-
 	i = src->offset - 1;
 	count = 0;
 	jump = 0;
@@ -56,12 +52,10 @@ int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 	}
 	return(count);
 }
-
 char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 {
 	int			b;
 	static int 	allocate;
-
 	(*i)++;
 	b = 0;
 	if (allocate == 1)
@@ -72,7 +66,6 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 	}
 	if (s[*i] == '>')
 		printf("another >\n"); //Variable of double Red should be 1 and *i should be incremented
-
 	while (s[*i] == ' ')
 		(*i)++;	
 	b = *i;
@@ -86,13 +79,10 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 	allocate = 1;
 	return (0);
 }
-
 char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 {
 	int		i;
 	char	*re;
-
-
 	i = src->offset;
 	while (s[i] == ' ')
 		i++;

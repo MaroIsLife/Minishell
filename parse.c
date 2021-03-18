@@ -21,7 +21,7 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 
 	// if (src->foundred == 0)
 	// {
-		head->cmd = find_command(pipe[src->c], src->offset, src, envp);
+		head->cmd = find_command(pipe[src->c], head, src, envp);
 		count = count_argument(pipe[src->c], src->offset, src);
 		src->count = count;
 		src->dquotes = 0;
@@ -42,8 +42,8 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 		while (c < src->npipe)
 		{
 			src->offset = src->offset + 2; //Whie pipe[c][offset] == '|' offset ++    try putting two pipes near eachother
-			p->cmd = find_command(pipe[src->c], src->offset, src, envp);
-			count = count_argument(pipe[src->c],src->offset,src);
+			p->cmd = find_command(pipe[src->c], head, src, envp);
+			count = count_argument(pipe[src->c], src->offset, src);
 			i = 0;
 			p->arg = malloc((count + 1) * sizeof(char *));
 			while (i < count)
