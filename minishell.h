@@ -17,6 +17,12 @@ typedef struct s_filename {
 	char				*filename;
     struct s_filename	*next;
 }	t_filename;
+
+// typedef struct s_export {
+// 	char				*name;
+// 	char				*value; // With or without =
+//     struct s_export	*next;
+// }	t_export;
 typedef struct	s_source
 {
 	int		cmdlen; // Contains input's length without counting \n
