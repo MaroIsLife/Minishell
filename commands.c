@@ -1,5 +1,5 @@
-#include "minishell.h"
 
+#include "minishell.h"
 void    ft_echo(t_node *head, t_source *src)
 {
 	int i;
@@ -25,9 +25,48 @@ void    ft_echo(t_node *head, t_source *src)
 	if (newline == 0)
 		ft_putstr_fd("\n", 1);
 }
+int ft_strlen_eq(char *src)
+{
+	int i;
+
+	i = -1;
+	while (src[++i])
+		if (src[i]== '=')
+			break ;
+	return (i);
+}
+
+void	replace_env(char **envp, t_source *src, char *value)
+{
+	int i;
+
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		if (ft_strncmp(value, envp[i], ft_strlen_eq(value)) == 0)
+			{
+				envp[i] = value;
+				if (i == src->lastenv)
+					envp[++i] = NULL;
+			}
+		i++;
+	}
+}
+
+int arg_counter(char **src)
+{
+	int i;
+
+	i = 0;
+	while (src[i] != NULL)
+		i++;
+	return (i);
+}
 
 void	print_env(t_node *head, t_source *src, char **envp)
 {
+
+
 	int i;
 
 	i = 0;
@@ -171,6 +210,7 @@ void ft_wr_eq(char *s)
 		}
 	}
 }
+
 void	em_export(t_source *src)
 {
 
@@ -185,153 +225,257 @@ void	em_export(t_source *src)
 			i++;
 		}
 }
-int ft_strlen_eq(char *src)
-{
-	int i;
 
-	i = -1;
-	while (src[++i])
-		if (src[i]== '=')
-			break ;
-	return (i);
-}
 
 int found_eq(char *src)
 {
+	if (src)
+	{
+		int i;
+
+		i = -1;
+		while (src[++i])
+			if (src[i]== '=')
+				return(1);
+	}
+		return (0);
+}
+int ft_search(char **src, char *value)
+{
 	int i;
 
-	i = -1;
-	while (src[++i])
-		if (src[i]== '=')
+	i = 0;
+	while (src[i] != NULL)
+	{
+		
+		if (ft_strncmp(src[i], value,ft_strlen_eq(value)) == 0)
 			return(1);
+		i++;
+	}
 	return (0);
 }
-int ft_search(t_source *src, char *value)
+
+
+int 	check_exsyn(char *src)
+{
+	if (src[0] >= '0' && src[0] <= '9')
+		return (1);
+	return (0);
+}
+
+void 	ft_expn_add(char *add, t_source *src ,char **envp)
+{
+	int id;
+
+	id = found_eq(add);
+	if (id)
+		{
+			envp[src->lastenv++] = add;
+			src->export[src->lastexp++] = add;
+			src->export[src->lastexp] = NULL;
+			envp[src->lastenv] = NULL;
+		}
+	else
+		{
+			src->export[src->lastexp++] = add;
+			src->export[src->lastexp] = NULL;
+		}
+}
+
+void	ft_expn_chng(char *add, t_source *src ,char **envp)
 {
 	int i;
 
 	i = 0;
 	while (src->export[i] != NULL)
 	{
-		
-		if (ft_strncmp(src->export[i], value,ft_strlen_eq(value)) == 0)
-			return(1);
+		if (ft_strncmp(add, src->export[i], ft_strlen_eq(add)) == 0)
+		{
+			src->export[i] = add;
+			envp[src->lastenv++] = add;
+			if (i == src->lastexp)
+				src->export[++i] = NULL;
+		}
 		i++;
 	}
-	return (0);
+	if (found_eq(add) && ft_search(envp, add))
+		replace_env(envp, src, add);
+	
 }
 
-void	replace_env(char **envp, t_source *src, char *value, int size)
+void	ft_set_enxp(t_node *head, t_source *src, char **envp)
 {
+	int argn;
 	int i;
-	int del;
 
-	del = 0;
 	i = 0;
-	while (envp[i] != NULL)
+	argn = arg_counter(head->arg);
+	while (i < argn)
 	{
-		if (ft_strncmp(envp[i], value, size) == 0)
+		if (check_exsyn(head->arg[i]))
 			{
-				del = 1;
-				envp[i] = value;
-				break ;
+				write (2, "not a valid identifier\n", 23);
+				i++;
+				continue ;
 			}
+		if (ft_search(src->export, head->arg[i]))
+			ft_expn_chng(head->arg[i], src, envp);
+		else
+			ft_expn_add(head->arg[i], src, envp);
 		i++;
 	}
-	if (!del)
-	{
-		envp[src->lastenv++] = value;
-		envp[src->lastenv] = NULL;
-	}
 }
+
 void	ft_export(t_node *head, t_source *src, char **envp)
 {
-	int		i;
-	int		j;
-	int		found;
-	int		length;
-	
-	i = 0;
-	if (head->arg[i] == NULL)
+	if (head->arg[0] == NULL)
 		em_export(src);
 	else
-	{
-		while (head->arg[i] != NULL)
-		{	
-			//  length = ft_strlen_eq(head->arg[i]);
-			found = ft_search(src,head->arg[i]);
-			if (found)
-			 {
-				 j = 0;
-				while (src->export[j] != NULL)
-				{
-					length = ft_strlen_eq(src->export[j]);
-					if (ft_strncmp(src->export[j], head->arg[i], length) == 0)
-					{
-						if (length < ft_strlen(head->arg[i]))
-						{
-							src->export[j] = head->arg[i];
-							replace_env(envp, src, head->arg[i], length);
-							if (j == src->lastexp)
-								src->export[++j] = NULL;
-						}
-	
-					}
-					j++;
-				}
-			 }
-			else
-			{
-				if (found_eq(head->arg[i]))
-				{
-					envp[src->lastenv++] = head->arg[i];
-					src->export[src->lastexp++] = head->arg[i];
-					src->export[src->lastexp] = NULL;
-					envp[src->lastenv] = NULL;
-				}
-				else
-				{
-					// if ()
-					src->export[src->lastexp++] = head->arg[i];
-					src->export[src->lastexp] = NULL;
-				}
-			}
-				i++;
-		}
-	}
+		ft_set_enxp(head, src, envp);
 }
+
+
+
+
+
+
+// void	ft_export(t_node *head, t_source *src, char **envp)
+// {
+// 	int		i;
+// 	int		j;
+// 	int		found;
+// 	int		length;
+	
+// 	i = 0;
+// 	if (head->arg[i] == NULL)
+// 		em_export(src);
+// 	else
+// 	{
+// 		while (head->arg[i] != NULL)
+// 		{	
+// 			//  length = ft_strlen_eq(head->arg[i]);
+// 			found = ft_search(src,head->arg[i]);
+// 			if (found)
+// 			 {
+// 				 j = 0;
+// 				while (src->export[j] != NULL)
+// 				{
+// 					length = ft_strlen_eq(src->export[j]);
+// 					if (ft_strncmp(src->export[j], head->arg[i], length) == 0)
+// 					{
+// 						if (length < ft_strlen(head->arg[i]))
+// 						{
+// 							src->export[j] = head->arg[i];
+// 							replace_env(envp, src, head->arg[i], length);
+// 							if (j == src->lastexp)
+// 								src->export[++j] = NULL;
+// 						}
+	
+// 					}
+// 					j++;
+// 				}
+// 			 }
+// 			else
+// 			{
+// 				if (found_eq(head->arg[i]))
+// 				{
+// 					envp[src->lastenv++] = head->arg[i];
+// 					src->export[src->lastexp++] = head->arg[i];
+// 					src->export[src->lastexp] = NULL;
+// 					envp[src->lastenv] = NULL;
+// 				}
+// 				else
+// 				{
+// 					// if ()
+// 					src->export[src->lastexp++] = head->arg[i];
+// 					src->export[src->lastexp] = NULL;
+// 				}
+// 			}
+// 				i++;
+// 		}
+// 	}
+// }
 
 int		ft_unset(t_node *head, t_source *src, char **envp)
 {
 	int i;
 	int c;
-	int b;
+	int len;
+	int arglen;
 
 	i = 0;
 	c = 0;
 	while (head->arg[i] != NULL)
 	{
-		c = 0;
-		while (envp[c] != NULL)
+		len = ft_strlen(head->arg[i]);
+		arglen = arg_counter(envp);
+		while(src->export[c]!= NULL)
 		{
-			b = 0;
-			while (envp[c][b] != '=' && envp[c][b] != '\0')
-				b++;
-			if ((ft_strncmp(envp[c],head->arg[i], b)) == 0)
-				envp[c][0] = '\0';
-			c++;
-		}
-		c = 0;
-		while (src->export[c] != '\0')
-		{
-			b = 0;
-			while (src->export[c][b] != '=' && src->export[c][b] != '\0')
-				b++;
-			if ((ft_strncmp(src->export[c],head->arg[i], b)) == 0)
-				src->export[c][0] = '\0';
+			if (ft_strncmp(head->arg[i], src->export[c], len) == 0)
+				{
+					int j = c;
+					while (j < arglen - 1)
+              	  	{
+                    	src->export[j] = src->export[j + 1];
+                    	j++;
+              	 	 }
+					src->lastexp--;
+					src->export[j] = NULL;
+					if (ft_search(envp, head->arg[i]))
+					{
+						int count = 0;
+						arglen = arg_counter(envp);
+						while (envp[count] != NULL)
+						{
+							if (ft_strncmp(head->arg[i], envp[c], ft_strlen(head->arg[i])) == 0)
+							{
+								int j = c;
+								while (j < arglen - 1)
+              	  				{
+            						envp[j] =envp[j + 1];
+                    				j++;
+              	 				 }
+									src->lastenv--;
+									envp[j] = NULL;
+								
+							}
+							count++;
+						}
+
+						
+					}
+				}
 			c++;
 		}
 		i++;
 	}
 	return (0);
 }
+/*
+void command_unset(t_commands *tmp ,char **envp)
+{
+    int lenp;
+    int lenarg;
+    int k = 0;
+    lenp = len_of_args(envp);
+    lenarg = nbr_argts(tmp) - 1;
+    while(k < lenarg)
+    {
+        check_syntax(tmp, k ,lenarg);
+        for (int i = 0; i < lenp; i++)
+        {
+            if (strncmp(envp[i], tmp->arguments[k], strlen(tmp->arguments[k])) == 0)
+            {
+                int j = i;
+                while (j < lenp - 1)
+                {
+                    envp[j] = envp[j + 1];
+                    j++;
+                }
+                envp[j] = NULL;
+                lenp = len_of_args(envp);
+            }
+        }
+        k++;
+    }
+}*/

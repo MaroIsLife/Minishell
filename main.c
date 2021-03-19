@@ -154,7 +154,9 @@ void	ms_loop(t_source *src, char **envp)
 			i = i^i;
 			src->c = c;
 			init_parse(src, head, envp, pipe);
-			i = i^i;
+			i = 0;
+			while (head->arg[i] != NULL)
+				printf("Arg: %s\n",head->arg[i++]);
 			src->offset = 0;
 			if (src->foundred == 0 && src->foundpipe == 0)
 				command_list(head , src, envp);
