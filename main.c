@@ -169,7 +169,7 @@ void	ms_loop(t_source *src, char **envp)
 					if (src->foundred == 1)
 						red_open(head);
 					command_list(head, src, envp);
-					// exit(0);
+					exit(0);
 				}
 				else
 					wait(&ge_id);
