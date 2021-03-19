@@ -109,7 +109,7 @@ void	change_pwd_env(char **envp);
 void	ft_pwd (void);
 int		ft_isdollar(int c);
 char	*where_home(char **envp);
-
+void	red_open(t_node *head);
 
 //Signals
 void	ft_signal();

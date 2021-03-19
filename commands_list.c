@@ -6,15 +6,19 @@ void	red_open(t_node *head)
 	int fd2;
 	t_filename *p;
 	p = head->first_filename;
-	while (p->next != NULL)
+	// printf("%s\n",p->filename);
+	while (1)
 	{
 		fd = open(p->filename, O_WRONLY | O_CREAT, 0777);
 		if (fd == -1)
 			strerror(errno);
 		// close(fd);
+		if (p->next == NULL)
+			break ;
 		p = p->next;
 	}
 	dup2(fd, 1);
+	close(fd);
 }
 
 char	**ft_valide_args(t_node *head, int count)
@@ -81,6 +85,7 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 	char	**varg;
 
   	varg = ft_valide_args(head, src->count);
+	
 	if (head->cmd[0] == '/' || (head->cmd[0] == '.' && head->cmd[1] == '/'))
 		path = head->cmd;
 	else 
@@ -93,18 +98,15 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 		s = get_env_path(envp, src);
 		path = get_correct_path(s, varg); // We should also add current PWD
 	}
-
 	if (path != 0)
 	{
 		if ((g_id = fork()) == 0)
 		{
 			signal(SIGINT,SIG_DFL);
-			if (src->foundred == 1)
-				red_open(head);
 			if (execve(path ,&varg[0], envp) == -1)
 			{
 				printf("bash: %s: %s\n",varg[0], strerror(errno));
-				exit(1);
+				// exit(1);
 			}
 		}
 		else

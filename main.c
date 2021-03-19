@@ -129,7 +129,8 @@ void	ms_loop(t_source *src, char **envp)
 			head->pipe->next = NULL;
 			first = head;
 			find_for_split(pipe[c], src);
-			char **test;
+
+
 			if (src->foundred == 1)
 			{
 				head->first_filename = (t_filename *) malloc(sizeof(t_filename));
@@ -147,8 +148,6 @@ void	ms_loop(t_source *src, char **envp)
 			// 		i++;
 			// 	}
 			// }
-					
-			
 			
 			src->dquotes = 0;
 			src->squotes = 0;
@@ -158,15 +157,17 @@ void	ms_loop(t_source *src, char **envp)
 			i = i^i;
 			src->offset = 0;
 			if (src->foundred == 0 && src->foundpipe == 0)
-				command_list(head , src,envp);
+				command_list(head , src, envp);
 			else
 			{
 				int id = fork();
 				int ge_id;
 				if (id == 0)
 				{
+					if (src->foundred == 1)
+						red_open(head);
 					command_list(head, src, envp);
-					exit(0);
+					// exit(0);
 				}
 				else
 					wait(&ge_id);
