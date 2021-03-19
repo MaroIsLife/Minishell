@@ -44,6 +44,7 @@ int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 		}
 		else if (s[i] == '>')
 		{
+			count++;
 			jump = 1;
 			i++;
 		}
@@ -76,6 +77,7 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 	while (s[*i] != ' ' && s[*i] != '\0' && s[*i] != '\n')
 		src->p->filename[b++] = s[(*i)++];
 	src->p->filename[b] = '\0';
+	// printf("Filename: %s\n",src->p->filename);
 	allocate = 1;
 	return (0);
 }
@@ -90,23 +92,26 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 	src->re_b = 0;
 	while (s[i] != '\n' && s[i] != '\0')
 	{
-		if (s[i] == ' ')
+		if ((s[i] == '>' || s[i] == '<') && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
+		{
+			find_file_name(&i, s, src, head);
+			continue ;
+		}
+		else if (s[i] == ' ')
 		{
 			if (s[i] == ' ' && (src->dquotes == 1 || src->squotes == 1))
 				arg_if_space(s, &i, src);
-			else if (s[i] == ' ' && (src->dquotes == 0 || src->squotes == 0))
+			else if (s[i] == ' ' && (src->dquotes == 0 || src->squotes == 0) && (s[i + 1] != '>' && s[i + 1] != '<'))
 				break ;
 		}
-		else if ((s[i] == '|' || s[i] == ';') && (src->dquotes == 0 && src->aslash == 0 ))
+		else if ((s[i] == '|' || s[i] == ';') && (src->dquotes == 0 && src->aslash == 0))
 		{
-			if (src->squotes == 1)
+			if (src->squotes == 1)	
 				src->re[src->re_b++] = s[i];
 			else
 				break ;
 		}
-		else if (s[i] == '\"' && src->squotes == 0 && src->aslash == 0)
-			finding_quotes(s, i, src);
-		else if (s[i] == '\'' && src->dquotes == 0 && src->aslash == 0)
+		else if ((s[i] == '\"' || s[i] == '\'') && src->squotes == 0 && src->aslash == 0)
 			finding_quotes(s, i, src);
 		else if (s[i] == '$' && src->aslash == 0 && ft_isalpha(s[i + 1]) == 1 && src->squotes == 0)
 			i = get_env_value_arg(s, envp, src, i) - 1;
@@ -118,12 +123,6 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 				src->re[src->re_b++] = s[i];
 				src->tmp = 0;
 			}
-		}
-		else if (s[i] == '>' && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
-		{
-			find_file_name(&i, s, src, head);
-			// printf("%s\n",src->p->filename);
-			continue ;
 		}
 		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\' || s[i] == ';' || s[i] == '|' || s[i] == '$' || s[i] == '>' || s[i] == '<') && src->aslash == 1)
 		{
@@ -141,5 +140,6 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 	}
 	src->offset = i;
 	src->re[src->re_b] = '\0';
+
 	return (src->re);
 }
