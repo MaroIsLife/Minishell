@@ -57,6 +57,10 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 {
 	int			b;
 	static int 	allocate;
+	char		c;
+	
+	if (s[*i] == '>')
+		c = '>';
 	(*i)++;
 	b = 0;
 	if (allocate == 1)
@@ -70,11 +74,11 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 	while (s[*i] == ' ')
 		(*i)++;	
 	b = *i;
-	while (s[b] != ' ' && s[b] != '\0' && s[b] != '\n')
+	while (s[b] != ' ' && s[b] != '\0' && s[b] != '\n' && s[b] != c)
 		b++;
 	src->p->filename = malloc((b + 1) * sizeof(char));
 	b = 0;
-	while (s[*i] != ' ' && s[*i] != '\0' && s[*i] != '\n')
+	while (s[*i] != ' ' && s[*i] != '\0' && s[*i] != '\n' && s[*i] != c)
 		src->p->filename[b++] = s[(*i)++];
 	src->p->filename[b] = '\0';
 	// printf("Filename: %s\n",src->p->filename);

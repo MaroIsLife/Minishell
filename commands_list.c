@@ -23,15 +23,17 @@ void	red_open(t_node *head)
 
 char	**ft_valide_args(t_node *head, int count)
 {
-	char **varg = malloc (sizeof(char*) * (count + 2));
-	int i = 1;
-   varg[0] = head->cmd;
-	while (i < (count + 1))
-	{
-		varg[i] = ft_strdup(head->arg[i - 1]);
-		i++;
-	}
-	varg[i] = NULL;
+	char	**varg;
+	int		i;
+	int		b;
+
+	i = 0;
+	b = 1;
+	varg = malloc (sizeof(char*) * (count + 2));
+	varg[0] = head->cmd;
+	while (head->arg[i] != NULL)
+		varg[b++] = head->arg[i++];
+	varg[b] = NULL;
 	return (varg);
 }
 
@@ -92,7 +94,7 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 	{
 		if (get_x_env(envp, src, "PATH") == 0)
 		{
-			printf("bash: %s: command not found\n",head->cmd);
+			printf("bash: %s: command not found\n", head->cmd);
 			return(0);
 		}
 		s = get_env_path(envp, src);
@@ -102,11 +104,11 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 	{
 		if ((g_id = fork()) == 0)
 		{
-			signal(SIGINT,SIG_DFL);
-			if (execve(path ,&varg[0], envp) == -1)
+			// signal(SIGINT,SIG_DFL);
+			if (execve(path , &varg[0], envp) == -1)
 			{
-				printf("bash: %s: %s\n",varg[0], strerror(errno));
-				// exit(1);
+				printf("bash: %s: %s\n", varg[0], strerror(errno));
+				exit(0);
 			}
 		}
 		else
