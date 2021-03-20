@@ -37,12 +37,12 @@ int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 				return (count);
 			if (s[i] == '\0' || s[i] == '\n')
 				return (count);
-			if (s[i] != '>' && jump == 0)
+			if (s[i] != '>' && jump == 0) // Add != <
 				count++;
 			else
 				jump = 0;
 		}
-		else if (s[i] == '>')
+		else if (s[i] == '>' || s[i] == '<')
 		{
 			count++;
 			jump = 1;
@@ -56,29 +56,38 @@ int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 {
 	int			b;
-	static int 	allocate;
-	char		c;
-	
-	if (s[*i] == '>')
-		c = '>';
-	(*i)++;
-	b = 0;
+	static int 	allocate; // i should find a way to make allocate = 0 after Pipe[src->c] increments
+
 	if (allocate == 1)
 	{
 		src->p->next = (t_filename *) malloc(sizeof(t_filename));
 		src->p->next->next = NULL;
 		src->p = src->p->next;
 	}
-	if (s[*i] == '>')
-		printf("another >\n"); //Variable of double Red should be 1 and *i should be incremented
+	if (s[*i] == '>' && s[*i + 1] == '>')
+	{
+		src->p->c = 94;
+		(*i) = (*i) + 2;
+	}
+	else if (s[*i] == '>')
+	{
+		(*i)++;
+		src->p->c = '>';
+	}
+	else if (s[*i] == '<')
+	{
+		(*i)++;
+		src->p->c = '<';
+	}
+	b = 0;
 	while (s[*i] == ' ')
 		(*i)++;	
 	b = *i;
-	while (s[b] != ' ' && s[b] != '\0' && s[b] != '\n' && s[b] != c)
+	while (s[b] != ' ' && s[b] != '\0' && s[b] != '\n' && s[b] != '>' && s[b] != '<')
 		b++;
 	src->p->filename = malloc((b + 1) * sizeof(char));
 	b = 0;
-	while (s[*i] != ' ' && s[*i] != '\0' && s[*i] != '\n' && s[*i] != c)
+	while (s[*i] != ' ' && s[*i] != '\0' && s[*i] != '\n' && s[*i] != '>' && s[*i] != '<')
 		src->p->filename[b++] = s[(*i)++];
 	src->p->filename[b] = '\0';
 	// printf("Filename: %s\n",src->p->filename);
