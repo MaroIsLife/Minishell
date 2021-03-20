@@ -85,9 +85,9 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 			i = get_env_value_cmd(s, envp, src, i) - 1;
 		else if (s[i] == '>' && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
 		{
-			find_file_name(&i, s, src, head);
+			while (s[i] == '>')
+				find_file_name(&i, s, src, head);
 			i++;
-			// printf("%s\n",src->p->filename);
 			continue ;
 		}
 		else if (s[i] == '\\' && src->aslash == 1)
