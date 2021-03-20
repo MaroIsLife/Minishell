@@ -54,7 +54,7 @@ int		finding_aslash(char *s, int i, t_source *src)
 {
 		if (s[i] == '\\' && s[i + 1] == '\'' && src->dquotes == 1)
 			src->aslash = 0;
-		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'' || s[i + 1] == '$') && src->aslash == 0 && src->squotes == 0)
+		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'' || s[i + 1] == '$' || s[i + 1] == '>' || s[i + 1] == '<') && src->aslash == 0 && src->squotes == 0)
 		{
 			src->aslash = 1;
 		}
@@ -91,7 +91,7 @@ void	find_for_split(char *cmd, t_source *src)
 			src->foundpipe = 1;
 			src->npipe++;
 		}
-		else if (cmd[i] == '>' && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
+		else if ((cmd[i] == '>'|| cmd[i] == '<') && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
 		{
 			src->foundred = 1;
 			src->nred++;

@@ -15,6 +15,7 @@
 
 typedef struct s_filename {
 	char				*filename;
+	char				c;
     struct s_filename	*next;
 }	t_filename;
 

@@ -9,15 +9,26 @@ void	red_open(t_node *head)
 	// printf("%s\n",p->filename);
 	while (1)
 	{
-		fd = open(p->filename, O_WRONLY | O_CREAT, 0777);
+	if (p->c == 94)
+		fd = open(p->filename, O_RDWR | O_APPEND | O_CREAT, 0777);
+	else if (p->c == '>')
+		fd = open(p->filename, O_RDWR | O_TRUNC | O_CREAT, 0777);
+	else if (p->c == '<')
+		fd = open(p->filename, O_RDONLY);
 		if (fd == -1)
-			strerror(errno);
-		// close(fd);
+		{
+			printf("bash: %s: %s\n",p->filename, strerror(errno));
+			exit(0);
+		}
 		if (p->next == NULL)
 			break ;
 		p = p->next;
 	}
-	dup2(fd, 1);
+	if (p->c == 94 || p->c == '>')
+		dup2(fd, 1);
+	else if (p->c == '<')
+		dup2(fd, 0);
+
 	close(fd);
 }
 
