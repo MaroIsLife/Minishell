@@ -70,15 +70,34 @@ void	init_env(t_source *src,char **envp)
 
 	i = 0;
 	src->lastenv = 0;
+	
+	
 	while (envp[i] != NULL)
 	{
 		src->lastenv++;
 		i++;
 	}
-	src->lastexp = src->lastenv;
+	// New ENV
+	src->our_envp = malloc(sizeof(char*) * (i + 1));
+	
 	i = 0;
 	while (envp[i] != NULL)
 	{
+		src->our_envp[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	src->our_envp[i] = NULL;
+	
+	//Pritnting our envp
+	// i = 0;
+	// while (src->our_envp[i] != 	NULL)
+	// 	puts(src->our_envp[i++]);
+	src->lastexp = src->lastenv;
+	// src->export = malloc(sizeof(char*) * (src->lastenv + 1));
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		// src->export[i] = ft_strdup(envp[i]);
 		src->export[i] = envp[i];
 		i++;
 	}
@@ -233,6 +252,7 @@ int     main(int argc, char **argv, char **envp)
 	t_source src;
 	g_id = 2;
 	// clear();
+
 	ms_loop(&src, envp);
 	
 	return (0);
