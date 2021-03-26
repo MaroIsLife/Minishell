@@ -7,8 +7,8 @@ char    *read_line()
 	int 	cmdlen;
 
 
-cmd = malloc(1024 * sizeof(char));
-cmdlen = read(0,&buf,1024);
+cmd = malloc(2048 * sizeof(char));
+cmdlen = read(0,&buf,2048); //leaks
 while (cmdlen != 0)
 {
 	if (cmdlen == -1)
@@ -27,7 +27,7 @@ while (cmdlen != 0)
 			cmd[cmdlen] = '\0';
 			return cmd;
 	}
-	cmdlen = read(0,&buf,1024);
+	cmdlen = read(0,&buf,2048);
 }
 	 return (0);
 }
