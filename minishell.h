@@ -45,7 +45,7 @@ typedef struct	s_source
 	int		npipe; // N pipe
 	char	*pwd;
 	int		forkid; // fork ID to know if we're in Parent or Child process
-	char 	*export[1024]; // Should be Malloced !!!!!
+	char 	**export; // Should be Malloced !!!!!
 	char	**our_envp;// Sould be malloced
 	char 	*re;
 	int		re_b;

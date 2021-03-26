@@ -197,7 +197,7 @@ void ft_wr_eq(char *s)
 		int sign = 0;
 		while (s[i] != 0)
 		{
-			if (s[i] == '=')
+			if (s[i] == '=' && s[i + 1])
 				{
 					sign = 1;
 					write(1,&s[i++], 1);
