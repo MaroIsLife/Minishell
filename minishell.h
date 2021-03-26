@@ -12,10 +12,13 @@
 # include <errno.h>
 # include "gnl/get_next_line.h"
 # include "libft/libft.h"
+# include <sys/types.h>
+# include <sys/wait.h>
 
 typedef struct s_filename {
 	char				*filename;
 	char				c;
+	char				r;
     struct s_filename	*next;
 }	t_filename;
 
@@ -52,6 +55,7 @@ typedef struct	s_source
 	int		lastexp;
 	int 	count;
 	int		return_value;
+	int		fd_r_c;
 	t_filename	*p;
 }				t_source;
 
@@ -111,7 +115,7 @@ void	change_pwd_env(char **envp);
 void	ft_pwd (void);
 int		ft_isdollar(int c);
 char	*where_home(char **envp);
-void	red_open(t_node *head);
+void	red_open(t_node *head, t_source *src);
 
 //Signals
 void	ft_signal();

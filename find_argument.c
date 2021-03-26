@@ -66,16 +66,22 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 	}
 	if (s[*i] == '>' && s[*i + 1] == '>')
 	{
+		if (src->fd_r_c != 50)
+			src->fd_r_c = 1;
 		src->p->c = 94;
 		(*i) = (*i) + 2;
 	}
 	else if (s[*i] == '>')
 	{
+		if (src->fd_r_c != 50)
+			src->fd_r_c = 1;
 		(*i)++;
 		src->p->c = '>';
 	}
 	else if (s[*i] == '<')
 	{
+		if(src->fd_r_c == 1)
+			src->fd_r_c = 50;
 		(*i)++;
 		src->p->c = '<';
 	}

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	red_open(t_node *head)
+void	red_open(t_node *head, t_source *src)
 {
 	int fd;
 	int fd2;
@@ -14,7 +14,7 @@ void	red_open(t_node *head)
 	else if (p->c == '>')
 		fd = open(p->filename, O_RDWR | O_TRUNC | O_CREAT, 0777);
 	else if (p->c == '<')
-		fd = open(p->filename, O_RDONLY);
+		fd2 = open(p->filename, O_RDONLY);
 		if (fd == -1)
 		{
 			printf("bash: %s: %s\n",p->filename, strerror(errno));
@@ -24,7 +24,12 @@ void	red_open(t_node *head)
 			break ;
 		p = p->next;
 	}
-	if (p->c == 94 || p->c == '>')
+	if (src->fd_r_c == 50)
+	{
+		dup2(fd, 1);
+		dup2(fd2, 0);
+	}
+	else if (p->c == 94 || p->c == '>')
 		dup2(fd, 1);
 	else if (p->c == '<')
 		dup2(fd, 0);

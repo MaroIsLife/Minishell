@@ -139,6 +139,7 @@ void	ms_loop(t_source *src, char **envp)
 		int c;
 
 		c = 0;
+		src->fd_r_c = 0;
 		while (pipe[c] != NULL)
 		{
 
@@ -186,7 +187,7 @@ void	ms_loop(t_source *src, char **envp)
 				if (id == 0)
 				{
 					if (src->foundred == 1)
-						red_open(head);
+						red_open(head, src);
 					command_list(head, src, envp);
 					exit(0);
 				}
