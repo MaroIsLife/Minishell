@@ -43,6 +43,9 @@ void	replace_env(char **envp, t_source *src, char *value)
 	i = 0;
 	while (src->our_envp[i] != NULL)
 	{
+	
+
+
 		if (ft_strncmp(value, src->our_envp[i], ft_strlen_eq(value)) == 0)
 			{
 				src->our_envp[i] = ft_strdup(value);
@@ -63,6 +66,16 @@ int arg_counter(char **src)
 	return (i);
 }
 
+char **our_realloc(char **s, int count)
+{
+	char **ret = malloc (count);
+	int i = -1;
+	while (s[++i])
+		ret[i] = ft_strdup(s[i]);
+
+	return (ret);
+}
+
 void	print_env(t_node *head, t_source *src, char **envp)
 {
 
@@ -70,26 +83,26 @@ void	print_env(t_node *head, t_source *src, char **envp)
 	int i;
 
 	i = 0;
-	while (envp[i] != NULL)
+	while (src->our_envp[i] != NULL)
 	{
-		ft_putstr_fd(envp[i], 1);
-		if (envp[i][0] != '\0')
+		ft_putstr_fd(src->our_envp[i], 1);
+		if (src->our_envp[i][0] != '\0')
 			ft_putstr_fd("\n", 1);
 		i++;
 	}
 }
 
-char	*where_home(char **envp)
+char	*where_home(char **envp, t_source *src)
 {
 	int i = 0;
 	char *home;
 	
-	while (envp[i])
+	while (src->our_envp[i])
 	{
-		if (ft_strncmp(envp[i], "HOME=", 5) == 0)
+		if (ft_strncmp(src->our_envp[i], "HOME=", 5) == 0)
 		{
 			home = malloc (ft_strlen(envp[i] + 5) + 1);
-			ft_strlcpy(home, envp[i] + 5, ft_strlen(envp[i] + 5) + 1);
+			ft_strlcpy(home, src->our_envp[i] + 5, ft_strlen(src->our_envp[i] + 5) + 1);
 			return (home);
 		}
 	i++;
@@ -103,7 +116,7 @@ void	ft_pwd (void)
 	printf ("%s\n",getcwd(s, 100));
 	free (s);
 }
-void	ft_cd(t_node *head, char *home, char **envp)
+void	ft_cd(t_node *head, t_source *src, char *home, char **envp)
 {
 	int sign;
 
@@ -262,8 +275,24 @@ int 	check_exsyn(char *src)
 		return (1);
 	return (0);
 }
+//envp just for testing
+int ft_alloc_count(char **envp, t_node *head)
+{
+	int i = 0;
+	while (envp[i])
+		i++;
+	int j = 0;
+	while (head->arg[j] != NULL)
+		{
+			if (ft_search(envp, head->arg[j]))
+				i++;
+			j++;
+		}
+	return (i);
+}
 
-void 	ft_expn_add(char *add, t_source *src ,char **envp)
+
+void 	ft_expn_add(char *add, t_source *src ,char **our_envp, t_node *head)
 {
 	int id;
 
@@ -271,15 +300,19 @@ void 	ft_expn_add(char *add, t_source *src ,char **envp)
 	id = found_eq(add);
 	if (id)
 		{
-			envp[src->lastenv++] = add;
-			src->export[src->lastexp++] = add;
+			src->our_envp = our_realloc(src->our_envp, sizeof(char*) * (ft_alloc_count(src->our_envp, head) + 2) ); //here
+			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, head) + 2) ); //here
+			src->our_envp[src->lastenv++] = ft_strdup(add);
+			src->export[src->lastexp++] = ft_strdup(add);
 			src->export[src->lastexp] = NULL;
-			envp[src->lastenv] = NULL;
+			src->our_envp[src->lastenv] = NULL;
 		}
 	else
 		{
+			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, head) + 2) ); //here
 			src->export[src->lastexp++] = add;
 			src->export[src->lastexp] = NULL;
+
 		}
 }
 
@@ -292,9 +325,9 @@ void	ft_expn_chng(char *add, t_source *src ,char **envp)
 	{
 		if (ft_strncmp(add, src->export[i], ft_strlen_eq(add)) == 0)
 		{
-			src->export[i] = NULL;
+			// src->export[i] = NULL;
 			src->export[i] = ft_strdup(add);
-			envp[src->lastenv++] = ft_strdup(add);
+			// src->our_envp[src->lastenv++] = ft_strdup(add);
 			if (i == src->lastexp)
 				src->export[++i] = NULL;
 		}
@@ -304,27 +337,22 @@ void	ft_expn_chng(char *add, t_source *src ,char **envp)
 		replace_env(envp, src, add);
 
 }
-int ft_alloc_count(char **envp, t_node *head)
-{
-	int i = 0;
-	while (envp[i])
-		i++;
-	int j = 0;
-	while (head->arg[j])
-		{
-			if (ft_search(envp, head->arg[i]))
-				i++;
-			j++;
-		}
-	return (i);
-}
 
-void ft_realloc_enxp(t_source *src, t_node *head)
-{
-	int ex = ft_alloc_count(src->export, head);
-	int en = ft_alloc_count(src->our_envp, head);
+
+// void ft_realloc_enxp(t_source *src, t_node *head)
+// {
+// 	int ex = ft_alloc_count(src->export, head);
+// 	int en = ft_alloc_count(src->our_envp, head);
 	
-}
+// 	src->export = NULL;
+// 	src->our_envp = NULL;
+// 	src->export = malloc (sizeof(char*) * ex);
+// 	src->our_envp = malloc (sizeof(char*) * en);
+// 	src->export[ex] = NULL;
+// 	src->our_envp[en] = NULL;
+
+	
+// }
 void	ft_set_enxp(t_node *head, t_source *src, char **envp)
 {
 	int argn;
@@ -341,11 +369,11 @@ void	ft_set_enxp(t_node *head, t_source *src, char **envp)
 				continue ;
 			}
 		if (ft_search(src->export, head->arg[i]))
-			ft_expn_chng(head->arg[i], src, envp);
+			ft_expn_chng(head->arg[i], src, src->our_envp);
 		else
 			{
-				ft_realloc_enxp(src, head);
-				ft_expn_add(head->arg[i], src, envp);}
+			    // ft_realloc_enxp(src, head);
+				ft_expn_add(head->arg[i], src, src->our_envp, head);}
 		i++;
 	}
 }
@@ -355,7 +383,7 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 	if (head->arg[0] == NULL)
 		em_export(src);
 	else
-		ft_set_enxp(head, src, envp);
+		ft_set_enxp(head, src, src->our_envp);
 }
 
 
@@ -432,7 +460,7 @@ int		ft_unset(t_node *head, t_source *src, char **envp)
 	while (head->arg[i] != NULL)
 	{
 		len = ft_strlen(head->arg[i]);
-		arglen = arg_counter(envp);
+		arglen = arg_counter(src->our_envp);
 		while(src->export[c]!= NULL)
 		{
 			if (ft_strncmp(head->arg[i], src->export[c], len) == 0)
@@ -448,19 +476,19 @@ int		ft_unset(t_node *head, t_source *src, char **envp)
 					if (ft_search(envp, head->arg[i]))
 					{
 						int count = 0;
-						arglen = arg_counter(envp);
-						while (envp[count] != NULL)
+						arglen = arg_counter(src->our_envp);
+						while (src->our_envp[count] != NULL)
 						{
-							if (ft_strncmp(head->arg[i], envp[c], ft_strlen(head->arg[i])) == 0)
+							if (ft_strncmp(head->arg[i], src->our_envp[c], ft_strlen(head->arg[i])) == 0)
 							{
 								int j = c;
 								while (j < arglen - 1)
               	  				{
-            						envp[j] =envp[j + 1];
+            						src->our_envp[j] = src->our_envp[j + 1];
                     				j++;
               	 				 }
 									src->lastenv--;
-									envp[j] = NULL;
+									src->our_envp[j] = NULL;
 								
 							}
 							count++;

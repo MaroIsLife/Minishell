@@ -56,9 +56,9 @@ int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 {
 	int			b;
-	static int 	allocate; // i should find a way to make allocate = 0 after Pipe[src->c] increments
+	 // i should find a way to make allocate = 0 after Pipe[src->c] increments
 
-	if (allocate == 1)
+	if (src->allocate == 1)
 	{
 		src->p->next = (t_filename *) malloc(sizeof(t_filename));
 		src->p->next->next = NULL;
@@ -97,7 +97,7 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 		src->p->filename[b++] = s[(*i)++];
 	src->p->filename[b] = '\0';
 	// printf("Filename: %s\n",src->p->filename);
-	allocate = 1;
+	src->allocate = 1;
 	return (0);
 }
 char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
