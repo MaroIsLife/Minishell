@@ -32,9 +32,13 @@ void	red_open(t_node *head, t_source *src)
 	else if (p->c == 94 || p->c == '>')
 		dup2(fd, 1);
 	else if (p->c == '<')
-		dup2(fd, 0);
+	{
+		printf("Test\n");
+		dup2(fd2, 0);
+	}
 
 	close(fd);
+	//Close fd2 too
 }
 
 char	**ft_valide_args(t_node *head, int count)
