@@ -130,8 +130,10 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 			else
 				break ;
 		}
-		else if ((s[i] == '\"' || s[i] == '\'') && src->squotes == 0 && src->aslash == 0)
+		else if ((s[i] == '\"') && src->squotes == 0 && src->aslash == 0)
 			finding_quotes(s, i, src);
+		else if ((s[i] == '\'') && src->dquotes == 0 && src->aslash == 0)
+			finding_quotes(s, i , src);
 		else if (s[i] == '$' && src->aslash == 0 && ft_isalpha(s[i + 1]) == 1 && src->squotes == 0)
 			i = get_env_value_arg(s, envp, src, i) - 1;
 		else if (s[i] == '\\' && src->aslash == 0)
