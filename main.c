@@ -154,7 +154,7 @@ void	ms_loop(t_source *src, char **envp)
 			head->pipe->next = NULL;
 			first = head;
 			find_for_split(pipe[c], src);
-
+			src->allocate = 0;
 
 			if (src->foundred == 1)
 			{

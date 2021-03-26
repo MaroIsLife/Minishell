@@ -54,6 +54,7 @@ typedef struct	s_source
 	int		ra_b;
 	int		lastexp;
 	int 	count;
+	int 	allocate;
 	int		return_value;
 	int		fd_r_c;
 	t_filename	*p;
@@ -110,11 +111,11 @@ void	print_env(t_node *head, t_source *src, char **envp);
 void	ft_export(t_node *head, t_source *src, char **envp);
 char	*search_env(t_node *head, t_source *src, char **envp, int offset);
 int		ft_unset(t_node *head, t_source *src, char **envp);
-void	ft_cd(t_node *head, char *home, char **envp);
+void	ft_cd(t_node *head, t_source *src, char *home, char **envp);
 void	change_pwd_env(char **envp);
 void	ft_pwd (void);
 int		ft_isdollar(int c);
-char	*where_home(char **envp);
+char	*where_home(char **envp, t_source *src);
 void	red_open(t_node *head, t_source *src);
 
 //Signals
