@@ -506,20 +506,19 @@ int		ft_unset(t_node *head, t_source *src, char **envp)
 
 int		ft_exit(t_node *head, t_source *src)
 {
-	int i;
 	int b;
 	int ret;
 
-	i = 0;
-	if (head->arg == NULL)
+	b = 0;
+	if (head->arg[0] == NULL)
 		exit(0);
 	while (head->arg[0][b] != '\0')
 	{
-		if (ft_isalpha(head->arg[0][b]) == 1)
+		if (ft_isdigit(head->arg[0][b]) != 1)
 		{
-			printf("exit\nbash: exit: %s: numeric argument required\n",head->arg[i]);
+			printf("exit\nbash: exit: %s: numeric argument required\n",head->arg[0]);
 			//src->return_value = 2;
-			exit(2);
+			exit(255);
 		}
 		b++;
 	}
@@ -531,6 +530,8 @@ int		ft_exit(t_node *head, t_source *src)
 	ret = ft_atoi(head->arg[0]);
 	if (ret > 255)
 		exit(ret % 256);
+	else if (ret < 0)
+		exit (ret + 256);
 	else
 		exit(ret);
 }
