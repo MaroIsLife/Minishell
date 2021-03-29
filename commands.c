@@ -511,7 +511,8 @@ int		ft_exit(t_node *head, t_source *src)
 	int ret;
 
 	i = 0;
-
+	if (head->arg == NULL)
+		exit(0);
 	while (head->arg[0][b] != '\0')
 	{
 		if (ft_isalpha(head->arg[0][b]) == 1)
@@ -527,11 +528,7 @@ int		ft_exit(t_node *head, t_source *src)
 		printf("exit\nbash: exit: too many arguments\n");
 		return(0);
 	}
-	if (head->arg[0] != NULL)
-		ret = ft_atoi(head->arg[0]);
-	else
-		exit(0);
-
+	ret = ft_atoi(head->arg[0]);
 	if (ret > 255)
 		exit(ret % 256);
 	else
