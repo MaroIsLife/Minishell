@@ -92,8 +92,8 @@ void	init_env(t_source *src,char **envp)
 	src->our_envp[i] = NULL;
 	src->export[i] = NULL;
 	i = 0;
-	while (src->export[i])
-		puts(src->export[i++]);
+	// while (src->export[i])
+	// 	puts(src->export[i++]);
 	
 	//Pritnting our envp
 	// i = 0;
@@ -119,8 +119,8 @@ void	ms_loop(t_source *src, char **envp)
 	char	**pipe;
 
 	init_env(src,envp);
-	src->user = get_x_env(envp, src, "USER");  // This Retrieves the USER's logname and stores it in src->user NOT ALLOCATED
-	src->pwd = get_x_env(envp, src, "PWD");
+	src->user = get_x_env(src->our_envp, src, "USER");  // This Retrieves the USER's logname and stores it in src->user NOT ALLOCATED
+	src->pwd = get_x_env(src->our_envp, src, "PWD");
 	set_x_env(envp, src, "TESST", "test");
 	print_prompt1();
 	while(1)

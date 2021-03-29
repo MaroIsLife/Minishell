@@ -82,7 +82,7 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 		else if (s[i] == '\\' && ft_isascii(s[i + 1]) == 1 && src->dquotes == 0 && src->squotes == 0)
 			src->ra[src->ra_b++] = s[++i];
 		else if (s[i] == '$' && src->squotes == 0 && ft_isalpha(s[i + 1]) == 1 && src->aslash == 0)
-			i = get_env_value_cmd(s, envp, src, i) - 1;
+			i = get_env_value_cmd(s, src->our_envp, src, i) - 1;
 		else if ((s[i] == '>' || s[i] == '<') && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
 		{
 			while (s[i] == '>' || s[i] == '<') //TEST THIS WITH ls>out1>out2 or >out1>out2 ls
