@@ -109,12 +109,12 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 		path = head->cmd;
 	else 
 	{
-		if (get_x_env(envp, src, "PATH") == 0)
+		if (get_x_env(src->our_envp, src, "PATH") == 0)
 		{
 			printf("bash: %s: command not found\n", head->cmd);
 			return(0);
 		}
-		s = get_env_path(envp, src);
+		s = get_env_path(src->our_envp, src);
 		path = get_correct_path(s, varg); // We should also add current PWD
 	}
 	if (path != 0)
@@ -122,7 +122,7 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 		if ((g_id = fork()) == 0)
 		{
 			// signal(SIGINT,SIG_DFL);
-			if (execve(path , &varg[0], envp) == -1)
+			if (execve(path , &varg[0], envp) == -1) //Should i send ENVP or OUR-ENV AND WHAT IS THE DIFFERENCE???!
 			{
 				printf("bash: %s: %s\n", varg[0], strerror(errno));
 				exit(0);
@@ -150,7 +150,7 @@ void command_list(t_node *head, t_source *src, char **envp)
 		ft_export(head, src, envp);
 	else if (ft_strncmp(head->cmd, "unset", 5) == 0 && head->cmd[5] == '\0')
 		ft_unset(head, src, envp);
-	else if (head->cmd[0] == '\0')
+	else if (head->cmd[0] == '\0') // Enter with '\0'?? (Remove \0 from Read if the cmd = '\n')
 		;
 	else
 		ft_execute(head, src, envp);
