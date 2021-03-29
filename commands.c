@@ -503,6 +503,40 @@ int		ft_unset(t_node *head, t_source *src, char **envp)
 	}
 	return (0);
 }
+
+int		ft_exit(t_node *head, t_source *src)
+{
+	int i;
+	int b;
+	int ret;
+
+	i = 0;
+
+	while (head->arg[0][b] != '\0')
+	{
+		if (ft_isalpha(head->arg[0][b]) == 1)
+		{
+			printf("exit\nbash: exit: %s: numeric argument required\n",head->arg[i]);
+			//src->return_value = 2;
+			exit(2);
+		}
+		b++;
+	}
+	if (head->arg[1] != NULL) //CHECK IF IT DOESNT LEAVE CHILD PROCESS
+	{
+		printf("exit\nbash: exit: too many arguments\n");
+		return(0);
+	}
+	if (head->arg[0] != NULL)
+		ret = ft_atoi(head->arg[0]);
+	else
+		exit(0);
+
+	if (ret > 255)
+		exit(ret % 256);
+	else
+		exit(ret);
+}
 /*
 void command_unset(t_commands *tmp ,char **envp)
 {

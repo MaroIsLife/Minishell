@@ -105,6 +105,7 @@ void	ms_loop(t_source *src, char **envp);
 
 
 // Built in functions
+int		ft_exit(t_node *head, t_source *src);
 void	command_list(t_node *head, t_source *src, char **envp);
 void	ft_echo(t_node *head, t_source *src);
 void	print_env(t_node *head, t_source *src, char **envp);
