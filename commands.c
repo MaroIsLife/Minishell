@@ -307,7 +307,7 @@ void 	ft_expn_add(char *add, t_source *src ,char **our_envp, t_node *head)
 			src->export[src->lastexp] = NULL;
 			src->our_envp[src->lastenv] = NULL;
 		}
-	else
+	else 
 		{
 			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, head) + 2) ); //here
 			src->export[src->lastexp++] = add;
@@ -323,7 +323,7 @@ void	ft_expn_chng(char *add, t_source *src ,char **envp)
 	i = 0;
 	while (src->export[i] != NULL)
 	{
-		if (ft_strncmp(add, src->export[i], ft_strlen_eq(add)) == 0)
+		if (ft_strncmp(add, src->export[i], ft_strlen_eq(add)) == 0 && !found_eq(src->export[i]))
 		{
 			// src->export[i] = NULL;
 			src->export[i] = ft_strdup(add);
