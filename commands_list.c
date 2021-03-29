@@ -150,6 +150,8 @@ void command_list(t_node *head, t_source *src, char **envp)
 		ft_export(head, src, envp);
 	else if (ft_strncmp(head->cmd, "unset", 5) == 0 && head->cmd[5] == '\0')
 		ft_unset(head, src, envp);
+		else if (ft_strncmp(head->cmd, "exit", 4) == 0 && head->cmd[4] == '\0')
+		ft_exit(head, src);
 	else if (head->cmd[0] == '\0') // Enter with '\0'?? (Remove \0 from Read if the cmd = '\n')
 		;
 	else
