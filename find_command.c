@@ -4,9 +4,13 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	char	*temp;
 	int		b;
 	int		c;
+
 	i = i + 1;
 	b = 0;
 	c = 0;
+
+	if (s[i] == '?')
+		return(init_question_cmd(src));
 	temp = malloc(1024 * sizeof(char));
 	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
 	{
@@ -81,8 +85,10 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 		}
 		else if (s[i] == '\\' && ft_isascii(s[i + 1]) == 1 && src->dquotes == 0 && src->squotes == 0)
 			src->ra[src->ra_b++] = s[++i];
-		else if (s[i] == '$' && src->squotes == 0 && ft_isalpha(s[i + 1]) == 1 && src->aslash == 0)
+		else if (s[i] == '$' && src->squotes == 0 && (ft_isalpha(s[i + 1]) == 1 || s[i + 1] == '?') && src->aslash == 0)
+		{
 			i = get_env_value_cmd(s, src->our_envp, src, i) - 1;
+		}
 		else if ((s[i] == '>' || s[i] == '<') && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
 		{
 			while (s[i] == '>' || s[i] == '<') //TEST THIS WITH ls>out1>out2 or >out1>out2 ls
