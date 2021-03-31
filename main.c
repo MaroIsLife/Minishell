@@ -123,6 +123,7 @@ void	ms_loop(t_source *src, char **envp)
 	src->pwd = get_x_env(src->our_envp, src, "PWD");
 	set_x_env(envp, src, "TESST", "test");
 	print_prompt1();
+	src->return_value = 155;
 	while(1)
 	{
 		// printf("\U0001F600"); //Useless Emoji
@@ -183,6 +184,7 @@ void	ms_loop(t_source *src, char **envp)
 			// while (head->arg[i] != NULL)
 			// 	printf("Arg: %s\n",head->arg[i++]);
 			src->offset = 0;
+			src->return_value = 0;
 			if (src->foundred == 0 && src->foundpipe == 0)
 				command_list(head , src, envp);
 			else
@@ -201,54 +203,6 @@ void	ms_loop(t_source *src, char **envp)
 			}	
 			c++;
 		}
-
-		//Use Stat to find Paths and get the paths from Environement
-		//
-
-	//export abc=123
-	//export abc
-	// then env
-	//echo $HOMEHA
-
-
-		//echo hello > abc echo haha > abd (TRY IN BASH NOT ZSH)
-
-
-	//	echo 'hello         a'  bye
-	////echo "\$ \| \; \" "
-		//FIX "echo" "hello" !!!
-		//echo "\hello\\\""
-		//echo "hello\\
-		//echo "hello\\"  FIX THIS
-		//echo "hello\"
-		//echo hello\"
-		//ls | grep "file" < file
-		//> file ls
-		//\e\c\h\o \e\a\c
-		//"e""c""h""o" hi
-		//echo 'a    b      c ' FIX THIS
-		//echo \' FIX THIS
-		//echo \"
-		//echo \\
-		//echo \'
-		//echo \;
-		//echo \|
-		//command "\'"
-		//FIX '\' = EVERYTHING INSIDE '' is written and not escaped
-		//e\c\h\o b\y\e FIX THIS
-		// echo bye; FIX THIS
-		// echo "hello"\a\c FIX THIS	
-		//echo "'jjj'"'""\'
-		// echo '"'"ll'\'" FOUND ERROR = 1
-		//echo "$USERjjjjj$SHLVL"
-		//echo ' "ab" '
-
-		// free(command);
-		// free(cmd);
-		// free(argument);
-		// free(token);
-		// write(1,"\b\b  \b\b",6);
-		// write(1,"\r",1);
 		print_prompt1();
 	}
 }

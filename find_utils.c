@@ -118,6 +118,34 @@ int		find_equal_length(char **envp,int c, int b)
 	return length; 
 }
 
+int		init_question_arg(t_source *src)
+{
+	int		i;
+	char	*s;
+
+	i = 0;
+	s = ft_itoa(src->return_value);
+	while (s[i] != '\0')
+		src->re[src->re_b++] = s[i++];
+	free(s);
+	return (i + 1);
+}
+
+int		init_question_cmd(t_source *src)
+{
+	int		i;
+	char	*s;
+
+	i = 0;
+	s = ft_itoa(src->return_value);
+	while (s[i] != '\0')
+		src->ra[src->ra_b++] = s[i++];
+	free(s);
+	return (i);
+}
+
+
+
 
 int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 {
@@ -129,6 +157,9 @@ int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 	i = i + 1;
 	b = 0;
 	c = 0;
+
+	if (s[i] == '?')
+		return(init_question_arg(src));
 	temp = malloc(1024 * sizeof(char));
 	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
 	{
@@ -139,15 +170,15 @@ int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 	temp[b] = '\0';
 	b = 0;
 	length = ft_strlen(temp);
-	while (envp[c] != NULL)
+	while (src->our_envp[c] != NULL)
 	{
 		// if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
-		if (ft_strncmp(envp[c], temp, length) == 0 && envp[c][length] == '=')
+		if (ft_strncmp(src->our_envp[c], temp, length) == 0 && src->our_envp[c][length] == '=')
 		{
-			while (envp[c][b] != '=' && envp[c][b] != '\0')
+			while (src->our_envp[c][b] != '=' && src->our_envp[c][b] != '\0')
 				b++;
-				while (envp[c][++b] != '\0')
-					src->re[src->re_b++] = envp[c][b];
+				while (src->our_envp[c][++b] != '\0')
+					src->re[src->re_b++] = src->our_envp[c][b];
 				break ;
 		}
 		c++;
