@@ -112,6 +112,7 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 		if (get_x_env(src->our_envp, src, "PATH") == 0)
 		{
 			printf("bash: %s: command not found\n", head->cmd);
+			src->return_value = 127;
 			return(0);
 		}
 		s = get_env_path(src->our_envp, src);
@@ -131,8 +132,11 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 		else
 			wait(&g_id);
 	}
-	else 
+	else
+	{
 		printf("bash: %s: command not found\n",varg[0]);
+		src->return_value = 127;
+	}
 	return (0);	
 }
 

@@ -128,7 +128,7 @@ void	handler2(int c);
 //Utils
 char	*get_x_env(char **envp, t_source *src, char *envv_name);
 void	set_x_env(char **envp, t_source *src, char *envv_name, char *value);
-int 	init_question_arg(t_source *src);
-int 	init_question_cmd(t_source *src);
+int 	init_question_arg(t_source *src, int ret);
+int 	init_question_cmd(t_source *src, int ret);
 
 #endif

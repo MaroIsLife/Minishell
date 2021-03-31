@@ -118,7 +118,7 @@ int		find_equal_length(char **envp,int c, int b)
 	return length; 
 }
 
-int		init_question_arg(t_source *src)
+int		init_question_arg(t_source *src, int ret)
 {
 	int		i;
 	char	*s;
@@ -128,10 +128,10 @@ int		init_question_arg(t_source *src)
 	while (s[i] != '\0')
 		src->re[src->re_b++] = s[i++];
 	free(s);
-	return (i + 1);
+	return (ret + 1);
 }
 
-int		init_question_cmd(t_source *src)
+int		init_question_cmd(t_source *src,int ret)
 {
 	int		i;
 	char	*s;
@@ -141,7 +141,7 @@ int		init_question_cmd(t_source *src)
 	while (s[i] != '\0')
 		src->ra[src->ra_b++] = s[i++];
 	free(s);
-	return (i);
+	return (ret + 1);
 }
 
 
@@ -159,7 +159,7 @@ int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 	c = 0;
 
 	if (s[i] == '?')
-		return(init_question_arg(src));
+		return(init_question_arg(src, i));
 	temp = malloc(1024 * sizeof(char));
 	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
 	{
