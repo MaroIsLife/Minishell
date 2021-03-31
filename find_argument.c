@@ -160,6 +160,5 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 	}
 	src->offset = i;
 	src->re[src->re_b] = '\0';
-
 	return (src->re);
 }

@@ -123,7 +123,7 @@ void	ms_loop(t_source *src, char **envp)
 	src->pwd = get_x_env(src->our_envp, src, "PWD");
 	set_x_env(envp, src, "TESST", "test");
 	print_prompt1();
-	src->return_value = 155;
+	src->return_value = 0;
 	while(1)
 	{
 		// printf("\U0001F600"); //Useless Emoji

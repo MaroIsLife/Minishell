@@ -10,7 +10,7 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	c = 0;
 
 	if (s[i] == '?')
-		return(init_question_cmd(src));
+		return(init_question_cmd(src, i));
 	temp = malloc(1024 * sizeof(char));
 	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
 	{
