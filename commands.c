@@ -249,8 +249,6 @@ int ft_search(char **src, char *value)
 	i = 0;
 	while (src[i] != NULL)
 	{
-		// "ab" ?= "abc"
-		// if (ft_strncmp(value, src[i], ft_strlen_eq(src[i])) == 0)
 		if (is_equal(src[i], value))
 			return(1);
 		i++;
@@ -261,7 +259,18 @@ int ft_search(char **src, char *value)
 
 int 	check_exsyn(char *src)
 {
-	if (src[0] >= '0' && src[0] <= '9')
+	// if (src[0] >= '0' && src[0] <= '9')
+	// 	return (1);
+	if (src[0] == '_' || ft_isalpha(src[0]))
+	{
+		int i = 0;
+		while (src[i])
+		{	if (!ft_isalnum(src[i]) && src[i] != '_') 
+				return(1);
+				i++;
+			}
+	}
+	else
 		return (1);
 	return (0);
 }
@@ -315,7 +324,8 @@ void	ft_expn_chng(char *add, t_source *src ,char **envp)
 	while (src->export[i] != NULL)
 	{
 		char *see = src->export[i];
-		if (ft_strncmp(add, src->export[i], ft_strlen_eq(add)) == 0)
+		// if (ft_strncmp(add, src->export[i], ft_strlen_eq(add)) == 0)
+			if (is_equal(add, src->export[i]))
 		{
 			// src->export[i] = NULL;
 			//change only if there is an equle
@@ -358,12 +368,12 @@ void	ft_set_enxp(t_node *head, t_source *src, char **envp)
 	argn = arg_counter(head->arg);
 	while (i < argn)
 	{
-		if (check_exsyn(head->arg[i]))
-			{
-				write (2, "not a valid identifier\n", 23);
-				i++;
-				continue ;
-			}
+		// if (check_exsyn(head->arg[i]))
+		// 	{
+		// 		write (2, "not a valid identifier\n", 23);
+		// 		i++;
+		// 		continue ;
+		// 	}
 		if (ft_search(src->export, head->arg[i]))
 			ft_expn_chng(head->arg[i], src, src->our_envp);
 		else
