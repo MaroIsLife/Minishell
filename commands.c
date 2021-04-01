@@ -133,36 +133,6 @@ void	ft_cd(t_node *head, t_source *src, char *home, char **envp)
 	change_pwd_env(envp);
 }
 
-// char	*search_env(t_node *head, t_source *src, char **envp, int offset)
-// {
-// 	int i;
-// 	int c;
-// 	char *s;
-
-// 	c = 0;
-// 	i = 0;
-
-// 	s = malloc(1024 * sizeof(char));
-// 	while (envp[i] != NULL)
-// 	{
-// 		if (envp[i][0] == head->arg[offset][0])
-// 		{
-// 			while (envp[i][c] == head->arg[offset][c])
-// 			{
-// 				if (head->arg[offset][c] == '=')
-// 				{	
-// 					s[c] = '\0';
-// 					return (s);
-// 				}
-// 				s[c] = head->arg[offset][c];
-// 				c++;
-// 			}
-// 		}
-// 		i++;
-// 	}
-// 	return (NULL);
-// }
-
 
 
 void 	ft_sort(t_source *src)
@@ -217,6 +187,11 @@ void ft_wr_eq(char *s)
 					write(1,"\"",1);
 				}
 			write(1,&s[i], 1);
+			  if (s[i] == '=' && !s[i + 1])
+				{
+                    write(1,"\"\"",2);
+                    break ;
+                }
 		i++;
 			if (!s[i] && sign == 1)
 					write(1,"\"",1);
@@ -253,6 +228,20 @@ int found_eq(char *src)
 	}
 		return (0);
 }
+int is_equal(char *s1, char *s2)
+{
+	int l1 = ft_strlen_eq(s1); //if NULL=SEGFAULT
+	int l2 = ft_strlen_eq(s2); //if NULL=SEGFAULT
+	
+
+	if (l1 != l2)
+		return 0;
+
+	for (int i = 0; i < l1; i++)
+		if (s1[i] != s2[i])
+			return 0;
+	return 1;
+}
 int ft_search(char **src, char *value)
 {
 	int i;
@@ -260,8 +249,9 @@ int ft_search(char **src, char *value)
 	i = 0;
 	while (src[i] != NULL)
 	{
-		
-		if (ft_strncmp(src[i], value,ft_strlen_eq(value)) == 0)
+		// "ab" ?= "abc"
+		// if (ft_strncmp(value, src[i], ft_strlen_eq(src[i])) == 0)
+		if (is_equal(src[i], value))
 			return(1);
 		i++;
 	}
@@ -275,6 +265,7 @@ int 	check_exsyn(char *src)
 		return (1);
 	return (0);
 }
+
 //envp just for testing
 int ft_alloc_count(char **envp, t_node *head)
 {
@@ -310,7 +301,7 @@ void 	ft_expn_add(char *add, t_source *src ,char **our_envp, t_node *head)
 	else 
 		{
 			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, head) + 2) ); //here
-			src->export[src->lastexp++] = add;
+			src->export[src->lastexp++] = ft_strdup(add);
 			src->export[src->lastexp] = NULL;
 
 		}
@@ -323,36 +314,41 @@ void	ft_expn_chng(char *add, t_source *src ,char **envp)
 	i = 0;
 	while (src->export[i] != NULL)
 	{
-		if (ft_strncmp(add, src->export[i], ft_strlen_eq(add)) == 0 && !found_eq(src->export[i]))
+		char *see = src->export[i];
+		if (ft_strncmp(add, src->export[i], ft_strlen_eq(add)) == 0)
 		{
 			// src->export[i] = NULL;
-			src->export[i] = ft_strdup(add);
+			//change only if there is an equle
+			if (found_eq(add))
+				src->export[i] = ft_strdup(add);
 			// src->our_envp[src->lastenv++] = ft_strdup(add);
 			if (i == src->lastexp)
 				src->export[++i] = NULL;
 		}
 		i++;
 	}
-	if (found_eq(add) && ft_search(envp, add))
-		replace_env(envp, src, add);
+	if (found_eq(add))
+	{
+		if (ft_search(src->our_envp, add))
+			replace_env(envp, src, add);
+		else
+			{
+				src->our_envp = our_realloc(src->our_envp, sizeof(char*) * (arg_counter(src->our_envp) + 2) );
+				src->our_envp[src->lastenv++] = ft_strdup(add);
+				src->our_envp[src->lastenv] = NULL;
+			}
+
+	}
+/**
+ * 
+ */
+
 
 }
 
 
-// void ft_realloc_enxp(t_source *src, t_node *head)
-// {
-// 	int ex = ft_alloc_count(src->export, head);
-// 	int en = ft_alloc_count(src->our_envp, head);
-	
-// 	src->export = NULL;
-// 	src->our_envp = NULL;
-// 	src->export = malloc (sizeof(char*) * ex);
-// 	src->our_envp = malloc (sizeof(char*) * en);
-// 	src->export[ex] = NULL;
-// 	src->our_envp[en] = NULL;
 
-	
-// }
+
 void	ft_set_enxp(t_node *head, t_source *src, char **envp)
 {
 	int argn;
@@ -371,9 +367,7 @@ void	ft_set_enxp(t_node *head, t_source *src, char **envp)
 		if (ft_search(src->export, head->arg[i]))
 			ft_expn_chng(head->arg[i], src, src->our_envp);
 		else
-			{
-			    // ft_realloc_enxp(src, head);
-				ft_expn_add(head->arg[i], src, src->our_envp, head);}
+			ft_expn_add(head->arg[i], src, src->our_envp, head);
 		i++;
 	}
 }
