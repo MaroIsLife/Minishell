@@ -261,10 +261,10 @@ int 	check_exsyn(char *src)
 {
 	// if (src[0] >= '0' && src[0] <= '9')
 	// 	return (1);
-	if (src[0] == '_' || ft_isalpha(src[0]))
+	if (src[0] == '_'  || ft_isalpha(src[0]) )
 	{
-		int i = 0;
-		while (src[i])
+		int i = 1;
+		while (src[i] != '=' && src[i])
 		{	if (!ft_isalnum(src[i]) && src[i] != '_') 
 				return(1);
 				i++;
@@ -368,12 +368,14 @@ void	ft_set_enxp(t_node *head, t_source *src, char **envp)
 	argn = arg_counter(head->arg);
 	while (i < argn)
 	{
-		// if (check_exsyn(head->arg[i]))
-		// 	{
-		// 		write (2, "not a valid identifier\n", 23);
-		// 		i++;
-		// 		continue ;
-		// 	}
+		int n = check_exsyn(head->arg[i]);
+		if (n)
+			{
+				printf ("[%d]\n", n);
+				write (2, "not a valid identifier\n", 23);
+				i++;
+				continue ;
+			}
 		if (ft_search(src->export, head->arg[i]))
 			ft_expn_chng(head->arg[i], src, src->our_envp);
 		else
