@@ -145,6 +145,12 @@ void	ms_loop(t_source *src, char **envp)
 
 		c = 0;
 		src->fd_r_c = 0;
+
+
+		/**
+		 * PIPE implumetation : Craete FD{2} and it redirect from 1>0 then use dup to dup 
+		 * EZPZ 
+		 * */
 		while (pipe[c] != NULL)
 		{
 
