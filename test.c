@@ -1,7 +1,7 @@
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <errno.h>
-// #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
 
 // typedef struct node {
 //     int val;
@@ -16,7 +16,31 @@
 //     }
 // }
 
-
+void ft_wr_eq(char *s)
+{
+	if (s != NULL)
+	{	int i = 0;
+		int sign = 0;
+		while (s[i] != 0)
+		{
+			if (s[i] == '=' && s[i + 1])
+				{
+					sign = 1;
+					write(1,&s[i++], 1);
+					write(1,"\"",1);
+				}
+			write(1,&s[i], 1);
+                if (s[i] == '=' && !s[i + 1])
+				{
+                    write(1,"\"\"",2);
+                    break ;
+                }
+		i++;
+			if (!s[i] && sign == 1)
+					write(1,"\"",1);
+		}
+	}
+}
 // void push(node_t *head, int val) {
 //     while (head->next != NULL) {
 //         head = head->next;
@@ -27,7 +51,7 @@
 //     head->next->next = NULL;
 // }
 
-// int main() {
+int main() {
   
 //   node_t *head;
 
@@ -50,7 +74,7 @@
 // // print_list(head);
 // // printf("%d\n",head->val);
 
-
-
-//   return 0;
-// }
+    ft_wr_eq("Hello=abc");
+    
+  return 0;
+}

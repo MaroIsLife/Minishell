@@ -136,8 +136,7 @@ void	ms_loop(t_source *src, char **envp)
 			exit(0);
 		}
 		// if (ft_strncmp(cmd, "exit", 4) == 0)
-		// 	exit(0);
-		// if (ft_strncmp(cmd,"clear",5) == 0)
+		// 	exit(0);export
 		// 	clearScreen();
 	
 		init(src); // MOVE INIT() TO WHILE PIPE != NULL??
