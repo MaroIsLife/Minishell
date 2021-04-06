@@ -116,14 +116,17 @@ void	ft_pwd (void)
 	printf ("%s\n",getcwd(s, 100));
 	free (s);
 }
-void	ft_cd(t_node *head, t_source *src, char *home, char **envp)
+void ft_cd(t_node *head, t_source *src, char *home, char **envp)
 {
 	int sign;
 
 	sign = 0;
 	if (!head->arg[0])
 		{
-			chdir(home);
+			if (!home)
+				write(1, "bash: cd: HOME not set\n", 23);
+			else
+				chdir(home);
 			free(home);
 		}
 	else

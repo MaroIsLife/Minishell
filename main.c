@@ -116,7 +116,7 @@ void	ms_loop(t_source *src, char **envp)
 	int		i = 0;
 	t_node	*head;
 	t_node	*first;
-	char	**pipe;
+	char	**pipes;
 
 	init_env(src,envp);
 	src->user = get_x_env(src->our_envp, src, "USER");  // This Retrieves the USER's logname and stores it in src->user NOT ALLOCATED
@@ -140,7 +140,7 @@ void	ms_loop(t_source *src, char **envp)
 		// 	clearScreen();
 	
 		init(src); // MOVE INIT() TO WHILE PIPE != NULL??
-		pipe = my_ft_split(cmd,';', src);
+		pipes = my_ft_split(cmd,';', src);
 		int c;
 
 		c = 0;
@@ -151,7 +151,7 @@ void	ms_loop(t_source *src, char **envp)
 		 * PIPE implumetation : Craete FD{2} and it redirect from 1>0 then use dup to dup 
 		 * EZPZ 
 		 * */
-		while (pipe[c] != NULL)
+		while (pipes[c] != NULL)
 		{
 
 			head = (t_node *) malloc(sizeof(t_node));
@@ -159,7 +159,7 @@ void	ms_loop(t_source *src, char **envp)
 			head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
 			head->pipe->next = NULL;
 			first = head;
-			find_for_split(pipe[c], src);
+			find_for_split(pipes[c], src);
 			src->allocate = 0;
 
 			if (src->foundred == 1)
@@ -184,7 +184,7 @@ void	ms_loop(t_source *src, char **envp)
 			src->squotes = 0;
 			i = i^i;
 			src->c = c;
-			init_parse(src, head, envp, pipe);
+			init_parse(src, head, envp, pipes);
 			i = 0;
 			// while (head->arg[i] != NULL)
 			// 	printf("Arg: %s\n",head->arg[i++]);
@@ -198,9 +198,15 @@ void	ms_loop(t_source *src, char **envp)
 				int ge_id;
 				if (id == 0)
 				{
+					if (src->foundpipe == 1)
+					{
+						int pid1 =fork();
+						int fd[2];
+						pipe(fd);
+					}
 					if (src->foundred == 1)
 						red_open(head, src);
-					command_list(head, src, envp);
+					// command_list(head, src, envp);
 					exit(0);
 				}
 				else
