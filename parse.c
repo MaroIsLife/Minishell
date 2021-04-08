@@ -12,8 +12,6 @@ int find_space(t_source *src, int i)
 	return (c);
 }
 
-
-
 void init_arg(t_node *head, char **arg)
 {
 	int b;
@@ -66,12 +64,11 @@ void init_arg_pipe(char **arg, t_pipe *p)
 
 void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 {
-	int		c;
-	int		count;
-	char	**arg;
-	t_pipe	*p;
-	int		i;
-
+	int c;
+	int count;
+	char **arg;
+	t_pipe *p;
+	int i;
 
 	c = 0;
 	i = 0;
@@ -90,13 +87,12 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 		}
 		arg[i] = NULL;
 		init_arg_pipe(arg, p);
-		p->next = (t_pipe *) malloc(sizeof(t_pipe));
+		p->next = (t_pipe *)malloc(sizeof(t_pipe));
 		p->next->next = NULL;
 		p = p->next;
 		c++;
 	}
 }
-
 
 void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 {
@@ -106,26 +102,26 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 	char **arg;
 	t_pipe *p;
 
-
-		head->cmd = find_command(pipe[src->c], head, src, envp);
-		count = count_argument(pipe[src->c], src->offset, src);
-		src->count = count;
-		src->dquotes = 0;
-		src->squotes = 0;
-		arg = malloc((count + 1) * sizeof(char *));
-		while (i < count)
-		{
-			arg[i] = find_argument(pipe[src->c], head, src, envp);
-			i++;
-		}
-		arg[i] = NULL;
-		init_arg(head, arg);
-		i = 0;
-		// while (head->arg[i] != NULL)
-		// {
-		// 	printf("%d Arg: |%s|\n",i, head->arg[i]);
-		// 	i++;
-		// }
+	head->cmd = find_command(pipe[src->c], head, src, envp);
+	count = count_argument(pipe[src->c], src->offset, src);
+	printf("Count: %d\n",count);
+	src->count = count;
+	src->dquotes = 0;
+	src->squotes = 0;
+	arg = malloc((count + 1) * sizeof(char *));
+	while (i < count)
+	{
+		arg[i] = find_argument(pipe[src->c], head, src, envp);
+		i++;
+	}
+	arg[i] = NULL;
+	init_arg(head, arg);
+	i = 0;
+	// while (head->arg[i] != NULL)
+	// {
+	// 	printf("%d Arg: |%s|\n",i, head->arg[i]);
+	// 	i++;
+	// }
 	i = 0;
 	p = head->pipe;
 	if (src->foundpipe == 1)

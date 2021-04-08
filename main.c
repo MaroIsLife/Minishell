@@ -142,7 +142,10 @@ void	ms_loop(t_source *src, char **envp)
 		init(src); // MOVE INIT() TO WHILE PIPE != NULL??
 		pipes = my_ft_split(cmd,';', src);
 		int c;
-
+		int o =0;
+		while (pipes[o] != NULL)
+			o++;
+		printf("Pipes Length: %d\n",o);
 		c = 0;
 		src->fd_r_c = 0;
 
@@ -153,7 +156,6 @@ void	ms_loop(t_source *src, char **envp)
 		 * */
 		while (pipes[c] != NULL)
 		{
-
 			head = (t_node *) malloc(sizeof(t_node));
 			head->next = NULL;
 			head->pipe = (t_pipe *) malloc(sizeof(t_pipe));

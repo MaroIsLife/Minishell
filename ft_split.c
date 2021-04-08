@@ -25,7 +25,7 @@ int		delimc(char *s, char c, t_source *src)
 	{
 		while (s[i] != c && s[i] != '\0')
 		{
-			finding_quotes(s, i, src);
+			finding_quotes2(s, i, src);
 			i++;
 		}
 		if (s[i] == '\0')
@@ -54,7 +54,7 @@ char		**my_ft_split(char *s, char c, t_source *src)
 	{
 		while (s[len] != '\0' && s[len] == c && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
 		{
-			finding_quotes(s, len, src);
+			finding_quotes2(s, len, src);
 			len++;
 		}
 		start = len;
@@ -62,7 +62,7 @@ char		**my_ft_split(char *s, char c, t_source *src)
 		{
 			if (s[len] == c && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
 				break ;
-			finding_quotes(s, len, src);
+			finding_quotes2(s, len, src);
 			len++;
 		}
 		p[k++] = ft_substr(s, start, (len - start));
