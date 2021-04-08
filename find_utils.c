@@ -54,7 +54,7 @@ int		finding_aslash(char *s, int i, t_source *src)
 {
 		if (s[i] == '\\' && s[i + 1] == '\'' && src->dquotes == 1)
 			src->aslash = 0;
-		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'' || s[i + 1] == '$' || s[i + 1] == '>' || s[i + 1] == '<') && src->aslash == 0 && src->squotes == 0)
+		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'' || s[i + 1] == '$' || s[i + 1] == '>' || s[i + 1] == '<' || s[i + 1] == ';') && src->aslash == 0 && src->squotes == 0)
 		{
 			src->aslash = 1;
 		}
@@ -67,6 +67,41 @@ int		finding_aslash(char *s, int i, t_source *src)
 		}
 		else
 			src->aslash = 0; //convert to return 0 or 1 for norminette?
+	return 0;
+}
+int		finding_aslash2(char *s, int i, t_source *src)
+{
+		if (s[i] == '\\' && s[i + 1] == '\'' && src->dquotes == 1)
+			src->aslash = 0;
+		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'' || s[i + 1] == '$' || s[i + 1] == '>' || s[i + 1] == '<' || s[i + 1] == ';') && src->aslash == 0 && src->squotes == 0)
+		{
+			src->aslash = 1;
+		}
+		else
+			src->aslash = 0; //convert to return 0 or 1 for norminette?
+	return 0;
+}
+int finding_quotes2(char *s,int i, t_source *src)
+{
+	if (s[i] == '\"' && src->squotes == 0 && src->aslash == 0)
+	{
+			if (src->dquotes == 0)
+			{
+				src->dquotes = 1;
+			}
+			else
+				src->dquotes = 0;
+	}
+	else if (s[i] == '\'' && src->dquotes == 0 && src->aslash == 0)
+	{
+			if (src->squotes == 0)
+			{
+				src->squotes = 1;
+			}
+			else
+				src->squotes = 0;
+	}
+	finding_aslash2(s, i, src);
 	return 0;
 }
 

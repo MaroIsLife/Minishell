@@ -7,7 +7,7 @@ int		arg_if_space(char *s,int *i, t_source *src)
 		(*i)++;
 	return (*i);
 }
-int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
+int		count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 {
 	int i;
 	int jump;
@@ -24,15 +24,19 @@ int count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 		else if (s[i] == '\'' && i == 0)
 			src->squotes = 1;
 		else
-			finding_quotes(s, i, src);
-		if ((s[i] == ';' || s[i] == '|') && (src->dquotes == 0 && src->squotes == 0 && src->aslash == 0))
+			finding_quotes2(s, i, src);
+		if ((s[i] == ';' || s[i] == '|') && (src->dquotes == 0 && src->squotes == 0 && src->aslash == 0) && s[i - 1] != '\\')
+		{
 			return (count);
+		}
 		if (s[i] == ' ' && src->dquotes == 0 && src->squotes == 0)
 		{
 			while (s[i] == ' ')
 				i++;
-			if ((s[i] == '|' || s[i] == ';') && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
+			if ((s[i] == '|' || s[i] == ';') && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0 && s[i - 1] != '\\')
+			{
 				return (count);
+			}
 			if (s[i] == '\0' || s[i] == '\n')
 				return (count);
 			if (s[i] != '>' && jump == 0) // Add != <
@@ -130,7 +134,7 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 		else if ((s[i] == '\"') && src->squotes == 0 && src->aslash == 0)
 			finding_quotes(s, i, src);
 		else if ((s[i] == '\'') && src->dquotes == 0 && src->aslash == 0)
-			finding_quotes(s, i , src);
+			finding_quotes(s, i, src);
 		else if (s[i] == '$' && src->aslash == 0 && (ft_isalpha(s[i + 1]) == 1 || s[i + 1] == '?') && src->squotes == 0)
 		{
 			i = get_env_value_arg(s, src->our_envp, src, i) - 1;

@@ -1,7 +1,5 @@
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <errno.h>
-// #include <string.h>
+// #include "minishell.h"
+// #include <termcap.h>
 
 // char    *read_line()
 // {
@@ -34,21 +32,28 @@
 // }
 // 	 return (0);
 // }
+
 // void    print_prompt1()
 // {
-// 		write(1,"\033[0;32m3ayn_chou9$ \033[0;39m",sizeof("\033[0;32m3ayn_chou9$ \033[0;39m"));
+// 		write(1,"\033[0;32mTermCap$ \033[0;39m",sizeof("\033[0;32mTermCap$ \033[0;39m"));
 // }
 
-// int main() {
-  
+// int main()
+// {
+//     char *s;
 
+//     print_prompt1();
 
-//     while (1)
+//     while(1)
 //     {
-//         char *l = malloc (1024);
+//         s = read_line();
+//         if (s == NULL)
+//             exit(0);
+//         printf("%s",s);
 //         print_prompt1();
-//         l  = read_line();
-//         puts(l);
-//        }
-//     return 0;
+
+
+//     }
+
+//     return (0);
 // }
