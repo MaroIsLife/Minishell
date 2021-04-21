@@ -78,7 +78,13 @@ typedef struct s_node {
 }   t_node;
 
 
-int	g_id;
+typedef struct s_global {
+	int		fsignal;
+	int		id;
+
+}		t_global;
+
+t_global g_global;
 
 
 //Parsing
