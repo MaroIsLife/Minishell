@@ -120,7 +120,7 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 	}
 	if (path != 0)
 	{
-		if ((g_id = fork()) == 0)
+		if ((g_global.id = fork()) == 0)
 		{
 			// signal(SIGINT,SIG_DFL);
 			if (execve(path , &varg[0], envp) == -1) //Should i send ENVP or OUR-ENV AND WHAT IS THE DIFFERENCE???!
@@ -130,7 +130,7 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 			}
 		}
 		else
-			wait(&g_id);
+			wait(&g_global.id);
 	}
 	else
 	{

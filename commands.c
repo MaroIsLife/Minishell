@@ -352,11 +352,6 @@ void	ft_expn_chng(char *add, t_source *src ,char **envp)
 			}
 
 	}
-/**
- * 
- */
-
-
 }
 
 
@@ -498,12 +493,9 @@ int		ft_unset(t_node *head, t_source *src, char **envp)
               	 				 }
 									src->lastenv--;
 									src->our_envp[j] = NULL;
-								
 							}
 							count++;
 						}
-
-						
 					}
 				}
 			c++;
