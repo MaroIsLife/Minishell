@@ -117,19 +117,25 @@ void	ms_loop(t_source *src, char **envp)
 	t_node	*head;
 	t_node	*first;
 	char	**pipes;
+	int		fsignal;
 
 	init_env(src,envp);
 	src->user = get_x_env(src->our_envp, src, "USER");  // This Retrieves the USER's logname and stores it in src->user NOT ALLOCATED
 	src->pwd = get_x_env(src->our_envp, src, "PWD");
 	set_x_env(envp, src, "TESST", "test");
-	print_prompt1();
 	src->return_value = 0;
 	while(1)
 	{
 		// printf("\U0001F600"); //Useless Emoji
 		signal(SIGINT,handler); // ^C
+		if (g_global.fsignal  == 0)
+		{
+			print_prompt1();
+			g_global.fsignal  = 1;
+		}
 		// signal(SIGQUIT,handler); // ^/
 		cmd = read_line();
+		g_global.fsignal  = 0;
 		if (cmd == NULL) // ^D
 		{
 			write(1,"exit\n",6);
@@ -145,7 +151,7 @@ void	ms_loop(t_source *src, char **envp)
 		int o =0;
 		while (pipes[o] != NULL)
 			o++;
-		printf("Pipes Length: %d\n",o);
+		// printf("Pipes Length: %d\n",o);
 		c = 0;
 		src->fd_r_c = 0;
 
@@ -216,14 +222,12 @@ void	ms_loop(t_source *src, char **envp)
 			}	
 			c++;
 		}
-		print_prompt1();
 	}
 }
 
 int     main(int argc, char **argv, char **envp)
 {
 	t_source src;
-	g_id = 2;
 	// clear();
 
 	ms_loop(&src, envp);
