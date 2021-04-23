@@ -352,11 +352,6 @@ void	ft_expn_chng(char *add, t_source *src ,char **envp)
 			}
 
 	}
-/**
- * 
- */
-
-
 }
 
 
@@ -484,6 +479,7 @@ int		ft_unset(t_node *head, t_source *src, char **envp)
 					{
 						while ((src->export[i] != NULL))
 							{
+<<<<<<< HEAD
 								src->export[i] = src->export[i + 1];
 								i++;
 							}
@@ -511,6 +507,19 @@ int		ft_unset(t_node *head, t_source *src, char **envp)
 							src->lastenv--;
 							src->our_envp[i] = NULL;
 							break ;
+=======
+								int j = c;
+								while (j < arglen - 1)
+              	  				{
+            						src->our_envp[j] = src->our_envp[j + 1];
+                    				j++;
+              	 				 }
+									src->lastenv--;
+									src->our_envp[j] = NULL;
+							}
+							count++;
+						}
+>>>>>>> ab4193287e370880fc06e4f989bfd056c12ac1db
 					}
 				i++;
 				}

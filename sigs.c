@@ -3,12 +3,12 @@
 void handler(int c)
 {
 
-	if (g_id != 0)
-	{
+	if (g_global.fsignal != 0)
 		write(1,"\b\b  \b\b",6);
-		write(1,"\r\n",2);
-		print_prompt1();
-	}
+	
+	write(1, "\n", 1);
+	print_prompt1();
+	g_global.fsignal = 1;
 
 	// write(1,"\b\b  \b\b",6);
 	// write(1,"\n",1);
