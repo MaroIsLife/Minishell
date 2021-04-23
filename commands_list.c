@@ -106,7 +106,9 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
   	varg = ft_valide_args(head, src->count);
 	
 	if (head->cmd[0] == '/' || (head->cmd[0] == '.' && head->cmd[1] == '/'))
+	{
 		path = head->cmd;
+	}
 	else 
 	{
 		if (get_x_env(src->our_envp, src, "PATH") == 0)

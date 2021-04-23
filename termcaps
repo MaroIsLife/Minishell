@@ -1,0 +1,14 @@
+`ce'
+String of commands to clear from the cursor to the end of the current line.
+
+`le'
+String of commands to move the cursor left one column. Unless the `bw' flag capability is specified, the effect is undefined if the cursor is at the left margin; do not use this command there. If `bw' is present, this command may be used at the left margin, and it wraps the cursor to the last column of the preceding line.
+
+`sc'
+String of commands to make the terminal save the current cursor position. Only the last saved position can be used. If this capability is present, `rc' should be provided also. Most terminals have neither.
+
+`rc'
+String of commands to make the terminal restore the last saved cursor position. If this capability is present, `sc' should be provided also. Most terminals have neither.
+
+
+https://www.gnu.org/software/termutils/manual/termcap-1.3/html_mono/termcap.html
