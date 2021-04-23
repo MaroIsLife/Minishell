@@ -457,61 +457,72 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 // 	}
 // }
 
+
+
+//// unset is not done yes ///
+
+/*
+
+
+*/
+
 int		ft_unset(t_node *head, t_source *src, char **envp)
 {
-	int i;
-	int c;
-	int len;
-	int arglen;
+	int env;
+	int exp;
 
-	i = 0;
-	c = 0;
-	while (head->arg[i] != NULL)
-	{
-		len = ft_strlen(head->arg[i]);
-		arglen = arg_counter(src->our_envp);
-		while(src->export[c]!= NULL)
-		{
-			if (ft_strncmp(head->arg[i], src->export[c], len) == 0)
+	env = ft_search(src->our_envp, head->arg[0]);
+	exp = ft_search(src->export, head->arg[0]);
+	printf ("env %d, exp %d\n", env , exp);
+
+	if (exp)
+			{
+				int i = 0;
+				while (src->export[i] != NULL)
 				{
-					int j = c;
-					while (j < arglen - 1)
-              	  	{
-                    	src->export[j] = src->export[j + 1];
-                    	j++;
-              	 	 }
-					src->lastexp--;
-					src->export[j] = NULL;
-					if (ft_search(envp, head->arg[i]))
+				if (is_equal(src->export[i], head->arg[0]))
 					{
-						int count = 0;
-						arglen = arg_counter(src->our_envp);
-						while (src->our_envp[count] != NULL)
-						{
-							if (ft_strncmp(head->arg[i], src->our_envp[c], ft_strlen(head->arg[i])) == 0)
+						while ((src->export[i] != NULL))
 							{
-								int j = c;
-								while (j < arglen - 1)
-              	  				{
-            						src->our_envp[j] = src->our_envp[j + 1];
-                    				j++;
-              	 				 }
-									src->lastenv--;
-									src->our_envp[j] = NULL;
-								
+								src->export[i] = src->export[i + 1];
+								i++;
 							}
-							count++;
-						}
-
-						
+							src->lastexp--;
+							src->export[i] = NULL;
+							break;
 					}
+				i++;
 				}
-			c++;
-		}
-		i++;
-	}
+
+			}
+	/******************************************/
+	if (env)
+			{
+				int i = 0;
+				while (src->our_envp[i] != NULL)
+				{
+				if (is_equal(src->our_envp[i], head->arg[0]))
+					{
+						while ((src->our_envp[i] != NULL))
+							{
+								src->our_envp[i] = src->our_envp[i + 1];
+								i++;
+							}
+							src->lastenv--;
+							src->our_envp[i] = NULL;
+							break ;
+					}
+				i++;
+				}
+
+			}
+	/******************************************/
+
+
 	return (0);
 }
+
+
 
 int		ft_exit(t_node *head, t_source *src)
 {

@@ -123,7 +123,7 @@ int    ft_execute(t_node *head, t_source *src, char **envp)
 		if ((g_id = fork()) == 0)
 		{
 			// signal(SIGINT,SIG_DFL);
-			if (execve(path , &varg[0], envp) == -1) //Should i send ENVP or OUR-ENV AND WHAT IS THE DIFFERENCE???!
+			if (execve(path , &varg[0], src->our_envp) == -1) //Should i send ENVP or OUR-ENV AND WHAT IS THE DIFFERENCE???!
 			{
 				printf("bash: %s: %s\n", varg[0], strerror(errno));
 				exit(0);

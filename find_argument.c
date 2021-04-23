@@ -97,7 +97,7 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 	while (s[*i] != ' ' && s[*i] != '\0' && s[*i] != '\n' && s[*i] != '>' && s[*i] != '<')
 		src->p->filename[b++] = s[(*i)++];
 	src->p->filename[b] = '\0';
-	// printf("Filename: %s\n",src->p->filename);
+	// prwintf("Filename: %s\n",src->p->filename);
 	src->allocate = 1;
 	return (0);
 }
