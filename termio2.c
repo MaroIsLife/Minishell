@@ -1,10 +1,11 @@
-#include <stdio.h>
-#include <termios.h>
-#include <unistd.h>
-#include <termcap.h>
-#include <stdlib.h>
-#include <string.h>
-#include <signal.h>
+# include <stdio.h>
+# include <termios.h>
+# include <unistd.h>
+# include <termcap.h>
+# include <stdlib.h>
+# include <string.h>
+# include <signal.h>
+# include "minishell.h"
 # define KEY_UP 183
 # define KEY_DOWN 184
 # define KEY_LEFT  186
@@ -14,12 +15,7 @@
 # define KEY_TAB 9
 # define CTRL_D 4
 
-typedef struct s_stack
-{
-	char            *data;
-	struct s_stack	*prev;
-	struct s_stack	*next;
-}                t_stack;
+
 
 char    *ft_strjoinchar(char *s, char c)
 {
@@ -64,22 +60,36 @@ int             get_char()
 		return (total);
 }
 
+void    print_prompt1()
+{
+		write(1,"\033[0;32mMaro-&-Ma3toub$ \033[0;39m",sizeof("\033[0;32mMaro-&-Ma3toub$ \033[0;39m"));
+}
+
+
+int ft_putc(int s)
+{
+	return write(1,&s,1);
+}
+
 int main()
 {
 	int		d;
 	char	*s;
 	char 	*ret;
-	int		iao;
 	t_stack *head;
-
-	iao = 0;
+	t_stack *tmp;
+	int help = 0;
     tgetent(NULL, getenv("TERM")); //Getting the Terminal description since termcap functionalities differ
 	ret = malloc(1 * sizeof(char));
 	ret[0] = '\0';
-	head = (t_stack *) malloc(sizeof(t_stack));
-	head->prev = NULL;
-	head->next = NULL;
-	t_stack *tmp;
+	// t_stack *tmp;
+	// head = (t_stack *) malloc(sizeof(t_stack));
+	// head->next = NULL;
+	// head->prev = NULL;
+	// tmp = head;
+		print_prompt1();
+	head = NULL;
+	tmp = NULL;
 	while(1)
 	{
 		d = get_char();
@@ -87,44 +97,112 @@ int main()
 		{
 			ret = ft_strjoinchar(ret, d);
 			write(1,&d,1);
-			iao++;
-		}
-		else if (d == KEY_UP)
-		{
-			s = tgetstr("ch", NULL);
-			write(1, s, strlen(s)); 
-			s = tgetstr("dl", NULL); //Get the string entry id 'ce' means clear from the cursor to the end of the current line.
-			write(1, s, strlen(s)); // execute the string entry id
-			write(1, "KEY_UP\n", 8);
-			// ret = "KEY UP";
-			// tmp = tmp->prev;
-			// ret = tmp->data;
 		}
 		else if (d == KEY_DOWN)
 		{
-			write(1, "KEY_DOWN\n", 10);
-			ret = "KEY DOWN";
+			tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
+			tputs(tgetstr("dl",NULL), 1, ft_putc);
+			print_prompt1();
+			// if (tmp)
+			// {
+	
+			// 	write(1, tmp->data, strlen(tmp->data));
+			// 	if (tmp->prev != NULL)
+			// 		tmp = tmp->prev;
+			// 	ret = tmp->data;
+			// }
+			if (tmp && tmp->prev)
+				{
+					tmp = tmp->prev;
+					ret = (char*)tmp->data;
+					write(1, tmp->data, strlen(tmp->data));
+				}
+				else
+				{
+					ret = "";
+					help = 0;
+					write(1, ret, strlen(ret));
+				}
+
+			// else
+			// 	ret[0] = 0;
+			// s = tgoto(tgetstr("ch", NULL), 0 ,0);
+			// write(1, s, strlen(s)); 
+			// s = tgetstr("dl", NULL); //Get the string entry id 'ce' means clear from the cursor to the end of the current line.
+			// write(1, s, strlen(s)); // execute the string entry id
+		}
+		else if (d == KEY_UP)
+		{
+			tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
+			tputs(tgetstr("dl",NULL), 1, ft_putc);
+			print_prompt1();
+			// if (tmp)
+			// {
+			// 	// fprintf(stderr, "%s", tmp->next);
+
+			// 	write(1, tmp->data, strlen(tmp->data));
+			// 	if(tmp->next != NULL)
+			// 		tmp = tmp->next;
+			// 	ret = tmp->data;
+			// }
+			if (tmp)
+				{
+					if (!tmp->prev && !help)
+					{
+						ret = (char*)tmp->data;
+						help = 1;
+					}
+					else
+					{
+						if(tmp->next)
+							tmp = tmp->next;
+						ret = (char*)tmp->data;		
+					}
+					write(1, tmp->data, strlen(tmp->data));
+				}
+			// else 
+			// {
+			// 	// fprintf(stderr, "Else made it here");
+			// 	ret[0] = 0;
+			// }
+			// t_stack *tmp;
+			// tmp = head;
+			// while (tmp)
+			// {
+			// 	printf("%s\n", (char*)tmp->data);
+			// 	tmp = tmp->next;
+			// }
 		}
 		else if (d == ENTER)
 		{
+			// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
+			// tputs(tgetstr("dl",NULL), 1, ft_putc);
+			write(1,"\n",1);
+			print_prompt1();
 			// s = tgetstr("ch", NULL);
 			// write(1, s, strlen(s)); 
 			// s = tgetstr("dl", NULL); //Get the string entry id 'ce' means clear from the cursor to the end of the current line.
 			// write(1, s, strlen(s)); // execute the string entry id
-			head->data = ret;
-			printf("\nHead data: %s\n",head->data);
-			head->next = (t_stack *) malloc(sizeof(t_stack));
-			tmp = head->next;
-			tmp->prev = head;
-			tmp->next = NULL;
-			head = head->next;
+			if (ret[0] != 0)
+			{
+				// head->data = ret;
+				// head->next = (t_stack *) malloc(sizeof(t_stack));
+				// head->next->next = NULL;
+				// head->next->prev = head;
+				// head = head->next;
+				// tmp = head;
+				lstadd_dlist(&head, lstnewc(ret));
+				tmp = head;
+			}
+			ret = "";
 
-
-
-			break ;
+			// tmp = head->next;
+			// tmp->prev = head;
+			// tmp->next = NULL;
+			// head = head->next;
+			continue ;
 		}
 	}
 	printf("\nret: %s\n",ret);
-
-    return (0);
+    return (0);	
 }

@@ -22,6 +22,13 @@ typedef struct s_filename {
     struct s_filename	*next;
 }	t_filename;
 
+typedef struct s_stack
+{
+	char            *data;
+	struct s_stack	*prev;
+	struct s_stack	*next;
+}                t_stack;
+
 // typedef struct s_export {
 // 	char				*name;
 // 	char				*value; // With or without =
@@ -138,5 +145,11 @@ char	*get_x_env(char **envp, t_source *src, char *envv_name);
 void	set_x_env(char **envp, t_source *src, char *envv_name, char *value);
 int 	init_question_arg(t_source *src, int ret);
 int 	init_question_cmd(t_source *src, int ret);
+
+
+void	lstadd_dlist(t_stack **alst, t_stack *new);
+void	next_node(t_stack **list);
+void	prev_node(t_stack **list);
+t_stack	*lstnewc(void *data);
 
 #endif
