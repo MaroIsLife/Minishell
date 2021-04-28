@@ -26,22 +26,7 @@ void	lstadd_dlist(t_stack **alst, t_stack *new)
 	// 	*alst = new;
 }
 
-void	next_node(t_stack **list)
-{
-	if (!*list)
-		return ;
-	if ((*list)->next != NULL)
-		(*list) = (*list)->next;
-}
-void	prev_node(t_stack **list)
-{
-	if (!*list)
-		return ;
-	if ((*list)->prev != NULL)
-		(*list) = (*list)->prev;
-}
-
-t_stack	*lstnewc(void *data)
+t_stack		*lstnewc(void *data)
 {
 	t_stack	*p;
 	p = (t_stack*)malloc(sizeof(t_stack));
