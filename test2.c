@@ -1,6 +1,5 @@
 # include <stdio.h>
 # include <termios.h>
-#include <stdio.h>
 # include <termcap.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -90,24 +89,20 @@ int main()
 	// head->prev = NULL;
 	// tmp = head;
 	head = NULL;
-	tmp = NULL;
+	tmp = head;
+    char *line;
 	print_prompt1();
 
 	while(1)
 	{
 		d = get_char();
-		if (d == 4)
+		if (d >= 32 && d < 127)
 		{
-			if (ret[0] == 0)
-			{
-				write(1,"exit",4);
-				exit(0);
-			}
-		}
-		else if (d >= 32 && d < 127)
-		{
-			ret = ft_strjoinchar(ret, d);
 			write(1, &d ,1);
+            if (!help)
+                line = ft_strjoinchar(line,d);
+            else
+			    ret = ft_strjoinchar(ret, d);
 		}
 		else if (d == KEY_REMOVE)
 		{
@@ -130,14 +125,6 @@ int main()
 			tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
 			tputs(tgetstr("dl",NULL), 1, ft_putc);
 			print_prompt1();
-			// if (tmp)
-			// {
-	
-			// 	write(1, tmp->data, strlen(tmp->data));
-			// 	if (tmp->prev != NULL)
-			// 		tmp = tmp->prev;
-			// 	ret = tmp->data;
-			// }
 			if (tmp && tmp->prev)
 				{
 					tmp = tmp->prev;
@@ -146,10 +133,11 @@ int main()
 				}
 				else
 				{
-					ret = "";
+					s = line;
 					help = 0;
-					write(1, ret, strlen(ret));
 				}
+					write(1, ret, strlen(ret));
+                    edit = 0;
 
 			// else
 			// 	ret[0] = 0;
@@ -183,10 +171,11 @@ int main()
 					{
 						if(tmp->next)
 							tmp = tmp->next;
-						ret = (char*)tmp->data;
+						ret = (char*)tmp->data;		
 					}
 					write(1, tmp->data, strlen(tmp->data));
 				}
+            edit = 0;
 			// else 
 			// {
 			// 	ret[0] = 0;
@@ -203,36 +192,26 @@ int main()
 		{
 			// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
 			// tputs(tgetstr("dl",NULL), 1, ft_putc);
-			write(1,"\n",1);
+            write(1,"\n",1);
 			print_prompt1();
 			// s = tgetstr("ch", NULL);
 			// write(1, s, strlen(s)); 
 			// s = tgetstr("dl", NULL); //Get the string entry id 'ce' means clear from the cursor to the end of the current line.
 			// write(1, s, strlen(s)); // execute the string entry id
 				// fprintf(stderr, "Else made it here");
-			if (ret[0] != 0)
+			if (tmp && help)
 			{
-				// head->data = ret;
-				// head->next = (t_stack *) malloc(sizeof(t_stack));
-				// head->next->next = NULL;
-				// head->next->prev = head;
-				// head = head->next;
-				// tmp = head;
-				lstadd_dlist(&head, lstnewc(strdup(ret)));
-				// fprintf(stderr, "%s", tmp);
-				tmp = head;
-				help = 0;
-				// printf("%s\n",tmp->data);
+                write(1,"MADE",4);
+                free(line);
+                if (edit)
+                    line = s;
+                else
+                    line = strdup(s);
 			}
+            edit = 0;
 			// if (help == 0)
-				ret = "";
-			
-			// while (tmp)
-			// {
-			// 	fprintf(stderr,".%s.",tmp->data);
-			// 	tmp = tmp->next;
-			// }
-			// tmp = head;
+				// ret = "";
+
 			// tmp = head->next;
 			// tmp->prev = head;
 			// tmp->next = NULL;

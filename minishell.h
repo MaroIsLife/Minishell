@@ -12,8 +12,19 @@
 # include <errno.h>
 # include "gnl/get_next_line.h"
 # include "libft/libft.h"
+# include <termios.h>
+# include <termcap.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+
+# define KEY_UP 183
+# define KEY_DOWN 184
+# define KEY_LEFT  186
+# define KEY_RIGHT 185
+# define ENTER 10
+# define KEY_REMOVE 127
+# define KEY_TAB 9
+# define CTRL_D 4
 
 typedef struct s_filename {
 	char				*filename;
