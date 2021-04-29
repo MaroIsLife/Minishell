@@ -118,10 +118,13 @@ int main()
 			{
 				while (i < (strlen(ret) - 1))
 					i++;
-				ret[i] = '\0';
 				tputs(tgetstr("le",NULL), 1, ft_putc);
 				// tputs(tgetstr("dm",NULL), 1, ft_putc);
 				tputs(tgetstr("dc",NULL), 1, ft_putc);
+				// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
+				if (!edit)
+					ret = strdup(ret);
+				ret[i] = '\0';
 				// tputs(tgetstr("ed",NULL), 1, ft_putc);
 			}
 		}
@@ -141,7 +144,7 @@ int main()
 			if (tmp && tmp->prev)
 				{
 					tmp = tmp->prev;
-					ret = (char*)tmp->data;
+					ret = (char *)tmp->data;
 					write(1, tmp->data, strlen(tmp->data));
 				}
 				else
@@ -150,6 +153,7 @@ int main()
 					help = 0;
 					write(1, ret, strlen(ret));
 				}
+				edit = 0;
 
 			// else
 			// 	ret[0] = 0;
@@ -187,6 +191,7 @@ int main()
 					}
 					write(1, tmp->data, strlen(tmp->data));
 				}
+				edit = 0;
 			// else 
 			// {
 			// 	ret[0] = 0;
@@ -224,6 +229,7 @@ int main()
 				help = 0;
 				// printf("%s\n",tmp->data);
 			}
+			edit = 0;
 			// if (help == 0)
 				ret = "";
 			
