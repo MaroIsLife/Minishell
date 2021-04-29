@@ -135,7 +135,7 @@ void	ms_loop(t_source *src, char **envp)
 		}
 		// signal(SIGQUIT,handler); // ^/
 		cmd = read_line();
-		printf("cmd: %s\n",cmd);
+		// printf("cmd: %s\n",cmd);
 		g_global.fsignal  = 0;
 		if (cmd == NULL) // ^D
 		{
