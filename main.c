@@ -199,8 +199,14 @@ void	ms_loop(t_source *src, char **envp)
 			// 	printf("Arg: %s\n",head->arg[i++]);
 			src->offset = 0;
 			src->return_value = 0;
+		/*
+		commande list should only take t_source and cmd and args
+		to make it accepet out-put from standard and from pipe NODE.
+		*/
+		
+		
 			if (src->foundred == 0 && src->foundpipe == 0)
-				command_list(head , src, envp);
+				command_list(NULL, head , src, envp);
 			else
 			{
 				int id = fork();
@@ -212,10 +218,10 @@ void	ms_loop(t_source *src, char **envp)
 						int pid1 =fork();
 						int fd[2];
 						pipe(fd);
-					}
+					}	
 					if (src->foundred == 1)
-						red_open(head, src);
-					// command_list(head, src, envp);
+					{	red_open(head, src);
+					command_list(NULL,head, src, envp);}
 					exit(0);
 				}
 				else

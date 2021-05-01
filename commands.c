@@ -1,6 +1,6 @@
 
 #include "minishell.h"
-void    ft_echo(t_node *head, t_source *src)
+void    ft_echo(char **args, t_node *head, t_source *src)
 {
 	int i;
 	int newline;
@@ -76,7 +76,7 @@ char **our_realloc(char **s, int count)
 	return (ret);
 }
 
-void	print_env(t_node *head, t_source *src, char **envp)
+void	print_env(t_source *src)
 {
 
 
@@ -116,7 +116,7 @@ void	ft_pwd (void)
 	printf ("%s\n",getcwd(s, 100));
 	free (s);
 }
-void ft_cd(t_node *head, t_source *src, char *home, char **envp)
+void ft_cd(char **args, t_node *head, t_source *src, char *home)
 {
 	int sign;
 
@@ -124,7 +124,7 @@ void ft_cd(t_node *head, t_source *src, char *home, char **envp)
 	if (!head->arg[0])
 		{
 			if (!home)
-				write(1, "bash: cd: HOME not set\n", 23);
+				write(1, "minishell: cd: HOME not set\n", 23);
 			else
 				chdir(home);
 			free(home);
@@ -133,7 +133,9 @@ void ft_cd(t_node *head, t_source *src, char *home, char **envp)
 		sign = chdir(head->arg[0]);
 	if (sign != 0)
 		printf ("Error: %s\n", strerror(errno));
-	change_pwd_env(envp);
+	change_pwd_env(src);
+	change_pwd_export(src);
+
 }
 
 
@@ -382,7 +384,7 @@ void	ft_set_enxp(t_node *head, t_source *src, char **envp)
 	}
 }
 
-void	ft_export(t_node *head, t_source *src, char **envp)
+void	ft_export(char **args, t_node *head, t_source *src)
 {
 	if (head->arg[0] == NULL)
 		em_export(src);
@@ -461,7 +463,7 @@ void	ft_export(t_node *head, t_source *src, char **envp)
 
 */
 
-int		ft_unset(t_node *head, t_source *src, char **envp)
+int		ft_unset(char **args, t_node *head, t_source *src)
 {
 	int env;
 	int exp;
