@@ -44,7 +44,7 @@ typedef struct s_stack
 // 	char				*name;
 // 	char				*value; // With or without =
 //     struct s_export	*next;
-// }	t_export;
+// }	t_expochar **args, rt;
 typedef struct	s_source
 {
 	int		cmdlen; // Contains input's length without counting \n
@@ -132,14 +132,15 @@ void	ms_loop(t_source *src, char **envp);
 
 // Built in functions
 int		ft_exit(t_node *head, t_source *src);
-void	command_list(t_node *head, t_source *src, char **envp);
-void	ft_echo(t_node *head, t_source *src);
-void	print_env(t_node *head, t_source *src, char **envp);
-void	ft_export(t_node *head, t_source *src, char **envp);
+void	command_list(char **args, t_node *head, t_source *src, char **envp);
+void	ft_echo(char **args, t_node *head, t_source *src);
+void	print_env(t_source *src);
+void	ft_export(char **args, t_node *head, t_source *src);
 char	*search_env(t_node *head, t_source *src, char **envp, int offset);
-int		ft_unset(t_node *head, t_source *src, char **envp);
-void	ft_cd(t_node *head, t_source *src, char *home, char **envp);
-void	change_pwd_env(char **envp);
+int		ft_unset(char **args, t_node *head, t_source *src);
+void	ft_cd(char **args, t_node *head, t_source *src, char *home);
+void	change_pwd_env(t_source *src);
+void change_pwd_export(t_source *src);
 void	ft_pwd (void);
 int		ft_isdollar(int c);
 char	*where_home(char **envp, t_source *src);
@@ -162,5 +163,8 @@ void	lstadd_dlist(t_stack **alst, t_stack *new);
 void	next_node(t_stack **list);
 void	prev_node(t_stack **list);
 t_stack	*lstnewc(void *data);
+
+///
+int is_equal(char *s1, char *s2);
 
 #endif
