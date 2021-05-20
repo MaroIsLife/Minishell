@@ -78,6 +78,13 @@ typedef struct	s_source
 	t_filename	*p;
 }				t_source;
 
+
+typedef struct s_termc {
+	char			*ret;
+	int				edit;
+	int				help;
+}	t_termc;
+
 typedef struct s_pipe {
 	char			*cmd;
 	char			**arg;
@@ -166,5 +173,7 @@ t_stack	*lstnewc(void *data);
 
 ///
 int is_equal(char *s1, char *s2);
+
+char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc);
 
 #endif

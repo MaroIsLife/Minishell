@@ -1,5 +1,6 @@
 # include <stdio.h>
 # include <termios.h>
+#include <stdio.h>
 # include <termcap.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -42,10 +43,10 @@ int             get_char()
 {
 		char    c;
 		int		total;
-		struct	termios term; //, init; //init made to reset to default
+		struct	termios term , init; //init made to reset to default
 
 		tcgetattr(0, &term); //get terminal attributes and store them in in the struct
-		// tcgetattr(0, &init); //set terminal attributes in the struct
+		tcgetattr(0, &init); //set terminal attributes in the struct
 		term.c_lflag &= ~(ICANON); //Set to Non Canonical, Reads instantly without waiting for "ENTER" key, Maximum length is 4096
 		term.c_lflag &= ~(ECHO);  // Stops the keys read from printing in terminal
 		term.c_cc[VMIN] = 0;  // VMIN   Minimum number of characters for noncanonical read (MIN).
@@ -56,14 +57,14 @@ int             get_char()
 		total += c;
 		while (read(0, &c, 1) > 0)
 				total += c;
-		// tcsetattr(0, TCSANOW, &init); //WA ZABI ACH HAD L9LAWI!?!?!
+		tcsetattr(0, TCSANOW, &init); // Reset to Default because it doesn't work when cmd = cat, sort etc..
 		return (total);
 }
 
-void    print_prompt1()
-{
-		write(1,"\033[0;32mMaro-&-Ma3toub$ \033[0;39m",sizeof("\033[0;32mMaro-&-Ma3toub$ \033[0;39m"));
-}
+// void    print_prompt1()
+// {
+// 		write(1,"\033[0;32mMaro-&-Ma3toub$ \033[0;39m",sizeof("\033[0;32mMaro-&-Ma3toub$ \033[0;39m"));
+// }
 
 
 int ft_putc(int s)
@@ -71,52 +72,50 @@ int ft_putc(int s)
 	return write(1,&s,1);
 }
 
-int main()
+char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 {
 	int		d;
 	char	*s;
-	char 	*ret;
-	t_stack *head;
-	t_stack *tmp;
-	int help = 0;
-	int edit = 0;
-    tgetent(NULL, getenv("TERM")); //Getting the Terminal description since termcap functionalities differ
-	ret = malloc(1 * sizeof(char));
-	ret[0] = '\0';
 	// t_stack *tmp;
 	// head = (t_stack *) malloc(sizeof(t_stack));
 	// head->next = NULL;
 	// head->prev = NULL;
 	// tmp = head;
-	head = NULL;
-	tmp = head;
-    char *line;
-	print_prompt1();
+	// tmp = NULL;
 
 	while(1)
 	{
 		d = get_char();
-		if (d >= 32 && d < 127)
+		// fprintf(stderr,"d = %d",d);
+		if (d == 4)
 		{
+			if (termc->ret[0] == 0)
+			{
+				write(1,"exit",4);
+				exit(0);
+			}
+		}
+		else if (d >= 32 && d < 127)
+		{
+			termc->ret = ft_strjoinchar(termc->ret, d);
 			write(1, &d ,1);
-            if (!help)
-                line = ft_strjoinchar(line,d);
-            else
-			    ret = ft_strjoinchar(ret, d);
 		}
 		else if (d == KEY_REMOVE)
 		{
 			int i;
 
 			i = 0;
-			if (strlen(ret) > 0)
+			if (strlen(termc->ret) > 0)
 			{
-				while (i < (strlen(ret) - 1))
+				while (i < (strlen(termc->ret) - 1))
 					i++;
-				ret[i] = '\0';
 				tputs(tgetstr("le",NULL), 1, ft_putc);
 				// tputs(tgetstr("dm",NULL), 1, ft_putc);
 				tputs(tgetstr("dc",NULL), 1, ft_putc);
+				// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
+				if (!termc->edit)
+					termc->ret = strdup(termc->ret);
+				termc->ret[i] = '\0';
 				// tputs(tgetstr("ed",NULL), 1, ft_putc);
 			}
 		}
@@ -125,22 +124,22 @@ int main()
 			tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
 			tputs(tgetstr("dl",NULL), 1, ft_putc);
 			print_prompt1();
-			if (tmp && tmp->prev)
+			if (*tmp && (*tmp)->prev)
 				{
-					tmp = tmp->prev;
-					ret = (char*)tmp->data;
-					write(1, tmp->data, strlen(tmp->data));
+					*tmp = (*tmp)->prev;
+					termc->ret = (char *)(*tmp)->data;
+					write(1, (*tmp)->data, strlen((*tmp)->data));
 				}
 				else
 				{
-					s = line;
-					help = 0;
+					termc->ret = "";
+					termc->help = 0;
+					write(1, termc->ret, strlen(termc->ret));
 				}
-					write(1, ret, strlen(ret));
-                    edit = 0;
+				termc->edit = 0;
 
 			// else
-			// 	ret[0] = 0;
+			// 	termc->ret[0] = 0;
 			// s = tgoto(tgetstr("ch", NULL), 0 ,0);
 			// write(1, s, strlen(s)); 
 			// s = tgetstr("dl", NULL); //Get the string entry id 'ce' means clear from the cursor to the end of the current line.
@@ -158,27 +157,30 @@ int main()
 			// 	write(1, tmp->data, strlen(tmp->data));
 			// 	if(tmp->next != NULL)
 			// 		tmp = tmp->next;
-			// 	ret = tmp->data;
+			// 	termc->ret = tmp->data;
 			// }
-			if (tmp)
+			if (*tmp)
 				{
-					if (!tmp->prev && !help)
+					// printf("made it here\n");
+					if (!(*tmp)->prev && !termc->help)
 					{
-						ret = (char*)tmp->data;
-						help = 1;
+						termc->ret = (char*)(*tmp)->data;
+						termc->help = 1;
 					}
 					else
 					{
-						if(tmp->next)
-							tmp = tmp->next;
-						ret = (char*)tmp->data;		
+						if((*tmp)->next)
+							*tmp = (*tmp)->next;
+						termc->ret = (char*)(*tmp)->data;
 					}
-					write(1, tmp->data, strlen(tmp->data));
+					write(1, (*tmp)->data, strlen((*tmp)->data));
 				}
-            edit = 0;
+			else
+				termc->ret = "";
+			termc->edit = 0;
 			// else 
 			// {
-			// 	ret[0] = 0;
+			// 	termc->ret[0] = 0;
 			// }
 			// t_stack *tmp;
 			// tmp = head;
@@ -192,33 +194,31 @@ int main()
 		{
 			// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
 			// tputs(tgetstr("dl",NULL), 1, ft_putc);
-            write(1,"\n",1);
+			write(1,"\n",1);
 			print_prompt1();
 			// s = tgetstr("ch", NULL);
 			// write(1, s, strlen(s)); 
 			// s = tgetstr("dl", NULL); //Get the string entry id 'ce' means clear from the cursor to the end of the current line.
 			// write(1, s, strlen(s)); // execute the string entry id
 				// fprintf(stderr, "Else made it here");
-			if (tmp && help)
+			if (termc->ret[0] != 0)
 			{
-                write(1,"MADE",4);
-                free(line);
-                if (edit)
-                    line = s;
-                else
-                    line = strdup(s);
+				lstadd_dlist(head, lstnewc(strdup(termc->ret)));
+				// fprintf(stderr, "%s", tmp);
+				*tmp = *head;
+				termc->help = 0;
+				// printf("Data: %s\n",(*head)->data);
+				// printf("%s\n",tmp->data);
 			}
-            edit = 0;
-			// if (help == 0)
-				// ret = "";
-
-			// tmp = head->next;
-			// tmp->prev = head;
-			// tmp->next = NULL;
-			// head = head->next;
-			continue ;
+			termc->edit = 0;
+			// if (termc->help == 0)
+			// strcpy(s, termc->ret);
+			s = termc->ret;
+			termc->ret = "";
+			return (s);
+			// continue ;
 		}
 	}
-	// printf("\nret: %s\n",ret);
+	// printf("\ntermc->ret: %s\n",ret);
     return (0);	
 }
