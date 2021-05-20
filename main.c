@@ -64,7 +64,7 @@ void	init(t_source *src)
 	src->offset = 0;
 }
 
-void	init_env(t_source *src,char **envp)
+void	init_env(t_source *src, char **envp)
 {
 	int i;
 
@@ -124,6 +124,20 @@ void	ms_loop(t_source *src, char **envp)
 	src->pwd = get_x_env(src->our_envp, src, "PWD");
 	set_x_env(envp, src, "TESST", "test");
 	src->return_value = 0;
+	//............................
+	t_termc *termc;
+	t_stack *head1;
+	t_stack *tmp;
+	char *ret;
+
+	termc = (t_termc *) malloc(sizeof(t_termc));
+	termc->edit = 0;
+	termc->help = 0;
+	termc->ret = malloc(1 * sizeof(char));
+	termc->ret[0] = '\0';
+	tgetent(NULL, getenv("TERM"));
+	tmp = NULL;
+	head1 = NULL;
 	while(1)
 	{
 		// printf("\U0001F600"); //Useless Emoji
@@ -134,8 +148,10 @@ void	ms_loop(t_source *src, char **envp)
 			g_global.fsignal  = 1;
 		}
 		// signal(SIGQUIT,handler); // ^/
-		cmd = read_line();
+		// cmd = read_line();
+		cmd = term_loop(&head1, &tmp, termc);
 		// printf("cmd: %s\n",cmd);
+		// printf("Data1: %s\n",head1->data);
 		g_global.fsignal  = 0;
 		if (cmd == NULL) // ^D
 		{
@@ -191,7 +207,7 @@ void	ms_loop(t_source *src, char **envp)
 			
 			src->dquotes = 0;
 			src->squotes = 0;
-			i = i^i;
+			i = 0;
 			src->c = c;
 			init_parse(src, head, envp, pipes);
 			i = 0;
@@ -221,7 +237,8 @@ void	ms_loop(t_source *src, char **envp)
 					}	
 					if (src->foundred == 1)
 					{	red_open(head, src);
-					command_list(NULL,head, src, envp);}
+						command_list(NULL,head, src, envp);
+					}
 					exit(0);
 				}
 				else

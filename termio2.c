@@ -43,10 +43,10 @@ int             get_char()
 {
 		char    c;
 		int		total;
-		struct	termios term; //, init; //init made to reset to default
+		struct	termios term , init; //init made to reset to default
 
 		tcgetattr(0, &term); //get terminal attributes and store them in in the struct
-		// tcgetattr(0, &init); //set terminal attributes in the struct
+		tcgetattr(0, &init); //set terminal attributes in the struct
 		term.c_lflag &= ~(ICANON); //Set to Non Canonical, Reads instantly without waiting for "ENTER" key, Maximum length is 4096
 		term.c_lflag &= ~(ECHO);  // Stops the keys read from printing in terminal
 		term.c_cc[VMIN] = 0;  // VMIN   Minimum number of characters for noncanonical read (MIN).
@@ -57,7 +57,7 @@ int             get_char()
 		total += c;
 		while (read(0, &c, 1) > 0)
 				total += c;
-		// tcsetattr(0, TCSANOW, &init); //WA ZABI ACH HAD L9LAWI!?!?!
+		tcsetattr(0, TCSANOW, &init); // Reset to Default because it doesn't work when cmd cat, sort etc..
 		return (total);
 }
 
@@ -96,6 +96,7 @@ int main()
 	while(1)
 	{
 		d = get_char();
+		// fprintf(stderr,"d = %c",d);
 		if (d == 4)
 		{
 			if (ret[0] == 0)
@@ -118,7 +119,7 @@ int main()
 			{
 				while (i < (strlen(ret) - 1))
 					i++;
-				tputs(tgetstr("le",NULL), 1, ft_putc);
+				tputs(tgetstr("le",NULL), 1, ft_putc);	
 				// tputs(tgetstr("dm",NULL), 1, ft_putc);
 				tputs(tgetstr("dc",NULL), 1, ft_putc);
 				// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
@@ -231,7 +232,9 @@ int main()
 			}
 			edit = 0;
 			// if (help == 0)
+			// s = ret;
 				ret = "";
+			// printf("s = %s\n", s);
 			
 			// while (tmp)
 			// {
