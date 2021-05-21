@@ -195,7 +195,7 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
 			// tputs(tgetstr("dl",NULL), 1, ft_putc);
 			write(1,"\n",1);
-			print_prompt1();
+			// print_prompt1();
 			// s = tgetstr("ch", NULL);
 			// write(1, s, strlen(s)); 
 			// s = tgetstr("dl", NULL); //Get the string entry id 'ce' means clear from the cursor to the end of the current line.
