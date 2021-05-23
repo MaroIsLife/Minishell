@@ -73,7 +73,7 @@ typedef struct	s_source
 	int		lastexp;
 	int 	count;
 	int 	allocate;
-	int		return_value;
+	// int		return_value;
 	int		fd_r_c;
 	t_filename	*p;
 }				t_source;
@@ -106,6 +106,7 @@ typedef struct s_node {
 typedef struct s_global {
 	int		fsignal;
 	int		id;
+	int		return_value;
 
 }		t_global;
 

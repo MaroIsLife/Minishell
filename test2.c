@@ -125,19 +125,20 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			tputs(tgetstr("dl",NULL), 1, ft_putc);
 			print_prompt1();
 			if (*tmp && (*tmp)->prev)
-				{
-					*tmp = (*tmp)->prev;
-					termc->ret = (char *)(*tmp)->data;
-					write(1, (*tmp)->data, strlen((*tmp)->data));
-				}
-				else
-				{
-					termc->ret = "";
-					termc->help = 0;
-					write(1, termc->ret, strlen(termc->ret));
-				}
+			{
+				*tmp = (*tmp)->prev;
+				termc->ret = (char *)(*tmp)->data;
+				write(1, (*tmp)->data, strlen((*tmp)->data));
+			}
+			else
+			{
+				// printf("Made it here\n");
+				termc->ret = "";
+				termc->help = 0;
+				write(1, termc->ret, strlen(termc->ret));
+			}
 				termc->edit = 0;
-
+			
 			// else
 			// 	termc->ret[0] = 0;
 			// s = tgoto(tgetstr("ch", NULL), 0 ,0);
@@ -175,9 +176,9 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 					}
 					write(1, (*tmp)->data, strlen((*tmp)->data));
 				}
-			else
-				termc->ret = "";
 			termc->edit = 0;
+			// else
+			// 	termc->ret = "";
 			// else 
 			// {
 			// 	termc->ret[0] = 0;

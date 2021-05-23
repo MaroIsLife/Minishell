@@ -28,6 +28,7 @@ char	*get_x_env(char **envp, t_source *src, char *envv_name)
 	}
 	return (0);
 }
+
 void	set_x_env(char **envp, t_source *src, char *envv_name, char *value)
 {
 	int 	i;
@@ -66,22 +67,18 @@ void	init(t_source *src)
 
 void	init_env(t_source *src, char **envp)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	src->lastenv = 0;
-	
-	
 	while (envp[i] != NULL)
 	{
 		src->lastenv++;
 		src->lastexp++;
 		i++;
 	}
-	// New ENV
-	src->our_envp = malloc(sizeof(char*) * (i + 1));
-	src->export = malloc(sizeof(char*) * (i + 1));
-	
+	src->our_envp = malloc(sizeof(char *) * (i + 1)); /* New ENV */
+	src->export = malloc(sizeof(char *) * (i + 1));
 	i = 0;
 	while (envp[i] != NULL)
 	{
@@ -123,12 +120,12 @@ void	ms_loop(t_source *src, char **envp)
 	src->user = get_x_env(src->our_envp, src, "USER");  // This Retrieves the USER's logname and stores it in src->user NOT ALLOCATED
 	src->pwd = get_x_env(src->our_envp, src, "PWD");
 	set_x_env(envp, src, "TESST", "test");
-	src->return_value = 0;
+	g_global.return_value = 0;
 	//............................
 	t_termc *termc;
 	t_stack *head1;
 	t_stack *tmp;
-	char *ret;
+	char	*ret;
 
 	termc = (t_termc *) malloc(sizeof(t_termc));
 	termc->edit = 0;
@@ -214,13 +211,11 @@ void	ms_loop(t_source *src, char **envp)
 			// while (head->arg[i] != NULL)
 			// 	printf("Arg: %s\n",head->arg[i++]);
 			src->offset = 0;
-			src->return_value = 0;
+			g_global.return_value = 0;
 		/*
 		commande list should only take t_source and cmd and args
 		to make it accepet out-put from standard and from pipe NODE.
 		*/
-		
-		
 			if (src->foundred == 0 && src->foundpipe == 0)
 				command_list(NULL, head , src, envp);
 			else

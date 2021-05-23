@@ -545,12 +545,22 @@ int		ft_exit(t_node *head, t_source *src)
 		return(0);
 	}
 	ret = ft_atoi(head->arg[0]);
+	// printf("%d\n",ret);
 	if (ret > 255)
+	{
+		write(1,"exit\n",6);
 		exit(ret % 256);
+	}
 	else if (ret < 0)
+	{
+		write(1,"exit\n",6);
 		exit (ret + 256);
+	}
 	else
+	{
+		write(1,"exit\n",6);
 		exit(ret);
+	}
 }
 /*
 void command_unset(t_commands *tmp ,char **envp)
