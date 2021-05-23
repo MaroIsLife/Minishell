@@ -114,7 +114,7 @@ int    ft_execute(char **args, t_node *head, t_source *src, char **envp)
 		if (get_x_env(src->our_envp, src, "PATH") == 0)
 		{
 			printf("bash: %s: command not found\n", head->cmd);
-			src->return_value = 127;
+			g_global.return_value = 127;
 			return(0);
 		}
 		s = get_env_path(src->our_envp, src);
@@ -132,12 +132,15 @@ int    ft_execute(char **args, t_node *head, t_source *src, char **envp)
 			}
 		}
 		else
+		{
 			wait(&g_global.id);
+			// printf("%d\n",g_global.id - 255);
+		}
 	}
 	else
 	{
 		printf("bash: %s: command not found\n",varg[0]);
-		src->return_value = 127;
+		g_global.return_value = 127;
 	}
 	return (0);	
 }
@@ -160,7 +163,7 @@ void command_list(char **args, t_node *head, t_source *src, char **envp)
 		ft_export(args, head, src);
 	else if (ft_strncmp(head->cmd, "unset", 5) == 0 && head->cmd[5] == '\0')
 		ft_unset(args, head, src);
-		else if (ft_strncmp(head->cmd, "exit", 4) == 0 && head->cmd[4] == '\0')
+	else if (ft_strncmp(head->cmd, "exit", 4) == 0 && head->cmd[4] == '\0')
 		ft_exit(head, src);
 	else if (head->cmd[0] == '\0') // Enter with '\0'?? (Remove \0 from Read if the cmd = '\n')
 		;

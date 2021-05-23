@@ -159,7 +159,7 @@ int		init_question_arg(t_source *src, int ret)
 	char	*s;
 
 	i = 0;
-	s = ft_itoa(src->return_value);
+	s = ft_itoa(g_global.return_value);
 	while (s[i] != '\0')
 		src->re[src->re_b++] = s[i++];
 	free(s);
@@ -172,7 +172,7 @@ int		init_question_cmd(t_source *src,int ret)
 	char	*s;
 
 	i = 0;
-	s = ft_itoa(src->return_value);
+	s = ft_itoa(g_global.return_value);
 	while (s[i] != '\0')
 		src->ra[src->ra_b++] = s[i++];
 	free(s);

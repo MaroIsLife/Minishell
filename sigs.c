@@ -9,6 +9,7 @@ void handler(int c)
 	write(1, "\n", 1);
 	print_prompt1();
 	g_global.fsignal = 1;
+	g_global.return_value = 1;
 
 	// write(1,"\b\b  \b\b",6);
 	// write(1,"\n",1);
