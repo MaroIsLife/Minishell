@@ -134,7 +134,10 @@ int    ft_execute(char **args, t_node *head, t_source *src, char **envp)
 		else
 		{
 			wait(&g_global.id);
-			// printf("%d\n",g_global.id - 255);
+			if (WIFSIGNALED(g_global.id))
+				g_global.return_value = WTERMSIG(g_global.id) + 128;
+			else 
+				g_global.return_value = WEXITSTATUS(g_global.id) % 128;
 		}
 	}
 	else

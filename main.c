@@ -106,6 +106,7 @@ void	init_env(t_source *src, char **envp)
 	// }
 }
 
+
 void	ms_loop(t_source *src, char **envp)
 {
 	char	*cmd;
@@ -140,6 +141,7 @@ void	ms_loop(t_source *src, char **envp)
 	{
 		// printf("\U0001F600"); //Useless Emoji
 		signal(SIGINT,handler); // ^C
+		signal(SIGQUIT,handler2);
 		if (g_global.fsignal  == 0)
 		{
 			print_prompt1();
