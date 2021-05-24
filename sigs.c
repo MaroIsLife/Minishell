@@ -20,7 +20,7 @@ void handler(int c)
 
 void handler2(int c)
 {
-	write(1,"Quit: ",5);
+	write(2,"Quit: ",6);
+	fprintf(stderr, "%d", c);
 	write(2,"\n",1);
-	exit (0);
 }
