@@ -456,66 +456,65 @@ void	ft_export(char **args, t_node *head, t_source *src)
 
 
 
-//// unset is not done yes ///
 
-/*
+void 	unset_export(t_source *src, char *arg)
+{
+	int i = 0;
+	while (src->export[i] != NULL)
+	{
+	if (is_equal(src->export[i], arg))
+		{
+			while ((src->export[i] != NULL))
+				{
+					src->export[i] = src->export[i + 1];
+					i++;
+				}
+				src->lastexp--;
+				src->export[i] = NULL;
+				break ;
+		}
+	i++;
+	}			
+}
 
-
-*/
+void 	unset_env(t_source *src, char *arg)
+{
+	int i = 0;
+	while (src->our_envp[i] != NULL)
+	{
+	if (is_equal(src->our_envp[i], arg))
+		{
+			while ((src->our_envp[i] != NULL))
+				{
+					src->our_envp[i] = src->our_envp[i + 1];
+					i++;
+				}
+				src->lastenv--;
+				src->our_envp[i] = NULL;
+				break ;
+		}
+	i++;
+	}			
+}
 
 int		ft_unset(char **args, t_node *head, t_source *src)
 {
 	int env;
 	int exp;
+	int j = 0;
 
-	env = ft_search(src->our_envp, head->arg[0]);
-	exp = ft_search(src->export, head->arg[0]);
-	printf ("env %d, exp %d\n", env , exp);
-
-	if (exp)
-			{
-				int i = 0;
-				while (src->export[i] != NULL)
-				{
-				if (is_equal(src->export[i], head->arg[0]))
-					{
-						while ((src->export[i] != NULL))
-							{
-								src->export[i] = src->export[i + 1];
-								i++;
-							}
-							src->lastexp--;
-							src->export[i] = NULL;
-							break;
-					}
-				i++;
-				}
-
-			}
-	/******************************************/
-	if (env)
-			{
-				int i = 0;
-				while (src->our_envp[i] != NULL)
-				{
-				if (is_equal(src->our_envp[i], head->arg[0]))
-					{
-						while ((src->our_envp[i] != NULL))
-							{
-								src->our_envp[i] = src->our_envp[i + 1];
-								i++;
-							}
-							src->lastenv--;
-							src->our_envp[i] = NULL;
-							break ;
-					}
-				i++;
-				}
-
-			}
-	/******************************************/
-
-
+	while (head->arg[j])
+	{
+		env = ft_search(src->our_envp, head->arg[j]);
+		exp = ft_search(src->export, head->arg[j]);
+		if (exp)	
+			unset_export(src, head->arg[j]);	
+		/******************************************/
+		if (env)
+			unset_env(src, head->arg[j]);	
+		/******************************************/
+		j++;
+	}
 	return (0);
 }
 
