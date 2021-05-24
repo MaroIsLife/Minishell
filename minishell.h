@@ -140,7 +140,7 @@ void	ms_loop(t_source *src, char **envp);
 
 // Built in functions
 int		ft_exit(t_node *head, t_source *src);
-void	command_list(char **args, t_node *head, t_source *src, char **envp);
+void	command_list(char *cmd, char **args, t_node *head, t_source *src);
 void	ft_echo(char **args, t_node *head, t_source *src);
 void	print_env(t_source *src);
 void	ft_export(char **args, t_node *head, t_source *src);
@@ -151,7 +151,7 @@ void	change_pwd_env(t_source *src);
 void change_pwd_export(t_source *src);
 void	ft_pwd (void);
 int		ft_isdollar(int c);
-char	*where_home(char **envp, t_source *src);
+char	*where_home(t_source *src);
 void	red_open(t_node *head, t_source *src);
 
 //Signals
