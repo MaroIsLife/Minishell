@@ -92,7 +92,7 @@ void	print_env(t_source *src)
 	}
 }
 
-char	*where_home(char **envp, t_source *src)
+char	*where_home(t_source *src)
 {
 	int i = 0;
 	char *home;
@@ -101,7 +101,7 @@ char	*where_home(char **envp, t_source *src)
 	{
 		if (ft_strncmp(src->our_envp[i], "HOME=", 5) == 0)
 		{
-			home = malloc (ft_strlen(envp[i] + 5) + 1);
+			home = malloc (ft_strlen(src->our_envp[i] + 5) + 1);
 			ft_strlcpy(home, src->our_envp[i] + 5, ft_strlen(src->our_envp[i] + 5) + 1);
 			return (home);
 		}
@@ -532,7 +532,7 @@ int		ft_exit(t_node *head, t_source *src)
 	{
 		if (ft_isdigit(head->arg[0][b]) != 1)
 		{
-			printf("exit\nbash: exit: %s: numeric argument required\n",head->arg[0]);
+			printf("exit\nminishell: exit: %s: numeric argument required\n",head->arg[0]);
 			//src->return_value = 2;
 			exit(255);
 		}
@@ -540,7 +540,7 @@ int		ft_exit(t_node *head, t_source *src)
 	}
 	if (head->arg[1] != NULL) //CHECK IF IT DOESNT LEAVE CHILD PROCESS
 	{
-		printf("exit\nbash: exit: too many arguments\n");
+		printf("exit\nminishell: exit: too many arguments\n");
 		return(0);
 	}
 	ret = ft_atoi(head->arg[0]);

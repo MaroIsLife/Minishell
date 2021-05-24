@@ -117,7 +117,8 @@ void	ms_loop(t_source *src, char **envp)
 	int		fsignal;
 
 	init_env(src,envp);
-	src->user = get_x_env(src->our_envp, src, "USER");  // This Retrieves the USER's logname and stores it in src->user NOT ALLOCATED
+	src->user = get_x_env(src->our_envp, src, "USER"); 
+	 // This Retrieves the USER's logname and stores it in src->user NOT ALLOCATED
 	src->pwd = get_x_env(src->our_envp, src, "PWD");
 	set_x_env(envp, src, "TESST", "test");
 	g_global.return_value = 0;
@@ -193,15 +194,7 @@ void	ms_loop(t_source *src, char **envp)
 			}
 
 			i = 0;
-			// if (src->foundred == 1)
-			// {
-			// 	while (test[i] != NULL)
-			// 	{
-			// 		printf("%d %s",i,test[i]);
-			// 		i++;
-			// 	}
-			// }
-			
+		
 			src->dquotes = 0;
 			src->squotes = 0;
 			i = 0;
@@ -217,7 +210,7 @@ void	ms_loop(t_source *src, char **envp)
 		to make it accepet out-put from standard and from pipe NODE.
 		*/
 			if (src->foundred == 0 && src->foundpipe == 0)
-				command_list(NULL, head , src, envp);
+				command_list(head->cmd ,head->arg, head , src);
 			else
 			{
 				int id = fork();
@@ -226,13 +219,13 @@ void	ms_loop(t_source *src, char **envp)
 				{
 					if (src->foundpipe == 1)
 					{
-						int pid1 =fork();
+						int pid1 = fork();
 						int fd[2];
 						pipe(fd);
 					}	
 					if (src->foundred == 1)
 					{	red_open(head, src);
-						command_list(NULL,head, src, envp);
+						command_list(head->cmd ,head->arg, head, src);
 					}
 					exit(0);
 				}
