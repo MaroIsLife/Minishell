@@ -9,7 +9,7 @@ void	red_open(t_node *head, t_source *src)
 	// printf("%s\n",p->filename);
 	while (1)
 	{
-		puts(p->filename);
+		// puts(p->filename);
 	if (p->c == 94)
 		fd = open(p->filename, O_RDWR | O_APPEND | O_CREAT, 0777);
 	else if (p->c == '>')
