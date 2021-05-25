@@ -47,13 +47,7 @@ void change_pwd_export(t_source *src)
 			puts (s);
 			free(src->export[i]);
 			src->export[i] =  NULL;
-			// while (c < ft_strlen(s))
-			// {
 			src->export[i] = ft_strjoin( "PWD=",s );
-			// 	c++;
-			// 	b++;
-			// }
-			// src->our_envp[i][b] = '\0';
 			free(s);
 			break ;
 		}

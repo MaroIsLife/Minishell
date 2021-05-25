@@ -122,7 +122,7 @@ void ft_cd(char **args, t_node *head, t_source *src, char *home)
 
 	sign = 0;
 
-	puts (args[0]);
+	//puts (args[0]);
 	if (!args[0])
 		{
 			if (!home)
