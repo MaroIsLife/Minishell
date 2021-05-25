@@ -102,12 +102,24 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 	while (s[*i] == ' ')
 		(*i)++;	
 	b = *i;
-	while (s[b] != ' ' && s[b] != '\0' && s[b] != '\n' && s[b] != '>' && s[b] != '<')
+	while (s[b] != '\0' && s[b] != '\n' && s[b] != '>' && s[b] != '<')
+	{
+		finding_quotes(s,b,src);
+		if (s[b] == ' ' && src->dquotes == 0 && src->squotes == 0)
+			break ;
+		// printf("c: %c----d: %d dquotes: %d squotes: %d\n",s[b], b,src->dquotes,src->squotes);
 		b++;
+	}
 	src->p->filename = malloc((b + 1) * sizeof(char));
 	b = 0;
-	while (s[*i] != ' ' && s[*i] != '\0' && s[*i] != '\n' && s[*i] != '>' && s[*i] != '<')
+	while (s[*i] != '\0' && s[*i] != '\n' && s[*i] != '>' && s[*i] != '<')
+	{
+		finding_quotes(s,*i,src);
+		if (s[*i] == ' ' && src->dquotes == 0 && src->squotes == 0)
+			break ;
+		// printf("c: %c----d: %d dquotes: %d squotes: %d\n",s[*i], *i,src->dquotes,src->squotes);
 		src->p->filename[b++] = s[(*i)++];
+	}
 	src->p->filename[b] = '\0';
 	// prwintf("Filename: %s\n",src->p->filename);
 	src->allocate = 1;
