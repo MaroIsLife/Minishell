@@ -7,16 +7,28 @@ int		arg_if_space(char *s,int *i, t_source *src)
 		(*i)++;
 	return (*i);
 }
+int check_offset (int offset, char *s)
+{
+	int i = 0;
+
+	while (s[i] == ' ')
+		i++;
+	if (s[i] == '>' || s[i] == '<')
+		return (0);
+	return (offset);
+}
 int		count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 {
 	int i;
 	int jump;
 	int count;
-	i = src->offset - 1;
+	i = check_offset (src->offset - 1, s);
 	count = 0;
 	jump = 0;
 	if (s[0] == '\n')
 		return 0;
+
+	
 	while (s[i] != '\0' && s[i] != '\n')
 	{
 		if (s[i] == '\"' && i == 0)
@@ -105,7 +117,9 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 {
 	int		i;
 	char	*re;
-	i = src->offset;
+	i = check_offset (src->offset - 1, s);
+	// here!!!!!!!!!!!
+	//  i = 0;
 	while (s[i] == ' ')
 		i++;
 	src->re = malloc((1024) * sizeof(char));

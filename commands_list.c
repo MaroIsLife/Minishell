@@ -9,13 +9,14 @@ void	red_open(t_node *head, t_source *src)
 	// printf("%s\n",p->filename);
 	while (1)
 	{
+		puts(p->filename);
 	if (p->c == 94)
 		fd = open(p->filename, O_RDWR | O_APPEND | O_CREAT, 0777);
 	else if (p->c == '>')
 		fd = open(p->filename, O_RDWR | O_TRUNC | O_CREAT, 0777);
 	else if (p->c == '<')
 		fd2 = open(p->filename, O_RDONLY);
-		if (fd == -1)
+		if (fd == -1 || fd2 == -1 )
 		{
 			printf("minishell: %s: %s\n",p->filename, strerror(errno));
 			exit(0);

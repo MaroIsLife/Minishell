@@ -189,10 +189,9 @@ void	ms_loop(t_source *src, char **envp)
 
 			if (src->foundred == 1)
 			{
-				head->first_filename = (t_filename *) malloc(sizeof(t_filename));
+				head->first_filename = (t_filename *)malloc(sizeof(t_filename));
 				head->first_filename->next = NULL;
 				src->p = head->first_filename;
-				// src->redsplit = my_ft_split(pipe[c], '>', src);
 			}
 
 			i = 0;
