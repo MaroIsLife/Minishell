@@ -121,7 +121,9 @@ void ft_cd(char **args, t_node *head, t_source *src, char *home)
 	int sign;
 
 	sign = 0;
-	if (!head->arg[0])
+
+	puts (args[0]);
+	if (!args[0])
 		{
 			if (!home)
 				write(1, "minishell: cd: HOME not set\n", 23);
@@ -130,11 +132,12 @@ void ft_cd(char **args, t_node *head, t_source *src, char *home)
 			free(home);
 		}
 	else
-		sign = chdir(head->arg[0]);
+		sign = chdir(args[0]);
 	if (sign != 0)
 		printf ("Error: %s\n", strerror(errno));
 	change_pwd_env(src);
 	change_pwd_export(src);
+
 
 }
 
