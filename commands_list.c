@@ -16,7 +16,7 @@ void	red_open(t_node *head, t_source *src)
 		fd = open(p->filename, O_RDWR | O_TRUNC | O_CREAT, 0777);
 	else if (p->c == '<')
 		fd2 = open(p->filename, O_RDONLY);
-		if (fd == -1 || fd2 == -1 )
+		if (fd == -1 || fd2 == -1)
 		{
 			printf("minishell: %s: %s\n",p->filename, strerror(errno));
 			exit(0);
