@@ -2,9 +2,9 @@
 
 void	red_open(t_node *head, t_source *src)
 {
-	int fd;
-	int fd2;
-	t_filename *p;
+	int			fd;
+	int			fd2;
+	t_filename	*p;
 	p = head->first_filename;
 	// printf("%s\n",p->filename);
 	while (1)
@@ -18,7 +18,13 @@ void	red_open(t_node *head, t_source *src)
 		fd2 = open(p->filename, O_RDONLY);
 		if (fd == -1 || fd2 == -1)
 		{
-			printf("minishell: %s: %s\n",p->filename, strerror(errno));
+			// printf("minishell: %s: %s\n",p->filename, strerror(errno));
+			char *err = strerror(errno);
+			write(2, "minishell: ", 11);
+			write(2, p->filename,ft_strlen(p->filename));
+			write(2, " ", 1);
+			write(2, err,ft_strlen(err));
+			write(2, "\n", 1);
 			exit(0);
 		}
 		if (p->next == NULL)
@@ -114,7 +120,10 @@ int    ft_execute(char **args, t_node *head, t_source *src, char **envp)
 	{
 		if (get_x_env(src->our_envp, src, "PATH") == 0)
 		{
-			printf("minishell: %s: command not found\n", head->cmd);
+			// printf("minishell: %s: command not found\n", head->cmd);
+			write(2,"minishell: ", 11);
+			write(2,head->cmd,ft_strlen(head->cmd));
+			write(2,": command not found\n",20);
 			g_global.return_value = 127;
 			return(0);
 		}
@@ -128,7 +137,14 @@ int    ft_execute(char **args, t_node *head, t_source *src, char **envp)
 			// signal(SIGINT,SIG_DFL);
 			if (execve(path , &varg[0], src->our_envp) == -1) //Should i send ENVP or OUR-ENV AND WHAT IS THE DIFFERENCE???!
 			{
+
+				// char *err = strerror(errno);
 				printf("minishell: %s: %s\n", varg[0], strerror(errno));
+				write(2,"minishell: ",11);
+				write(2,varg[0],ft_strlen(varg[0]));
+				write(2,": ",2);
+				write(2,strerror(errno),ft_strlen(strerror(errno)));
+				write(2,"\n",1);
 				exit(0);
 			}
 		}
@@ -143,7 +159,10 @@ int    ft_execute(char **args, t_node *head, t_source *src, char **envp)
 	}
 	else
 	{
-		printf("minishell: %s: command not found\n",varg[0]);
+		// printf("minishell: %s: command not found\n",varg[0]);
+			write(2,"minishell: ", 11);
+			write(2,varg[0],ft_strlen(varg[0]));
+			write(2,": command not found\n",20);
 		g_global.return_value = 127;
 	}
 	return (0);	
