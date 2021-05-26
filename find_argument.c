@@ -22,8 +22,8 @@ int		count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 	int i;
 	int jump;
 	int count;
-	// i = check_offset (src->offset - 1, s);
-	i = src->offset - 1;
+	i = check_offset (src->offset - 1, s);
+	// i = src->offset - 1;
 	count = 0;
 	jump = 0;
 	if (s[0] == '\n')
@@ -130,8 +130,8 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 {
 	int		i;
 	char	*re;
-	// i = check_offset (src->offset - 1, s);
-	i = src->offset;
+	i = check_offset (src->offset, s);
+	// i = src->offset;
 	// here!!!!!!!!!!!
 	//  i = 0;
 	while (s[i] == ' ')
