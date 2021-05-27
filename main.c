@@ -5,6 +5,7 @@
 # include <string.h>
 # include "minishell.h"
 
+
 void	clearScreen()
 {
   write(1, "\e[1;1H\e[2J", 10);
@@ -219,16 +220,39 @@ void	ms_loop(t_source *src, char **envp)
 				if (id == 0)
 				{
 					if (src->foundpipe == 1)
-					{
-						int pid1 = fork();
+					{ /*Here is the imp for pips with red*/
+						
 						int fd[2];
 						pipe(fd);
+						fork_pips(src, head);
+						/*****Working Code ********/
+					/*	if (fork() == 0)
+						{	
+								dup2(fd[1], 1);
+								close(fd[0]);
+								command_list(head->cmd, head->arg, head, src);
+								exit(0);
+						}
+						close(fd[1]);
+						if (fork() == 0)
+						{
+							dup2(fd[0], 0);
+							close(fd[1]);
+							command_list(head->pipe->cmd, head->pipe->arg, head, src);
+							exit(0);
+						}
+						close(fd[0]);
+						wait(NULL);
+						wait(NULL); */
+						//fork_pips(head->pipe);
+						// printf ("%d \n", src->npipe);
+						/*****/
 					}	
 					if (src->foundred == 1)
 					{	red_open(head, src);
 						command_list(head->cmd ,head->arg, head, src);
 					}
-					exit(0);
+						exit(0);
 				}
 				else
 					wait(&ge_id);
@@ -245,5 +269,6 @@ int     main(int argc, char **argv, char **envp)
 
 	ms_loop(&src, envp);
 	
+	//echo kjlkj l> bl$lkjlkjlkj
 	return (0);
 }

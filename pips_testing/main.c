@@ -33,7 +33,7 @@ int spawn_proc (int in, int out, struct command *cmd)
 int fork_pipes (int n, struct command *cmd)
 {
   int i;
-  pid_t pid;
+  // pid_t pid;
   int in, fd [2];
 
   /* The lst process should get its input from the original file descriptor 0.  */
@@ -62,15 +62,27 @@ int fork_pipes (int n, struct command *cmd)
   
   return execvp (cmd [i].argv [0], (char * const *)cmd [i].argv);
 }
+  int  calc_args (char **args)
+{
+	int i;
+
+	i  = 0;
+	while (args[i])
+		i++;
+	return (i);
+}
 int main ()
 {
   const char *ls[] = { "ifconfig", 0 };
   const char *awk[] = { "grep", "ether", 0 };
   const char *sort[] = { "grep", "-n", "18", 0 };
-  // const char *uniq[] = { "uniq", 0 };
-  // const char *uniq[] = { "uniq", 0 };
-
+  
   struct command cmd [] = { {ls}, {awk}, {sort} };
+  
 
-  return fork_pipes (3, cmd);
+  
+  // return fork_pipes (3, cmd);
+  char *args[3] = {"Hello", "World", NULL };
+  printf ("%d\n", calc_args(args));
+  return 0;
 }
