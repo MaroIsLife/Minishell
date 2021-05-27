@@ -153,6 +153,7 @@ void	ft_pwd (void);
 int		ft_isdollar(int c);
 char	*where_home(t_source *src);
 void	red_open(t_node *head, t_source *src);
+void 	fork_pips(t_source *src, t_node *head);
 
 //Signals
 void	ft_signal();

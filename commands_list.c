@@ -44,8 +44,16 @@ void	red_open(t_node *head, t_source *src)
 	close(fd);
 	//Close fd2 too
 }
+int  calc_args (char **args)
+{
+	int i;
 
-char	**ft_valide_args(t_node *head, int count)
+	i  = 0;
+	while (args[i])
+		i++;
+	return (i);
+}
+char	**ft_valide_args(char *cmd, char **args, t_node *head, int count)
 {
 	char	**varg;
 	int		i;
@@ -54,9 +62,9 @@ char	**ft_valide_args(t_node *head, int count)
 	i = 0;
 	b = 1;
 	varg = malloc (sizeof(char*) * (count + 2));
-	varg[0] = head->cmd;
-	while (head->arg[i] != NULL)
-		varg[b++] = head->arg[i++];
+	varg[0] = cmd;
+	while (args[i] != NULL)
+		varg[b++] = args[i++];
 	varg[b] = NULL;
 	return (varg);
 }
@@ -103,18 +111,18 @@ char	*get_correct_path(char **s, char **varg)
 	return (0);
 }
 
-int    ft_execute(char **args, t_node *head, t_source *src, char **envp)
+int    ft_execute(char *cmd, char **args, t_node *head, t_source *src, char **envp)
 {
 	char	**s;
 	char	*path;
 	static int	i;
 	char	**varg;
 
-  	varg = ft_valide_args(head, src->count);
+  	varg = ft_valide_args(cmd,args,head, calc_args(args));
 	
-	if (head->cmd[0] == '/' || (head->cmd[0] == '.' && head->cmd[1] == '/'))
+	if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/'))
 	{
-		path = head->cmd;
+		path = cmd;
 	}
 	else 
 	{
@@ -122,7 +130,7 @@ int    ft_execute(char **args, t_node *head, t_source *src, char **envp)
 		{
 			// printf("minishell: %s: command not found\n", head->cmd);
 			write(2,"minishell: ", 11);
-			write(2,head->cmd,ft_strlen(head->cmd));
+			write(2,cmd,ft_strlen(cmd));
 			write(2,": command not found\n",20);
 			g_global.return_value = 127;
 			return(0);
@@ -139,7 +147,7 @@ int    ft_execute(char **args, t_node *head, t_source *src, char **envp)
 			{
 
 				// char *err = strerror(errno);
-				printf("minishell: %s: %s\n", varg[0], strerror(errno));
+				// printf("minishell: %s: %s\n", varg[0], strerror(errno));
 				write(2,"minishell: ",11);
 				write(2,varg[0],ft_strlen(varg[0]));
 				write(2,": ",2);
@@ -190,32 +198,32 @@ void command_list(char *cmd, char **args, t_node *head, t_source *src)
 	else if (cmd[0] == '\0') // Enter with '\0'?? (Remove \0 from Read if the cmd = '\n')
 		;
 	else
-		ft_execute(args, head, src, src->our_envp);
+		ft_execute(cmd, args, head, src, src->our_envp);
 }
 
-void command_list_pipe(char *cmd, char **args, t_node *head, t_source *src)
-{
-	/*
-	insted of Sending Head node only send double and single array for pips
-	*/
-	if (ft_strncmp(cmd, "cd", 2) == 0 && cmd[2] == '\0')
-		ft_cd(args, head, src, where_home(src));
-	else if (ft_strncmp(cmd,"echo",4) == 0 && cmd[4] == '\0')
-		ft_echo(args, head, src);
-	else if (ft_strncmp(cmd, "env", 3) == 0 && cmd[3] == '\0')
-		print_env(src);
-	else if (ft_strncmp(head->cmd, "pwd", 3) == 0 && cmd[3] == '\0')
-		ft_pwd();
-	else if (ft_strncmp(cmd, "export", 6) == 0 && cmd[6] == '\0')
-		ft_export(args, head, src);
-	else if (ft_strncmp(cmd, "unset", 5) == 0 && cmd[5] == '\0')
-		ft_unset(args, head, src);
-	else if (ft_strncmp(cmd, "exit", 4) == 0 && cmd[4] == '\0')
-		ft_exit(head, src);
-	else if (cmd[0] == '\0') // Enter with '\0'?? (Remove \0 from Read if the cmd = '\n')
-		;
-	else
-		ft_execute(args, head, src, src->our_envp);
-}
+// void command_list_pipe(char *cmd, char **args, t_node *head, t_source *src)
+// {
+// 	/*
+// 	insted of Sending Head node only send double and single array for pips
+// 	*/
+// 	if (ft_strncmp(cmd, "cd", 2) == 0 && cmd[2] == '\0')
+// 		ft_cd(args, head, src, where_home(src));
+// 	else if (ft_strncmp(cmd,"echo",4) == 0 && cmd[4] == '\0')
+// 		ft_echo(args, head, src);
+// 	else if (ft_strncmp(cmd, "env", 3) == 0 && cmd[3] == '\0')
+// 		print_env(src);
+// 	else if (ft_strncmp(head->cmd, "pwd", 3) == 0 && cmd[3] == '\0')
+// 		ft_pwd();
+// 	else if (ft_strncmp(cmd, "export", 6) == 0 && cmd[6] == '\0')
+// 		ft_export(args, head, src);
+// 	else if (ft_strncmp(cmd, "unset", 5) == 0 && cmd[5] == '\0')
+// 		ft_unset(args, head, src);
+// 	else if (ft_strncmp(cmd, "exit", 4) == 0 && cmd[4] == '\0')
+// 		ft_exit(head, src);
+// 	else if (cmd[0] == '\0') // Enter with '\0'?? (Remove \0 from Read if the cmd = '\n')
+// 		;
+// 	else
+// 		ft_execute(args, head, src, src->our_envp);
+// }
 
 
