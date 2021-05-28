@@ -200,10 +200,8 @@ void command_list(char *cmd, char **args, t_node *head, t_source *src)
 		ft_unset(args, head, src);
 	else if (ft_strncmp(cmd, "exit", 4) == 0 && cmd[4] == '\0')
 		ft_exit(head, src);
-	else if (src->dollarused == 1)
-	{
+	else if (src->dollarused == 1 && cmd[0] == '\0')
 		;
-	}
 	// else if (cmd[0] == '\0') // Enter with '\0'?? (Remove \0 from Read if the cmd = '\n')
 	// {
 	// 	;	// printf("%s %d\n",cmd,ft_strlen(cmd));
