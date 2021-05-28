@@ -131,7 +131,7 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 			while (s[*i] != '\0' && s[*i] != '$')
 			{	
 				 tmp = ft_strdup(ft_strjoinchar(tmp ,s[*i]));
-				if (ft_search(src->our_envp, tmp))       
+				if (ft_search(src->our_envp, tmp) && !ft_isalpha(s[(*i) + 1]))       
 				{
 					char* rev = get_x_env(src->our_envp, src, tmp);
 					int j = 0;
