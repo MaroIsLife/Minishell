@@ -53,6 +53,7 @@ typedef struct	s_source
 	int		squotes;
 	int		aslash;
 	int		lastenv;
+	int 	dollarused;
 	char 	**redsplit;
 	int		foundpipe; // Found Pipe
 	int		founderror; // Found Error

@@ -11,6 +11,7 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 
 	if (s[i] == '?')
 		return(init_question_cmd(src, i));
+	src->dollarused = 1;
 	temp = malloc(1024 * sizeof(char));
 	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
 	{
