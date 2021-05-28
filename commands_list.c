@@ -119,11 +119,16 @@ int    ft_execute(char *cmd, char **args, t_node *head, t_source *src, char **en
 	char	**varg;
 
   	varg = ft_valide_args(cmd,args,head, calc_args(args));
-	
-	if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/'))
+	if (cmd[0] == '\0')
 	{
-		path = cmd;
+		write(2,"minishell: ", 11);
+		write(2,cmd,ft_strlen(cmd));
+		write(2,": command not found\n",20);
+		g_global.return_value = 127;
+		return(0);
 	}
+	if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/'))
+		path = cmd;
 	else 
 	{
 		if (get_x_env(src->our_envp, src, "PATH") == 0)
@@ -195,8 +200,10 @@ void command_list(char *cmd, char **args, t_node *head, t_source *src)
 		ft_unset(args, head, src);
 	else if (ft_strncmp(cmd, "exit", 4) == 0 && cmd[4] == '\0')
 		ft_exit(head, src);
-	else if (cmd[0] == '\0') // Enter with '\0'?? (Remove \0 from Read if the cmd = '\n')
-		;
+	// else if (cmd[0] == '\0') // Enter with '\0'?? (Remove \0 from Read if the cmd = '\n')
+	// {
+	// 	;	// printf("%s %d\n",cmd,ft_strlen(cmd));
+	// }
 	else
 		ft_execute(cmd, args, head, src, src->our_envp);
 }
