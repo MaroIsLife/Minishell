@@ -195,6 +195,12 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 		{
 			// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
 			// tputs(tgetstr("dl",NULL), 1, ft_putc);
+			if (termc->ret[0] == 0)
+			{
+				write(1,"\n",1);
+				print_prompt1();
+				continue ;
+			}
 			write(1,"\n",1);
 			// print_prompt1();
 			// s = tgetstr("ch", NULL);
