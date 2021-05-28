@@ -255,6 +255,7 @@ int ft_search(char **src, char *value)
 	int i;
 
 	i = 0;
+	// printf("%s\n",value);
 	while (src[i] != NULL)
 	{
 		if (is_equal(src[i], value))

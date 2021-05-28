@@ -108,24 +108,54 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 		finding_quotes(s,b,src);
 		if (s[b] == ' ' && src->dquotes == 0 && src->squotes == 0)
 			break ;
+		else if (s[b] == '$' && src->squotes == 0)
+		{
+			;
+		}
 		// printf("c: %c----d: %d dquotes: %d squotes: %d\n",s[b], b,src->dquotes,src->squotes);
 		b++;
 	}
-	src->p->filename = malloc((b + 1) * sizeof(char));
+	// src->p->filename = malloc((b + 1) * sizeof(char));
+	src->p->filename = malloc((1024 + 1) * sizeof(char));
 	b = 0;
 	while (s[*i] != '\0' && s[*i] != '\n' && s[*i] != '>' && s[*i] != '<')
 	{
 		finding_quotes(s,*i,src);
 		if (s[*i] == ' ' && src->dquotes == 0 && src->squotes == 0)
 			break ;
-		// printf("c: %c----d: %d dquotes: %d squotes: %d\n",s[*i], *i,src->dquotes,src->squotes);
-		src->p->filename[b++] = s[(*i)++];
+		if (s[*i] == '$' && src->squotes == 0)
+		{
+
+			char *tmp = ft_strdup("");//malloc(1024);
+			(*i)++;
+			while (s[*i] != '\0' && s[*i] != '$')
+			{	
+				 tmp = ft_strdup(ft_strjoinchar(tmp ,s[*i]));
+				if (ft_search(src->our_envp, tmp))       
+				{
+					char* rev = get_x_env(src->our_envp, src, tmp);
+					int j = 0;
+					while (rev[j] != '\0')
+					{	
+						src->p->filename[b] = rev[j];
+						j++;
+						b++;
+					}
+				}
+				(*i)++;
+			}
+		}
+		else
+			src->p->filename[b++] = s[(*i)++];
 	}
 	src->p->filename[b] = '\0';
 	// prwintf("Filename: %s\n",src->p->filename);
+	// printf("%s\n",src->p->filename);
 	src->allocate = 1;
 	return (0);
 }
+
+
 char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 {
 	int		i;
@@ -160,9 +190,13 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 				break ;
 		}
 		else if ((s[i] == '\"') && src->squotes == 0 && src->aslash == 0)
+		{
 			finding_quotes(s, i, src);
+		}
 		else if ((s[i] == '\'') && src->dquotes == 0 && src->aslash == 0)
+		{
 			finding_quotes(s, i, src);
+		}
 		else if (s[i] == '$' && src->aslash == 0 && (ft_isalpha(s[i + 1]) == 1 || s[i + 1] == '?') && src->squotes == 0)
 		{
 			i = get_env_value_arg(s, src->our_envp, src, i) - 1;

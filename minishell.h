@@ -178,5 +178,8 @@ t_stack	*lstnewc(void *data);
 int is_equal(char *s1, char *s2);
 
 char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc);
+char    *ft_strjoinchar(char *s, char c);
+int 	ft_search(char **src, char *value);
+
 
 #endif

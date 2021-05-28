@@ -178,6 +178,18 @@ int		init_question_cmd(t_source *src,int ret)
 	free(s);
 	return (ret + 1);
 }
+int		init_question_red(t_source *src,int ret)
+{
+	int		i;
+	char	*s;
+
+	i = 0;
+	s = ft_itoa(g_global.return_value);
+	while (s[i] != '\0')
+		src->ra[src->ra_b++] = s[i++];
+	free(s);
+	return (ret + 1);
+}
 
 
 
@@ -225,4 +237,44 @@ int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 }
 
 
+int		get_env_value_red(char *s, int *z, t_source *src, int i)
+{
+	char	*temp;
+	int		b;
+	int 	length;
+	int		c;
 
+	i = i + 1;
+	b = 0;
+	c = 0;
+
+	if (s[i] == '?')
+		return(init_question_red(src, i));
+	temp = malloc(1024 * sizeof(char));
+	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
+	{
+		temp[b++] = s[i++];
+		if (ft_isdollar(s[i]) != 1)
+			break ;
+	}
+	temp[b] = '\0';
+	b = 0;
+	length = ft_strlen(temp);
+	while (src->our_envp[c] != NULL)
+	{
+		// if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
+		if (ft_strncmp(src->our_envp[c], temp, length) == 0 && src->our_envp[c][length] == '=')
+		{
+			while (src->our_envp[c][b] != '=' && src->our_envp[c][b] != '\0')
+				b++;
+				while (src->our_envp[c][++b] != '\0')
+					src->p->filename[*z] = src->our_envp[c][b];
+				break ;
+		}
+		c++;
+	}
+	free(temp);
+	// if (src->re == '\0')
+		// printf("ZEROOO %s\n",src->re);
+	return (i);
+}
