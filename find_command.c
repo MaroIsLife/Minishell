@@ -22,16 +22,18 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	b = 0;
 	while (envp[c] != NULL)
 	{
-		if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b) - 1) == 0)
+		if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
 		{
 			while (envp[c][b] != '=' && envp[c][b] != '\0')
 				b++;
 				while (envp[c][++b] != '\0')
 					src->ra[src->ra_b++] = envp[c][b];
+				src->ra[src->ra_b] = '\0';
 				break ;
 		}
 		c++;
 	}
+		// printf("MAde it here %s\n",src->ra);
 	free(temp);
 	return (i);
 }

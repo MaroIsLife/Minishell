@@ -151,6 +151,7 @@ void	ms_loop(t_source *src, char **envp)
 		// signal(SIGQUIT,handler); // ^/
 		// cmd = read_line();
 		cmd = term_loop(&head1, &tmp, termc);
+		
 		// printf("cmd: %s\n",cmd);
 		// printf("Data1: %s\n",head1->data);
 		g_global.fsignal  = 0;
@@ -203,6 +204,7 @@ void	ms_loop(t_source *src, char **envp)
 			src->c = c;
 			init_parse(src, head, envp, pipes);
 			i = 0;
+			// printf("Cmd: %s\n",head->cmd);
 			// while (head->arg[i] != NULL)
 			// 	printf("Arg: %s\n",head->arg[i++]);
 			src->offset = 0;
