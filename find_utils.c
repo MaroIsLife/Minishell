@@ -219,6 +219,8 @@ int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 		c++;
 	}
 	free(temp);
+	// if (src->re == '\0')
+		// printf("ZEROOO %s\n",src->re);
 	return (i);
 }
 

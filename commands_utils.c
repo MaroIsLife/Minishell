@@ -9,11 +9,11 @@ void change_pwd_env(t_source *src)
 	{
 		if (ft_strncmp(src->our_envp[i],"PWD=", 4) == 0)
 		{
-			puts ("FOUND");
+			// puts ("FOUND");
 			char *s;
 			s = malloc(100);
 			s = getcwd(s,100);
-			puts("CURRENT");
+			// puts("CURRENT");
 			puts (s);
 			free(src->our_envp[i]);
 			src->our_envp[i] =  NULL;
