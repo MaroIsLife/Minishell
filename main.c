@@ -224,8 +224,8 @@ void	ms_loop(t_source *src, char **envp)
 					if (src->foundpipe == 1)
 					{ /*Here is the imp for pips with red*/
 						
-						int fd[2];
-						pipe(fd);
+						// int fd[2];
+						//pipe(fd);
 						fork_pips(src, head);
 						/*****Working Code ********/
 					/*	if (fork() == 0)
