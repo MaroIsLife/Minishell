@@ -38,6 +38,8 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	free(temp);
 	return (i);
 }
+
+
 char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 {
 	int i;
@@ -60,14 +62,17 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 					sp = ft_strdup(ft_strjoinchar(sp, s[start]));
 					start++;
 				}
-				if (!get_x_env(src->our_envp, src, sp))
+				if (get_x_env(src->our_envp, src, sp) == 0)
 				{
+					free(sp);
+					sp = ft_strdup("");
 					while (s[start] == ' ')
 						start++;
-					i = start - i;
+					i = start;
+					src->dollarused = 1;
 					continue ;
 				}
-				// printf("sp: %s\n",sp);
+					// printf("sp: %s\n",sp);
 		}
 		if (s[start] == '>' || s[start] == '<') // to be changed later
 		{
@@ -89,7 +94,6 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 			start++;
 	}
 	src->ra_b = 0;
-	// printf("Start: %d\n",start);
 	// src->ra = malloc((start + 1) * sizeof(char));
 	src->ra = malloc((1024) * sizeof(char));
 	while (i < start)
