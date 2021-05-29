@@ -23,19 +23,21 @@ int spawn_proc (int in, int out, char *cmd, char **arg,  t_node *head, t_source 
           dup2 (in, 0);
           close (in);
         // write(2, "You here", 8);
+        // close(out);
         }
 
       if (out != 1)
         {
           dup2 (out, 1);
           close (out);
+          //  close (in);
         //    write(2, "Now here", 8);
         }
 
       command_list(cmd, arg, head, src);
       exit(0);
     }
-     wait(&pid);
+    //  wait(&pid);
   return pid;
 }
 
@@ -49,18 +51,20 @@ t_pipe *tmp;
 
 tmp = head->pipe;
   i = 0;
- int nb = src-> npipe == 1 ? 1 : src->npipe - 1;
-  while(i < nb )
+  int nb = src-> npipe == 1 ? 1 : src->npipe - 1;
+  while(i < nb)
     {
       pipe (fd);
       if (i == 0)
-         { spawn_proc (in, fd [1], head->cmd, head->arg ,head, src);
+         { 
+           spawn_proc (in, fd [1], head->cmd, head->arg ,head, src);
           close (fd [1]);
           if (src->npipe == 1)
             {
                 in = dup(fd[0]);
                 close(fd[0]);
-                break;}
+                break;
+                }
          }
       else 
       {  
@@ -72,7 +76,7 @@ tmp = head->pipe;
       if (tmp->next == NULL)
         break;
       in = fd [0];
-      close (fd[0]);
+        close (fd[0]);
     i++;
     }
 
@@ -80,8 +84,8 @@ tmp = head->pipe;
         dup2 (in, 0);
   command_list(tmp->cmd, tmp->arg, head, src);
   exit (0);
-  wait(NULL);
+  //wait(NULL);
   i = -1;
-//   while (++i < src->npipe)
-//     wait(NULL);
+  while (++i < src->npipe)
+    wait(NULL);
 }
