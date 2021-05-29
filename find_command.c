@@ -48,9 +48,27 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	while(s[i] == ' ')
 		i++;
 	start = i;
+	char *sp = ft_strdup("");
 	while (s[start] != '\0' && s[start] != '\n')
 	{
 		finding_quotes(s, start, src);
+		if (s[start] == '$' && src->squotes == 0)
+		{
+				start++;
+				while (s[start] != '\0' && s[start] != '$' && s[start] != ' ')
+				{
+					sp = ft_strdup(ft_strjoinchar(sp, s[start]));
+					start++;
+				}
+				if (!get_x_env(src->our_envp, src, sp))
+				{
+					while (s[start] == ' ')
+						start++;
+					i = start - i;
+					continue ;
+				}
+				// printf("sp: %s\n",sp);
+		}
 		if (s[start] == '>' || s[start] == '<') // to be changed later
 		{
 			if (s[start + 1] == '>')
@@ -71,6 +89,7 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 			start++;
 	}
 	src->ra_b = 0;
+	// printf("Start: %d\n",start);
 	// src->ra = malloc((start + 1) * sizeof(char));
 	src->ra = malloc((1024) * sizeof(char));
 	while (i < start)
