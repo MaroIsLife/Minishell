@@ -94,6 +94,7 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 			start++;
 	}
 	src->ra_b = 0;
+	free(sp);
 	// src->ra = malloc((start + 1) * sizeof(char));
 	src->ra = malloc((1024) * sizeof(char));
 	while (i < start)
