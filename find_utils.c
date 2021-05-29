@@ -207,7 +207,7 @@ int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 
 	if (s[i] == '?')
 		return(init_question_arg(src, i));
-	temp = malloc(1024 * sizeof(char));
+	temp = malloc(4096 * sizeof(char));
 	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
 	{
 		temp[b++] = s[i++];
@@ -250,7 +250,7 @@ int		get_env_value_red(char *s, int *z, t_source *src, int i)
 
 	if (s[i] == '?')
 		return(init_question_red(src, i));
-	temp = malloc(1024 * sizeof(char));
+	temp = malloc(4096 * sizeof(char));
 	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
 	{
 		temp[b++] = s[i++];
