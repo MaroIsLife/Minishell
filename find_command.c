@@ -12,7 +12,7 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	if (s[i] == '?')
 		return(init_question_cmd(src, i));
 	src->dollarused = 1;
-	temp = malloc(1024 * sizeof(char));
+	temp = malloc(4096 * sizeof(char));
 	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
 	{
 		temp[b++] = s[i++];
@@ -81,7 +81,7 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 				}
 					// printf("sp: %s\n",sp);
 		}
-		if (s[start] == '>' || s[start] == '<') // to be changed later
+		if (s[start] == '>' || s[start] == '<')
 		{
 			if (s[start + 1] == '>')
 				start = start + 2;
@@ -103,7 +103,7 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	src->ra_b = 0;
 	free(sp);
 	// src->ra = malloc((start + 1) * sizeof(char));
-	src->ra = malloc((1024) * sizeof(char));
+	src->ra = malloc((4096) * sizeof(char));
 	while (i < start)
 	{
 		finding_quotes(s, i, src);

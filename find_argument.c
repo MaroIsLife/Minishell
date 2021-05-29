@@ -116,7 +116,7 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 		b++;
 	}
 	// src->p->filename = malloc((b + 1) * sizeof(char));
-	src->p->filename = malloc((1024 + 1) * sizeof(char));
+	src->p->filename = malloc((4096 + 1) * sizeof(char));
 	b = 0;
 	while (s[*i] != '\0' && s[*i] != '\n' && s[*i] != '>' && s[*i] != '<')
 	{
@@ -126,7 +126,7 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 		if (s[*i] == '$' && src->squotes == 0)
 		{
 
-			char *tmp = ft_strdup("");//malloc(1024);
+			char *tmp = ft_strdup("");
 			(*i)++;
 			while (s[*i] != '\0' && s[*i] != '$')
 			{	
@@ -166,7 +166,7 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 	//  i = 0;
 	while (s[i] == ' ')
 		i++;
-	src->re = malloc((1024) * sizeof(char));
+	src->re = malloc((4096) * sizeof(char));
 	src->re_b = 0;
 	while (s[i] != '\n' && s[i] != '\0')
 	{
