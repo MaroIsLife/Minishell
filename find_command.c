@@ -54,9 +54,16 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	while (s[start] != '\0' && s[start] != '\n')
 	{
 		finding_quotes(s, start, src);
-		if (s[start] == '$' && src->squotes == 0)
+		if (s[start] == '$' && src->squotes == 0 && src->dquotes == 0 && s[start + 1] != '?')
 		{
-				start++;
+				// start++;
+				finding_quotes(s, ++start, src);
+				if (src->squotes == 1 || src->dquotes == 1)
+				{
+					start++;
+					i = start;
+					continue ;
+				}
 				while (s[start] != '\0' && s[start] != '$' && s[start] != ' ')
 				{
 					sp = ft_strdup(ft_strjoinchar(sp, s[start]));
