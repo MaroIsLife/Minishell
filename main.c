@@ -138,6 +138,7 @@ void	ms_loop(t_source *src, char **envp)
 	tgetent(NULL, getenv("TERM"));
 	tmp = NULL;
 	head1 = NULL;
+	signal(SIGTERM, SIG_IGN);
 	while(1)
 	{
 		// printf("\U0001F600"); //Useless Emoji

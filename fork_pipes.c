@@ -21,16 +21,17 @@ int spawn_proc (int in, int out, char *cmd, char **arg,  t_node *head, t_source 
       if (in != 0)
         {
           dup2 (in, 0);
+          
           close (in);
         // write(2, "You here", 8);
-        // close(out);
+        //  close(out);
         }
 
       if (out != 1)
         {
           dup2 (out, 1);
           close (out);
-          //  close (in);
+          //close (in);
         //    write(2, "Now here", 8);
         }
 
@@ -51,41 +52,52 @@ t_pipe *tmp;
 
 tmp = head->pipe;
   i = 0;
-  int nb = src-> npipe == 1 ? 1 : src->npipe - 1;
-  while(i < nb)
+  // int nb = src-> npipe == 1 ? 1 : src->npipe - 1;
+  while(i < src->npipe)
     {
+      write (2, "Your Here\n", 10);
       pipe (fd);
       if (i == 0)
          { 
+          // printf("%d %s\n", i, head->cmd);
+
            spawn_proc (in, fd [1], head->cmd, head->arg ,head, src);
           close (fd [1]);
-          if (src->npipe == 1)
-            {
-                in = dup(fd[0]);
-                close(fd[0]);
-                break;
-                }
-         }
+          // if (src->npipe == 1)
+          //   {
+          //       in = fd[0];
+          //       break;
+          //       }
+          }
       else 
       {  
-        //   printf("%s\n", tmp->cmd);
+      // printf("%d %s\n", i, tmp->cmd);
           spawn_proc(in, fd [1], tmp->cmd ,tmp->arg , head, src);
           close (fd [1]);
-         }
-      tmp = tmp->next;
+          close (in);
+         
       if (tmp->next == NULL)
         break;
-      in = fd [0];
-        close (fd[0]);
+      tmp = tmp->next;
+      }
+      in = fd[0];
     i++;
     }
+    // write(2, "You here", 8);
+  int pid = fork();
+  if (pid == 0)
+  {
+      dup2 (in, 0);
+      close(in);
+      command_list(tmp->cmd, tmp->arg, head, src);
+      exit (0);
 
-    if (in != 0)
-        dup2 (in, 0);
-  command_list(tmp->cmd, tmp->arg, head, src);
-  exit (0);
-  //wait(NULL);
+  }
+  close(in);
+  int ret;
+  wait(NULL);
+  
   i = -1;
-  while (++i < src->npipe)
+  while (++i < src->npipe - 1 )
     wait(NULL);
 }
