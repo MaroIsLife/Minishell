@@ -133,8 +133,9 @@ void	ms_loop(t_source *src, char **envp)
 	termc = (t_termc *) malloc(sizeof(t_termc));
 	termc->edit = 0;
 	termc->help = 0;
-	termc->ret = malloc(1 * sizeof(char));
-	termc->ret[0] = '\0';
+	// g_global.ret = malloc(1 * sizeof(char));
+	// g_global.ret[0] = '\0';
+	g_global.ret = NULL;
 	tgetent(NULL, getenv("TERM"));
 	tmp = NULL;
 	head1 = NULL;
@@ -151,6 +152,7 @@ void	ms_loop(t_source *src, char **envp)
 		}
 		// signal(SIGQUIT,handler); // ^/
 		// cmd = read_line();
+		g_global.ret = NULL;
 		cmd = term_loop(&head1, &tmp, termc);
 		
 		// printf("cmd: %s\n",cmd);
@@ -273,5 +275,7 @@ int     main(int argc, char **argv, char **envp)
 	ms_loop(&src, envp);
 	
 	//echo kjlkj l> bl$lkjlkjlkj
+	//Enter then Delete without any Value
+	//Space then Enter
 	return (0);
 }

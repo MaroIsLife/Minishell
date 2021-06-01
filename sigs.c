@@ -3,13 +3,19 @@
 void handler(int c)
 {
 
-	if (g_global.fsignal != 0)
-		write(1,"\b\b  \b\b",6);
+	// if (g_global.fsignal != 0)
+	// 	write(1,"\b\b  \b\b",6);
 	
 	write(1, "\n", 1);
 	print_prompt1();
 	g_global.fsignal = 1;
 	g_global.return_value = 1;
+
+	if (g_global.ret != NULL)
+	{
+		free(g_global.ret);
+		g_global.ret = NULL;
+	}
 
 	// write(1,"\b\b  \b\b",6);
 	// write(1,"\n",1);
