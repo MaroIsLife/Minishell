@@ -23,8 +23,16 @@ char    *ft_strjoinchar(char *s, char c)
     int        i;
     char    *str;
     i = 0;
+
+	if (s == NULL)
+	{
+		str = malloc(2);
+		str[0] = c;
+		str[1] = 0;
+		return (str);
+	}
     while (s[i])
-        i++;
+		i++;
     if (!(str = (char *)malloc(i + 2)))
         return (0);
     i = 0;
@@ -89,7 +97,7 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 		// fprintf(stderr,"d = %d",d);
 		if (d == 4)
 		{
-			if (termc->ret[0] == 0)
+			if (g_global.ret[0] == 0)
 			{
 				write(1,"exit",4);
 				exit(0);
@@ -97,7 +105,7 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 		}
 		else if (d >= 32 && d < 127)
 		{
-			termc->ret = ft_strjoinchar(termc->ret, d);
+			g_global.ret = ft_strjoinchar(g_global.ret, d);
 			write(1, &d ,1);
 		}
 		else if (d == KEY_REMOVE)
@@ -105,17 +113,17 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			int i;
 
 			i = 0;
-			if (strlen(termc->ret) > 0)
+			if (strlen(g_global.ret) > 0)
 			{
-				while (i < (strlen(termc->ret) - 1))
+				while (i < (strlen(g_global.ret) - 1))
 					i++;
 				tputs(tgetstr("le",NULL), 1, ft_putc);
 				// tputs(tgetstr("dm",NULL), 1, ft_putc);
 				tputs(tgetstr("dc",NULL), 1, ft_putc);
 				// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
 				if (!termc->edit)
-					termc->ret = strdup(termc->ret);
-				termc->ret[i] = '\0';
+					g_global.ret = strdup(g_global.ret);
+				g_global.ret[i] = '\0';
 				// tputs(tgetstr("ed",NULL), 1, ft_putc);
 			}
 		}
@@ -127,20 +135,20 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			if (*tmp && (*tmp)->prev)
 			{
 				*tmp = (*tmp)->prev;
-				termc->ret = (char *)(*tmp)->data;
+				g_global.ret = (char *)(*tmp)->data;
 				write(1, (*tmp)->data, strlen((*tmp)->data));
 			}
 			else
 			{
 				// printf("Made it here\n");
-				termc->ret = "";
+				g_global.ret = "";
 				termc->help = 0;
-				write(1, termc->ret, strlen(termc->ret));
+				write(1, g_global.ret, strlen(g_global.ret));
 			}
 				termc->edit = 0;
 			
 			// else
-			// 	termc->ret[0] = 0;
+			// 	g_global.ret[0] = 0;
 			// s = tgoto(tgetstr("ch", NULL), 0 ,0);
 			// write(1, s, strlen(s)); 
 			// s = tgetstr("dl", NULL); //Get the string entry id 'ce' means clear from the cursor to the end of the current line.
@@ -158,30 +166,30 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			// 	write(1, tmp->data, strlen(tmp->data));
 			// 	if(tmp->next != NULL)
 			// 		tmp = tmp->next;
-			// 	termc->ret = tmp->data;
+			// 	g_global.ret = tmp->data;
 			// }
 			if (*tmp)
 				{
 					// printf("made it here\n");
 					if (!(*tmp)->prev && !termc->help)
 					{
-						termc->ret = (char*)(*tmp)->data;
+						g_global.ret = (char*)(*tmp)->data;
 						termc->help = 1;
 					}
 					else
 					{
 						if((*tmp)->next)
 							*tmp = (*tmp)->next;
-						termc->ret = (char*)(*tmp)->data;
+						g_global.ret = (char*)(*tmp)->data;
 					}
 					write(1, (*tmp)->data, strlen((*tmp)->data));
 				}
 			termc->edit = 0;
 			// else
-			// 	termc->ret = "";
+			// 	g_global.ret = "";
 			// else 
 			// {
-			// 	termc->ret[0] = 0;
+			// 	g_global.ret[0] = 0;
 			// }
 			// t_stack *tmp;
 			// tmp = head;
@@ -195,7 +203,7 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 		{
 			// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
 			// tputs(tgetstr("dl",NULL), 1, ft_putc);
-			if (termc->ret[0] == 0)
+			if (g_global.ret == NULL)
 			{
 				write(1,"\n",1);
 				print_prompt1();
@@ -208,9 +216,9 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			// s = tgetstr("dl", NULL); //Get the string entry id 'ce' means clear from the cursor to the end of the current line.
 			// write(1, s, strlen(s)); // execute the string entry id
 				// fprintf(stderr, "Else made it here");
-			if (termc->ret[0] != 0)
+			if (g_global.ret[0] != 0)
 			{
-				lstadd_dlist(head, lstnewc(strdup(termc->ret)));
+				lstadd_dlist(head, lstnewc(strdup(g_global.ret)));
 				// fprintf(stderr, "%s", tmp);
 				*tmp = *head;
 				termc->help = 0;
@@ -219,13 +227,13 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			}
 			termc->edit = 0;
 			// if (termc->help == 0)
-			// strcpy(s, termc->ret);
-			s = termc->ret;
-			termc->ret = "";
+			// strcpy(s, g_global.ret);
+			s = g_global.ret;
+			g_global.ret = ft_strdup("");
 			return (s);
 			// continue ;
 		}
 	}
-	// printf("\ntermc->ret: %s\n",ret);
+	// printf("\ng_global.ret: %s\n",ret);
     return (0);	
 }

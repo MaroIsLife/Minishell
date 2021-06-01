@@ -81,7 +81,6 @@ typedef struct	s_source
 
 
 typedef struct s_termc {
-	char			*ret;
 	int				edit;
 	int				help;
 }	t_termc;
@@ -108,6 +107,7 @@ typedef struct s_global {
 	int		fsignal;
 	int		id;
 	int		return_value;
+	char 	*ret;
 
 }		t_global;
 
