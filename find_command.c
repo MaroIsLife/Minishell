@@ -48,7 +48,9 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	file_found = 0;
 	i = src->offset;
 	while(s[i] == ' ')
+	{
 		i++;
+	}
 	start = i;
 	char *sp = ft_strdup("");
 	while (s[start] != '\0' && s[start] != '\n')
