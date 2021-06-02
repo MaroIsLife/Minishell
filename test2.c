@@ -113,6 +113,8 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			int i;
 
 			i = 0;
+			if (g_global.ret == NULL)
+				continue ;
 			if (strlen(g_global.ret) > 0)
 			{
 				while (i < (strlen(g_global.ret) - 1))
