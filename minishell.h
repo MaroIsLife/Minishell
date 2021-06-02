@@ -88,6 +88,7 @@ typedef struct s_termc {
 typedef struct s_pipe {
 	char			*cmd;
 	char			**arg;
+	int				find_red;
     struct s_pipe	*next;
 }	t_pipe;
 
