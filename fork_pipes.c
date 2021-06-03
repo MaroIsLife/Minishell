@@ -6,7 +6,7 @@
 /*   By: aymaatou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 15:30:30 by aymaatou          #+#    #+#             */
-/*   Updated: 2021/05/27 15:30:31 by aymaatou         ###   ########.fr       */
+/*   Updated: 2021/06/03 18:51:29 by aymaatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int wait_proc (int in, int out,int fd,  char *cmd, char **arg,  t_node *head, t_
         {
           dup2 (in, 0);   
           close (in);
+          close (fd);
           // close (out);
 
         }
@@ -31,7 +32,7 @@ int wait_proc (int in, int out,int fd,  char *cmd, char **arg,  t_node *head, t_
           dup2 (out, 1);
           close (out);
           close (fd);
-        //    write(2, "Now here", 8);
+       
         }
       // if (src->foundred)
       //   red_open(head, src);
@@ -57,24 +58,24 @@ tmp = head->pipe;
   // int nb = src-> npipe == 1 ? 1 : src->npipe - 1;
   while(i < src->npipe)
     {
-      pipe (fd);
+      pipe(fd);
       if (i == 0)
-         { 
-           wait_proc (in, fd [1], fd[0], head->cmd, head->arg ,head, src);
-          close (fd [1]);
-      
-          }
+        { 
+         wait_proc (in, fd [1], fd[0], head->cmd, head->arg ,head, src);
+         close (fd [1]);
+         in = fd[0];
+        }
       else 
       {  
           wait_proc(in, fd [1], fd[0], tmp->cmd ,tmp->arg , head, src);
           close (fd [1]);
           close (in);
          
+      in = fd[0];
       if (tmp->next == NULL)
         break;
       tmp = tmp->next;
       }
-      in = fd[0];
     i++;
     }
     // write(2, "You here", 8);
@@ -83,20 +84,20 @@ tmp = head->pipe;
   {
       dup2 (in, 0);
       close(in);
-      if (src->foundred)
-        red_open(head, src);
+
       command_list(tmp->cmd, tmp->arg, head, src);
       exit (0);
 
   }
   close(in);
-  close(fd[0]);
-  close(fd[1]);
-  // wait(NULL);
+  close (fd[1]);
+  close (fd[0]);
+  int ret;
+  waitpid(pid, &ret, 0);
   
   i = -1;
   int status;
-  while (++i < src->npipe + 1)
+  while (++i < src->npipe)
   {
 
 
