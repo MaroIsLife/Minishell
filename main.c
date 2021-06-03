@@ -231,33 +231,8 @@ void	ms_loop(t_source *src, char **envp)
 				if (id == 0)
 				{
 					if (src->foundpipe == 1)
-					{ /*Here is the imp for pips with red*/
-						
-						// int fd[2];
-						//pipe(fd);
-						fork_pips(src, head);
-						/*****Working Code ********/
-					/*	if (fork() == 0)
-						{	
-								dup2(fd[1], 1);
-								close(fd[0]);
-								command_list(head->cmd, head->arg, head, src);
-								exit(0);
-						}
-						close(fd[1]);
-						if (fork() == 0)
-						{
-							dup2(fd[0], 0);
-							close(fd[1]);
-							command_list(head->pipe->cmd, head->pipe->arg, head, src);
-							exit(0);
-						}
-						close(fd[0]);
-						wait(NULL);
-						wait(NULL); */
-						//fork_pips(head->pipe);
-						// printf ("%d \n", src->npipe);
-						/*****/
+					{ 
+					fork_pips(src, head);
 					}	
 					if (src->foundred && !src->foundpipe)
 					{	red_open(head, src);
