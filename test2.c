@@ -97,7 +97,7 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 		// fprintf(stderr,"d = %d",d);
 		if (d == 4)
 		{
-			if (g_global.ret[0] == 0)
+			if (g_global.ret == NULL)
 			{
 				write(1,"exit",4);
 				exit(0);
