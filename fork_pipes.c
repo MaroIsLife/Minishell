@@ -12,7 +12,7 @@
 
 # include "minishell.h"
 
-int wait_proc (int in, int out, char *cmd, char **arg,  t_node *head, t_source *src)
+int wait_proc (int in, int out,int fd,  char *cmd, char **arg,  t_node *head, t_source *src)
 {
   pid_t pid;
 
@@ -30,7 +30,7 @@ int wait_proc (int in, int out, char *cmd, char **arg,  t_node *head, t_source *
         {
           dup2 (out, 1);
           close (out);
-          // close (in);
+          close (fd);
         //    write(2, "Now here", 8);
         }
       // if (src->foundred)
@@ -60,13 +60,13 @@ tmp = head->pipe;
       pipe (fd);
       if (i == 0)
          { 
-           wait_proc (in, fd [1], head->cmd, head->arg ,head, src);
+           wait_proc (in, fd [1], fd[0], head->cmd, head->arg ,head, src);
           close (fd [1]);
       
           }
       else 
       {  
-          wait_proc(in, fd [1], tmp->cmd ,tmp->arg , head, src);
+          wait_proc(in, fd [1], fd[0], tmp->cmd ,tmp->arg , head, src);
           close (fd [1]);
           close (in);
          
