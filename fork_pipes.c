@@ -34,7 +34,8 @@ int spawn_proc (int in, int out, char *cmd, char **arg,  t_node *head, t_source 
           //close (in);
         //    write(2, "Now here", 8);
         }
-
+      // if (src->foundred)
+      //   red_open(head, src);
       command_list(cmd, arg, head, src);
       exit(0);
     }
@@ -89,6 +90,8 @@ tmp = head->pipe;
   {
       dup2 (in, 0);
       close(in);
+      if (src->foundred)
+        red_open(head, src);
       command_list(tmp->cmd, tmp->arg, head, src);
       exit (0);
 
