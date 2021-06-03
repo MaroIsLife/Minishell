@@ -261,7 +261,7 @@ void	ms_loop(t_source *src, char **envp)
 						// printf ("%d \n", src->npipe);
 						/*****/
 					}	
-					if (src->foundred == 1)
+					if (src->foundred && !src->foundpipe)
 					{	red_open(head, src);
 						command_list(head->cmd ,head->arg, head, src);
 					}
