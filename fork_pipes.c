@@ -12,7 +12,7 @@
 
 # include "minishell.h"
 
-int spawn_proc (int in, int out, char *cmd, char **arg,  t_node *head, t_source *src)
+int wait_proc (int in, int out, char *cmd, char **arg,  t_node *head, t_source *src)
 {
   pid_t pid;
 
@@ -20,25 +20,26 @@ int spawn_proc (int in, int out, char *cmd, char **arg,  t_node *head, t_source 
     {
       if (in != 0)
         {
-          dup2 (in, 0);
-          
+          dup2 (in, 0);   
           close (in);
-        // write(2, "You here", 8);
-        //  close(out);
+          // close (out);
+
         }
 
-      if (out != 1)
+      else if (out != 1)
         {
           dup2 (out, 1);
           close (out);
-          //close (in);
+          // close (in);
         //    write(2, "Now here", 8);
         }
       // if (src->foundred)
       //   red_open(head, src);
+      // close(in);
       command_list(cmd, arg, head, src);
       exit(0);
     }
+    // close (in);
     //  wait(&pid);
   return pid;
 }
@@ -56,24 +57,16 @@ tmp = head->pipe;
   // int nb = src-> npipe == 1 ? 1 : src->npipe - 1;
   while(i < src->npipe)
     {
-      write (2, "Your Here\n", 10);
       pipe (fd);
       if (i == 0)
          { 
-          // printf("%d %s\n", i, head->cmd);
-
-           spawn_proc (in, fd [1], head->cmd, head->arg ,head, src);
+           wait_proc (in, fd [1], head->cmd, head->arg ,head, src);
           close (fd [1]);
-          // if (src->npipe == 1)
-          //   {
-          //       in = fd[0];
-          //       break;
-          //       }
+      
           }
       else 
       {  
-      // printf("%d %s\n", i, tmp->cmd);
-          spawn_proc(in, fd [1], tmp->cmd ,tmp->arg , head, src);
+          wait_proc(in, fd [1], tmp->cmd ,tmp->arg , head, src);
           close (fd [1]);
           close (in);
          
@@ -97,10 +90,24 @@ tmp = head->pipe;
 
   }
   close(in);
-  int ret;
-  wait(NULL);
+  close(fd[0]);
+  close(fd[1]);
+  // wait(NULL);
   
   i = -1;
-  while (++i < src->npipe - 1 )
-    wait(NULL);
+  int status;
+  while (++i < src->npipe + 1)
+  {
+
+
+    if (wait(&status) >= 0)
+    {
+        if (WIFEXITED(status))
+        {
+            /* Child process exited normally, through `return` or `exit` */
+            // printf("\nChild process exited with %d status\n", WEXITSTATUS(status));
+        }
+    }
+  }
+  //   wait(NULL);
 }
