@@ -75,7 +75,7 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 	p = head->pipe;
 	while (c < src->npipe)
 	{
-		src->offset = src->offset + 1; //Whie pipe[c][offset] == '|' offset ++    try putting two pipes near eachother
+		src->offset = src->offset; //Whie pipe[c][offset] == '|' offset ++    try putting two pipes near eachother
 		p->cmd = find_command(pipe[src->c], head, src, envp);
 		// printf("Pipe command: %s\n",p->cmd);
 		count = count_argument(pipe[src->c], src->offset, src);
