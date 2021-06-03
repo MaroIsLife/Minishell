@@ -57,8 +57,7 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	{
 		if (arg[i][0] != '\0')
 			p->arg[b++] = arg[i];
-		if (arg[i] == '>' || arg[i] == '<')
-			p->find_red = 1;
+
 		i++;
 	}
 	p->arg[b] = NULL;
