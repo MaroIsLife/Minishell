@@ -101,6 +101,6 @@ tmp = head->pipe;
   wait(NULL);
   
   i = -1;
-  while (++i < src->npipe - 1 )
+  while (++i < src->npipe)
     wait(NULL);
 }

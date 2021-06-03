@@ -206,8 +206,6 @@ void	ms_loop(t_source *src, char **envp)
 				src->p = head->first_filename;
 			}
 
-			i = 0;
-		
 			src->dquotes = 0;
 			src->squotes = 0;
 			i = 0;

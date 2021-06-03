@@ -47,11 +47,13 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	int file_found;
 	file_found = 0;
 	i = src->offset;
-	while(s[i] == ' ')
+	// printf("bug: %s\n i: %d \n", s, i);
+	while(s[i] == ' ' || s[i] == '|')
 	{
 		i++;
 	}
 	start = i;
+		// printf("Start: %d\n",start);
 	char *sp = ft_strdup("");
 	while (s[start] != '\0' && s[start] != '\n')
 	{
@@ -95,7 +97,7 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 				start++;
 			file_found = 1;
 		}
-		if (s[start] == ' ' && src->dquotes == 0 && src->squotes == 0 && file_found == 0)
+		if ((s[start] == ' ' || s[start] == '|') && src->dquotes == 0 && src->squotes == 0 && file_found == 0)
 			break ;
 		else
 			file_found = 0;
@@ -104,6 +106,7 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	}
 	src->ra_b = 0;
 	free(sp);
+	// printf("i: %d\n",i);
 	// src->ra = malloc((start + 1) * sizeof(char));
 	src->ra = malloc((4096) * sizeof(char));
 	while (i < start)

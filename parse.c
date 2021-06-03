@@ -57,8 +57,6 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	{
 		if (arg[i][0] != '\0')
 			p->arg[b++] = arg[i];
-		if (arg[i] == '>' || arg[i] == '<')
-			p->find_red = 1;
 		i++;
 	}
 	p->arg[b] = NULL;
@@ -77,8 +75,9 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 	p = head->pipe;
 	while (c < src->npipe)
 	{
-		src->offset = src->offset + 2; //Whie pipe[c][offset] == '|' offset ++    try putting two pipes near eachother
+		src->offset = src->offset + 1; //Whie pipe[c][offset] == '|' offset ++    try putting two pipes near eachother
 		p->cmd = find_command(pipe[src->c], head, src, envp);
+		// printf("Pipe command: %s\n",p->cmd);
 		count = count_argument(pipe[src->c], src->offset, src);
 		i = 0;
 		arg = malloc((count + 1) * sizeof(char *));
