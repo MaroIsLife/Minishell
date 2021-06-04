@@ -97,8 +97,8 @@ if (x == 0)
     {
     dup2 (in, 0);
     close(in);
-    close (fd[0]);
-    close (fd[1]);
+    // close (fd[0]);
+    // close (fd[1]);
     printf ("cmd: %s arg %s\n", tmp->cmd, tmp->arg[0]);
     command_list(tmp->cmd, tmp->arg, src);
     exit(0);
