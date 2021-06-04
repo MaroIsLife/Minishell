@@ -2,53 +2,105 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+
+struct command
+{
+  const char **argv;
+};
+
+int spawn_proc (int in,  int *out, struct command *cmd)
+{
+  pid_t pid;
+
+  if ((pid = fork ()) == 0)
+    {
+      if (in != 0)
+        {
+          dup2 (in, 0);
+          close (in);
+          close (out[1]);
+        }
+
+      if (out[1] != 1)
+        {
+          dup2 (out[0], 1);
+          close (out[1]);
+          // close (out[0]);
+        }
+
+     execvp (cmd->argv [0], (char * const *)cmd->argv);
+     exit(0);
+    }
+          close (out[1]);
+          close (out[0]);
+  return pid;
+}
+
+int
+fork_pipes (int n, struct command *cmd)
+{
+  int i;
+  pid_t pid;
+  int in, fd [2];
+
+  in = 0;
+  for (i = 0; i < n - 1; ++i)
+    {
+      pipe (fd);
+      if (i == 0)
+       { spawn_proc (in, fd , cmd + i);
+       close (fd[1]);
+      //  close(in);
+       }
+      else
+       { spawn_proc (in, fd , cmd + i);
+          close(fd[0]);
+          close (fd [1]);
+          // close(in);
+          }
+      in = fd [0];
+      close(fd[0]);
+    }
+
+pid_t x;
+x = fork();
+if (x == 0)
+    {
+    dup2 (in, 0);
+    close(in);
+    close (fd[0]);
+    execvp (cmd [i].argv [0], (char * const *)cmd [i].argv);
+    exit(0);
+    } 
+int ret; 
+ waitpid(x,&ret, 0 );
+i = 0;
+while (i < n - 1)
+ {
+   wait(NULL);
+ i++;
+ }
+  close (in);
+  close (fd[0]);
+  close (fd[1]);
+ return (0);
+}
+
 int main(int ac, char **av, char **env)
 {
-    char *cmd[2] = { "/bin/cat", NULL};
-    char *cmd2[2] = { "/bin/ls", NULL};
-    int fd[2];
 
-    pipe(fd);
-    if (fork() == 0)
-    {
-        dup2(fd[1], 1);
-        close(fd[0]);
-        close(fd[1]);
-        execve("/bin/cat", cmd, env);
-        exit(0);
-    }
-    // wait(NULL);
-    if (fork() == 0)
-    {
-        dup2(fd[0], 0);
-        close (fd[1]);
-         close(fd[0]);
-        execve("/bin/ls", cmd2, env);
-        exit(0);
-    }
-    close(fd[0]);
-    close(fd[1]);
-    wait(NULL);
-    wait(NULL);
 
-    	// if (fork() == 0)
-		// {	
-		// 		dup2(fd[1], 1);
-		// 		close(fd[0]);
-		// 		// command_list(head->cmd, head->arg, head, src);
-		// 		execve("/bin/cat", cmd, env);
-        //         exit(0);
-		// }
-		// close(fd[1]);
-		// if (fork() == 0)
-		// {
-		// 	dup2(fd[0], 0);
-		// 	close(fd[1]);
-        //      execve("/bin/ls", cmd2, env);
-		// 	// command_list(head->pipe->cmd, head->pipe->arg, head, src);
-		// 	exit(0);
-		// }
-		// close(fd[0]);
-		// wait(NULL);
-		// wait(NULL); 
+  const char *ls[] = { "ls", NULL };
+  const char *awk[] = { "cat", NULL };
+  const char *sort[] = {  "ls", NULL };
+  const char *uniq[] = {  "ls", NULL};
+
+    struct command cmd [] = { {ls}, {awk}, {sort}, {uniq} };
+  // struct command cmd [] = { {awk}, {ls},  {sort}, {uniq} };
+
+  return 
+  fork_pipes (2, cmd);
+
+
+
 }

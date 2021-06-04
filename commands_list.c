@@ -53,7 +53,7 @@ int  calc_args (char **args)
 		i++;
 	return (i);
 }
-char	**ft_valide_args(char *cmd, char **args, t_node *head, int count)
+char	**ft_valide_args(char *cmd, char **args, int count)
 {
 	char	**varg;
 	int		i;
@@ -111,14 +111,14 @@ char	*get_correct_path(char **s, char **varg)
 	return (0);
 }
 
-int    ft_execute(char *cmd, char **args, t_node *head, t_source *src, char **envp)
+int    ft_execute(char *cmd, char **args,t_source *src, char **envp)
 {
 	char	**s;
 	char	*path;
 	static int	i;
 	char	**varg;
 
-  	varg = ft_valide_args(cmd,args,head, calc_args(args));
+  	varg = ft_valide_args(cmd,args, calc_args(args));
 	if (cmd[0] == '\0')
 	{
 		write(2,"minishell: ", 11);
@@ -181,58 +181,27 @@ int    ft_execute(char *cmd, char **args, t_node *head, t_source *src, char **en
 	return (0);	
 }
 
-void command_list(char *cmd, char **args, t_node *head, t_source *src)
+void command_list(char *cmd, char **args,t_source *src)
 {
 	/*
 	insted of Sending Head node only send double and single array for pips
 	*/
 	if (ft_strncmp(cmd, "cd", 2) == 0 && cmd[2] == '\0')
-		ft_cd(args, head, src, where_home(src));
+		ft_cd(args, src, where_home(src));
 	else if (ft_strncmp(cmd,"echo",4) == 0 && cmd[4] == '\0')
-		ft_echo(args, head, src);
+		ft_echo(args);
 	else if (ft_strncmp(cmd, "env", 3) == 0 && cmd[3] == '\0')
 		print_env(src);
-	else if (ft_strncmp(head->cmd, "pwd", 3) == 0 && cmd[3] == '\0')
+	else if (ft_strncmp(cmd, "pwd", 3) == 0 && cmd[3] == '\0')
 		ft_pwd();
 	else if (ft_strncmp(cmd, "export", 6) == 0 && cmd[6] == '\0')
-		ft_export(args, head, src);
+		ft_export(args, src);
 	else if (ft_strncmp(cmd, "unset", 5) == 0 && cmd[5] == '\0')
-		ft_unset(args, head, src);
+		ft_unset(args, src);
 	else if (ft_strncmp(cmd, "exit", 4) == 0 && cmd[4] == '\0')
-		ft_exit(head, src);
+		ft_exit(args, src);
 	else if ((src->dollarused == 1 && cmd[0] == '\0'))
 		;
-	// else if (cmd[0] == '\0') // Enter with '\0'?? (Remove \0 from Read if the cmd = '\n')
-	// {
-	// 	;	// printf("%s %d\n",cmd,ft_strlen(cmd));
-	// }
 	else
-		ft_execute(cmd, args, head, src, src->our_envp);
+		ft_execute(cmd, args, src, src->our_envp);
 }
-
-// void command_list_pipe(char *cmd, char **args, t_node *head, t_source *src)
-// {
-// 	/*
-// 	insted of Sending Head node only send double and single array for pips
-// 	*/
-// 	if (ft_strncmp(cmd, "cd", 2) == 0 && cmd[2] == '\0')
-// 		ft_cd(args, head, src, where_home(src));
-// 	else if (ft_strncmp(cmd,"echo",4) == 0 && cmd[4] == '\0')
-// 		ft_echo(args, head, src);
-// 	else if (ft_strncmp(cmd, "env", 3) == 0 && cmd[3] == '\0')
-// 		print_env(src);
-// 	else if (ft_strncmp(head->cmd, "pwd", 3) == 0 && cmd[3] == '\0')
-// 		ft_pwd();
-// 	else if (ft_strncmp(cmd, "export", 6) == 0 && cmd[6] == '\0')
-// 		ft_export(args, head, src);
-// 	else if (ft_strncmp(cmd, "unset", 5) == 0 && cmd[5] == '\0')
-// 		ft_unset(args, head, src);
-// 	else if (ft_strncmp(cmd, "exit", 4) == 0 && cmd[4] == '\0')
-// 		ft_exit(head, src);
-// 	else if (cmd[0] == '\0') // Enter with '\0'?? (Remove \0 from Read if the cmd = '\n')
-// 		;
-// 	else
-// 		ft_execute(args, head, src, src->our_envp);
-// }
-
-
