@@ -48,6 +48,8 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	file_found = 0;
 	i = src->offset;
 	// printf("bug: %s\n i: %d \n", s, i);
+	if (s[0] == '|' || s[i] == '\\')
+		return 0;
 	while(s[i] == ' ' || s[i] == '|')
 	{
 		i++;
@@ -148,6 +150,7 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 		i++;
 	}
 	src->ra[src->ra_b] = '\0';
-	src->offset = i + 1;
+	src->offset = i;
+	printf("Offset: %d\n",src->offset);
 	return (src->ra);
 }
