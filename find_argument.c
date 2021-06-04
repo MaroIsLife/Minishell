@@ -28,8 +28,10 @@ int		count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 	jump = 0;
 	if (s[0] == '\n')
 		return 0;
-
-	
+	if (i < 0)
+		return 0;
+	if (s[i] == '|')
+		return 0;
 	while (s[i] != '\0' && s[i] != '\n')
 	{
 		if (s[i] == '\"' && i == 0)

@@ -154,6 +154,7 @@ void	ms_loop(t_source *src, char **envp)
 		// cmd = read_line();
 		g_global.ret = NULL;
 		cmd = term_loop(&head1, &tmp, termc);
+		free(g_global.ret);
 		int b = 0;
 		while (cmd[b] == ' ') // space as a command
 			b++;
@@ -176,11 +177,9 @@ void	ms_loop(t_source *src, char **envp)
 	
 		init(src); // MOVE INIT() TO WHILE PIPE != NULL??
 		pipes = my_ft_split(cmd,';', src);
+		free(cmd);
 		int c;
 		int o =0;
-		while (pipes[o] != NULL)
-			o++;
-		// printf("Pipes Length: %d\n",o);
 		c = 0;
 		src->fd_r_c = 0;
 
@@ -213,7 +212,12 @@ void	ms_loop(t_source *src, char **envp)
 			init_parse(src, head, envp, pipes);
 			i = 0;
 			// if (ft_strncmp(head->cmd,"\0", 1) == 0)
-			// 	printf("Cmd: %s\n",head->cmd);
+				// printf("Cmd: %s\n",head->cmd);
+			if (!head->cmd)
+			{
+				c++;
+				continue ;
+			}
 			// while (head->arg[i] != NULL)
 			// 	printf("Arg: %s\n",head->arg[i++]);
 			src->offset = 0;
@@ -270,6 +274,13 @@ void	ms_loop(t_source *src, char **envp)
 			}	
 			c++;
 		}
+		int p = 0;
+		while (pipes[p] != NULL)
+		{
+			free(pipes[p]);
+			p++;
+		}
+		free(pipes);
 	}
 }
 
