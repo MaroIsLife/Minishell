@@ -141,21 +141,21 @@ void	ms_loop(t_source *src, char **envp);
 
 
 // Built in functions
-int		ft_exit(t_node *head, t_source *src);
-void	command_list(char *cmd, char **args, t_node *head, t_source *src);
-void	ft_echo(char **args, t_node *head, t_source *src);
+int		ft_exit(char **args, t_source *src);
+void	command_list(char *cmd, char **args, t_source *src);
+void	ft_echo(char **args);
 void	print_env(t_source *src);
-void	ft_export(char **args, t_node *head, t_source *src);
+void	ft_export(char **args, t_source *src);
 char	*search_env(t_node *head, t_source *src, char **envp, int offset);
-int		ft_unset(char **args, t_node *head, t_source *src);
-void	ft_cd(char **args, t_node *head, t_source *src, char *home);
+int		ft_unset(char **args,t_source *src);
+void	ft_cd(char **args,t_source *src, char *home);
 void	change_pwd_env(t_source *src);
-void change_pwd_export(t_source *src);
+void 	change_pwd_export(t_source *src);
 void	ft_pwd (void);
 int		ft_isdollar(int c);
 char	*where_home(t_source *src);
 void	red_open(t_node *head, t_source *src);
-void 	fork_pips(t_source *src, t_node *head);
+int 	fork_pips(int npipe, t_node *head, t_source *src);
 
 //Signals
 void	ft_signal();

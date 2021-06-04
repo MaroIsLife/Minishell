@@ -227,50 +227,27 @@ void	ms_loop(t_source *src, char **envp)
 		to make it accepet out-put from standard and from pipe NODE.
 		*/
 			if (src->foundred == 0 && src->foundpipe == 0)
-				command_list(head->cmd ,head->arg, head , src);
+				command_list(head->cmd ,head->arg,  src);
 			else
 			{
-				int id = fork();
-				int ge_id;
-				if (id == 0)
-				{
+			
 					if (src->foundpipe == 1)
-					{ /*Here is the imp for pips with red*/
-						
-						// int fd[2];
-						//pipe(fd);
-						fork_pips(src, head);
-						/*****Working Code ********/
-					/*	if (fork() == 0)
-						{	
-								dup2(fd[1], 1);
-								close(fd[0]);
-								command_list(head->cmd, head->arg, head, src);
-								exit(0);
-						}
-						close(fd[1]);
-						if (fork() == 0)
-						{
-							dup2(fd[0], 0);
-							close(fd[1]);
-							command_list(head->pipe->cmd, head->pipe->arg, head, src);
-							exit(0);
-						}
-						close(fd[0]);
-						wait(NULL);
-						wait(NULL); */
-						//fork_pips(head->pipe);
-						// printf ("%d \n", src->npipe);
-						/*****/
-					}	
-					if (src->foundred && !src->foundpipe)
-					{	red_open(head, src);
-						command_list(head->cmd ,head->arg, head, src);
+					{ 
+					// fork_pips(src, head);
+						fork_pips (src->npipe + 1, head, src);
 					}
+					if (src->foundred && !src->foundpipe)
+					{	
+						int id = fork();
+						int ge_id;
+						if (id == 0)
+						{
+							red_open(head, src);
+						command_list(head->cmd ,head->arg, src);
 						exit(0);
-				}
-				else
-					wait(&ge_id);
+						}
+						wait(&id);
+					}
 			}	
 			c++;
 		}
