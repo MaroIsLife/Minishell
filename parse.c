@@ -105,6 +105,7 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 
 	src->dollarused = 0;
 	head->cmd = find_command(pipe[src->c], head, src, envp);
+	// free(src->ra);
 	// printf("Cmd: %s\n",head->cmd);
 	count = count_argument(pipe[src->c], src->offset, src);
 	// printf("Count: %d\n",count);
