@@ -1,23 +1,23 @@
 
 #include "minishell.h"
-void    ft_echo(char **args, t_node *head, t_source *src)
+void    ft_echo(char **args)
 {
 	int i;
 	int newline;
 	
 	newline = 0;
 	i = 0;
-	while (head->arg[i] != NULL)
+	while (args[i] != NULL)
 	{
-		if (ft_strncmp(head->arg[0], "-n", 2) == 0 && head->arg[0][2] == '\0')
+		if (ft_strncmp(args[0], "-n", 2) == 0 && args[0][2] == '\0')
 		{
 			i++;
 			newline = 1;
-			if (head->arg[1] == NULL)
+			if (args[1] == NULL)
 				break ;
 		}
-		ft_putstr_fd(head->arg[i], 1);
-		if (head->arg[i + 1] == NULL)
+		ft_putstr_fd(args[i], 1);
+		if (args[i + 1] == NULL)
 			break ;
 		ft_putstr_fd(" ", 1);
 		i++;
@@ -116,7 +116,7 @@ void	ft_pwd (void)
 	printf ("%s\n",getcwd(s, 100));
 	free (s);
 }
-void ft_cd(char **args, t_node *head, t_source *src, char *home)
+void ft_cd(char **args, t_source *src, char *home)
 {
 	int sign;
 
@@ -285,15 +285,15 @@ int 	check_exsyn(char *src)
 }
 
 //envp just for testing
-int ft_alloc_count(char **envp, t_node *head)
+int ft_alloc_count(char **envp, char **args)
 {
 	int i = 0;
 	while (envp[i])
 		i++;
 	int j = 0;
-	while (head->arg[j] != NULL)
+	while (args[j] != NULL)
 		{
-			if (ft_search(envp, head->arg[j]))
+			if (ft_search(envp, args[j]))
 				i++;
 			j++;
 		}
@@ -301,7 +301,7 @@ int ft_alloc_count(char **envp, t_node *head)
 }
 
 
-void 	ft_expn_add(char *add, t_source *src ,char **our_envp, t_node *head)
+void 	ft_expn_add(char *add, t_source *src ,char **our_envp, char **args)
 {
 	int id;
 
@@ -309,8 +309,8 @@ void 	ft_expn_add(char *add, t_source *src ,char **our_envp, t_node *head)
 	id = found_eq(add);
 	if (id)
 		{
-			src->our_envp = our_realloc(src->our_envp, sizeof(char*) * (ft_alloc_count(src->our_envp, head) + 2) ); //here
-			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, head) + 2) ); //here
+			src->our_envp = our_realloc(src->our_envp, sizeof(char*) * (ft_alloc_count(src->our_envp,args) + 2) ); //here
+			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, args) + 2) ); //here
 			src->our_envp[src->lastenv++] = ft_strdup(add);
 			src->export[src->lastexp++] = ft_strdup(add);
 			src->export[src->lastexp] = NULL;
@@ -318,7 +318,7 @@ void 	ft_expn_add(char *add, t_source *src ,char **our_envp, t_node *head)
 		}
 	else 
 		{
-			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, head) + 2) ); //here
+			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, args) + 2) ); //here
 			src->export[src->lastexp++] = ft_strdup(add);
 			src->export[src->lastexp] = NULL;
 
@@ -363,16 +363,16 @@ void	ft_expn_chng(char *add, t_source *src ,char **envp)
 
 
 
-void	ft_set_enxp(t_node *head, t_source *src, char **envp)
+void	ft_set_enxp(char **args, t_source *src, char **envp)
 {
 	int argn;
 	int i;
 
 	i = 0;
-	argn = arg_counter(head->arg);
+	argn = arg_counter(args);
 	while (i < argn)
 	{
-		int n = check_exsyn(head->arg[i]);
+		int n = check_exsyn(args[i]);
 		if (n)
 			{
 				printf ("[%d]\n", n);
@@ -380,22 +380,21 @@ void	ft_set_enxp(t_node *head, t_source *src, char **envp)
 				i++;
 				continue ;
 			}
-		if (ft_search(src->export, head->arg[i]))
-			ft_expn_chng(head->arg[i], src, src->our_envp);
+		if (ft_search(src->export, args[i]))
+			ft_expn_chng(args[i], src, src->our_envp);
 		else
-			ft_expn_add(head->arg[i], src, src->our_envp, head);
+			ft_expn_add(args[i], src, src->our_envp, args);
 		i++;
 	}
 }
 
-void	ft_export(char **args, t_node *head, t_source *src)
+void	ft_export(char **args, t_source *src)
 {
-	if (head->arg[0] == NULL)
+	if (args[0] == NULL)
 		em_export(src);
 	else
-		ft_set_enxp(head, src, src->our_envp);
+		ft_set_enxp(args, src, src->our_envp);
 }
-
 
 
 
@@ -501,21 +500,21 @@ void 	unset_env(t_source *src, char *arg)
 	}			
 }
 
-int		ft_unset(char **args, t_node *head, t_source *src)
+int		ft_unset(char **args,t_source *src)
 {
 	int env;
 	int exp;
 	int j = 0;
 
-	while (head->arg[j])
+	while (args[j])
 	{
-		env = ft_search(src->our_envp, head->arg[j]);
-		exp = ft_search(src->export, head->arg[j]);
+		env = ft_search(src->our_envp, args[j]);
+		exp = ft_search(src->export, args[j]);
 		if (exp)	
-			unset_export(src, head->arg[j]);	
+			unset_export(src, args[j]);	
 		/******************************************/
 		if (env)
-			unset_env(src, head->arg[j]);	
+			unset_env(src, args[j]);	
 		/******************************************/
 		j++;
 	}
@@ -524,30 +523,30 @@ int		ft_unset(char **args, t_node *head, t_source *src)
 
 
 
-int		ft_exit(t_node *head, t_source *src)
+int		ft_exit(char **args, t_source *src)
 {
 	int b;
 	int ret;
 
 	b = 0;
-	if (head->arg[0] == NULL)
+	if (args[0] == NULL)
 		exit(0);
-	while (head->arg[0][b] != '\0')
+	while (args[0][b] != '\0')
 	{
-		if (ft_isdigit(head->arg[0][b]) != 1)
+		if (ft_isdigit(args[0][b]) != 1)
 		{
-			printf("exit\nminishell: exit: %s: numeric argument required\n",head->arg[0]);
+			printf("exit\nminishell: exit: %s: numeric argument required\n",args[0]);
 			//src->return_value = 2;
 			exit(255);
 		}
 		b++;
 	}
-	if (head->arg[1] != NULL) //CHECK IF IT DOESNT LEAVE CHILD PROCESS
+	if (args[1] != NULL) //CHECK IF IT DOESNT LEAVE CHILD PROCESS
 	{
 		printf("exit\nminishell: exit: too many arguments\n");
 		return(0);
 	}
-	ret = ft_atoi(head->arg[0]);
+	ret = ft_atoi(args[0]);
 	// printf("%d\n",ret);
 	if (ret > 255)
 	{
