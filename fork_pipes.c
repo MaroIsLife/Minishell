@@ -77,13 +77,14 @@ fork_pips (int n, t_node *head,  t_source *src)
       if (i == 0)
         {
           pid = spawn_proc (in, fd , head ,src);
-        printf ("cmd: %s arg %s\n", head->cmd, head->arg[0]);}
+        // printf ("cmd: %s arg %s filename %s\n", tmp->cmd, tmp->arg[0], tmp->filename);
+        }
       else
        {
        if (tmp->next == NULL)
           break;
          pid = spawn_proc2 (in, fd , tmp, src);
-       printf ("cmd: %s arg %s\n", tmp->cmd, tmp->arg[0]);
+      //  printf ("cmd: %s arg %s filename %s\n", tmp->cmd, tmp->arg[0], tmp->filename);
        tmp = tmp->next;
        }
       close (fd [1]);
@@ -99,7 +100,7 @@ if (x == 0)
     close(in);
     // close (fd[0]);
     // close (fd[1]);
-    printf ("cmd: %s arg %s\n", tmp->cmd, tmp->arg[0]);
+    // printf ("cmd: %s arg %s filename %s\n", tmp->cmd, tmp->arg[0], tmp->filename);
     command_list(tmp->cmd, tmp->arg, src);
     exit(0);
     } 

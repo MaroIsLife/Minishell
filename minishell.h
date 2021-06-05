@@ -75,6 +75,7 @@ typedef struct	s_source
 	int		lastexp;
 	int 	count;
 	int 	allocate;
+	char 	**filenames;
 	// int		return_value;
 	int		fd_r_c;
 	t_filename	*p;
