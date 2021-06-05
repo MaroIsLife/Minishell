@@ -30,16 +30,17 @@ int spawn_proc (int in,  int *out, t_node *tmp, t_source *src)
           close (out[1]);
           close (out[0]);
         }
+      close(out[0]);
      command_list(tmp->cmd, tmp->arg, src);
      exit(0);
     }
-
   return pid;
 }
 
 int spawn_proc2 (int in,  int *out, t_pipe *tmp, t_source *src)
 {
   pid_t pid;
+
 
   if ((pid = fork ()) == 0)
     {
@@ -55,11 +56,10 @@ int spawn_proc2 (int in,  int *out, t_pipe *tmp, t_source *src)
           close (out[1]);
           close (out[0]);
         }
-    //  execvp (cmd->argv [0], (char * const *)cmd->argv);
+      close(out[0]);
      command_list(tmp->cmd, tmp->arg, src);
      exit(0);
     }
-
   return pid;
 }
 
@@ -75,21 +75,18 @@ fork_pips (int n, t_node *head,  t_source *src)
     {
       pipe (fd);
       if (i == 0)
-        {
           pid = spawn_proc (in, fd , head ,src);
-        // printf ("cmd: %s arg %s filename %s\n", tmp->cmd, tmp->arg[0], tmp->filename);
-        }
       else
        {
        if (tmp->next == NULL)
           break;
          pid = spawn_proc2 (in, fd , tmp, src);
-      //  printf ("cmd: %s arg %s filename %s\n", tmp->cmd, tmp->arg[0], tmp->filename);
        tmp = tmp->next;
        }
-      close (fd [1]);
+      close (fd [1]); 
+      if (i != 0)
+        close(in);
       in = fd [0];
-      close(fd[0]);
     }
 
 pid_t x;
@@ -98,31 +95,20 @@ if (x == 0)
     {
     dup2 (in, 0);
     close(in);
-    // close (fd[0]);
-    // close (fd[1]);
-    // printf ("cmd: %s arg %s filename %s\n", tmp->cmd, tmp->arg[0], tmp->filename);
+    close (fd[0]);
     command_list(tmp->cmd, tmp->arg, src);
     exit(0);
     } 
 int ret; 
  waitpid(x,&ret, 0 );
 
-int status;
-i = -1;
- while (++i < src->npipe)
-  {
-    if ( waitpid(pid,&ret, 0 ) >= 0)
-    {
-        if (WIFEXITED(pid))
-        {
-            /* Child process exited normally, through `return` or `exit` */
-            printf("\nChild process exited with %d status\n", WEXITSTATUS(status));
-        }
-    }
-  }
-  close (in);
   close (fd[0]);
-  close (fd[1]);
+  i = 0;
+  while (i < n - 1)
+  {
+   wait(NULL);
+    i++;
+  }
  return (0);
 }
 
