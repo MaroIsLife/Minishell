@@ -86,13 +86,16 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 			arg[i] = find_argument(pipe[src->c], head, src, envp);
 			i++;
 		}
-		if (src->p->filename != NULL)
+		if (src->p != NULL)
 		{
-			printf("%s\n",src->p->filename);
-			p->filename = ft_strdup(src->p->filename);
-			printf("La place de la femme est la cuisine\n");
+			if (src->p->filename != NULL)
+			{
+				printf("La place de la femme est la cuisine\n");
+				printf("%s\n",src->p->filename);
+				p->filename = ft_strdup(src->p->filename);
+			}
 		}
-		printf("filename: %s\n", p->filename);
+		// printf("filename: %s\n", p->filename);
 		arg[i] = NULL;
 		init_arg_pipe(arg, p);
 		p->next = (t_pipe *)malloc(sizeof(t_pipe));
