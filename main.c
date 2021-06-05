@@ -72,39 +72,28 @@ void	init_env(t_source *src, char **envp)
 
 	i = 0;
 	src->lastenv = 0;
+	src->lastexp = 0;
 	while (envp[i] != NULL)
 	{
 		src->lastenv++;
 		src->lastexp++;
 		i++;
 	}
-	src->our_envp = malloc(sizeof(char *) * (i + 1)); /* New ENV */
-	src->export = malloc(sizeof(char *) * (i + 1));
+	src->our_envp = malloc(sizeof(char *) * (i + 2)); /* New ENV */
+	src->export = malloc(sizeof(char *) * (i + 2));
+	src->our_envp[i] = NULL;
 	i = 0;
+	src->export[i] = ft_strdup("OLDPWD");
 	while (envp[i] != NULL)
 	{
 		src->our_envp[i] = ft_strdup(envp[i]);
-		src->export[i] = ft_strdup(envp[i]);
+		src->export[i + 1] = ft_strdup(envp[i]);
 		i++;
 	}
-	src->our_envp[i] = NULL;
-	src->export[i] = NULL;
-	i = 0;
-	// while (src->export[i])
-	// 	puts(src->export[i++]);
-	
-	//Pritnting our envp
-	// i = 0;
-	// while (src->our_envp[i] != 	NULL)
-	// 	puts(src->our_envp[i++]);
-	// src->lastexp = src->lastenv;
-	// i = 0;
-	// while (envp[i] != NULL)
-	// {
-	// 	// src->export[i] = ft_strdup(envp[i]);
-	// 	src->export[i] = ft_strdup(envp[i]);
-	// 	i++;
-	// }
+	src->our_envp[i + 1] = NULL;
+	src->export[i + 1] = NULL;
+	src->lastenv++;
+	src->lastexp++;
 }
 
 
