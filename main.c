@@ -81,7 +81,7 @@ void	init_env(t_source *src, char **envp)
 	}
 	src->our_envp = malloc(sizeof(char *) * (i + 2)); /* New ENV */
 	src->export = malloc(sizeof(char *) * (i + 2));
-	src->our_envp[i] = NULL;
+	src->our_envp[i] = "\0";
 	i = 0;
 	src->export[i] = ft_strdup("OLDPWD");
 	while (envp[i] != NULL)
