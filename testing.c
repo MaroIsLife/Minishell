@@ -28,6 +28,7 @@ int spawn_proc (int in,  int *out, struct command *cmd)
           close (out[0]);
           // close (in);
         }
+        close(out[0]);
 
      execvp (cmd->argv [0], (char * const *)cmd->argv);
      exit(0);
@@ -52,7 +53,8 @@ fork_pipes (int n, struct command *cmd)
       else
         spawn_proc (in, fd , cmd + i);
       close (fd [1]); 
-      close(in);
+      if (i != 0)
+        close(in);
       in = fd [0];
       // close(fd[0]);
     }
@@ -64,13 +66,13 @@ if (x == 0)
     dup2 (in, 0);
     close(in);
     close (fd[0]);
-    close(fd[1]);
+    // close(fd[1]);
     execvp (cmd [i].argv [0], (char * const *)cmd [i].argv);
     exit(0);
     } 
-  close (in);
+  // close (in);
   close (fd[0]);
-  close (fd[1]);
+  // close (fd[1]);
 int ret; 
  waitpid(x,&ret, 0 );
 i = 0;
@@ -91,15 +93,15 @@ int main(int ac, char **av, char **env)
   // const char *sort[] = {  "ls", NULL };
   // const char *uniq[] = {  "ls", NULL};
 
-  const char *ls[] = { "echo","1", NULL };
-  const char *awk[] = { "echo","2", NULL };
-  const char *sort[] = {  "echo","3", NULL };
-  const char *uniq[] = {  "echo","4", NULL};
+  const char *ls[] = { "cat", NULL };
+  const char *awk[] = { "ls", NULL };
+  const char *sort[] = { "ls", NULL };
+  const char *uniq[] = { "ls", NULL };
     // struct command cmd [] = { {ls}, {awk}, {sort}, {uniq} };
-  struct command cmd [] = { {awk}, {ls},  {sort}, {uniq} };
+  struct command cmd [] = { {ls}, {awk},  {sort}, {uniq} };
 
   return 
-  fork_pipes (4, cmd);
+  fork_pipes (2, cmd);
 
 
 
