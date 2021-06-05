@@ -232,13 +232,14 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 		i++;
 	src->re = malloc((4096) * sizeof(char));
 	src->re_b = 0;
-	find_argument_two(s, src, i, head);
+	i = find_argument_two(s, src, i, head);
 	if (src->dquotes == 1 || src->squotes == 1 || src->aslash == 1)
 	{
 		printf("Error\n");
 		printf("Dquotes: %d, Squotes: %d, Aslash: %d\n",src->dquotes,src->squotes,src->aslash);
 	}
 	src->offset = i;
+	// printf("Offset Arg: %d\n",src->offset);
 	src->re[src->re_b] = '\0';
 	return (src->re);
 }
