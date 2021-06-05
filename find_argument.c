@@ -214,7 +214,6 @@ int		find_argument_two(char *s, t_source *src, int i, t_node *head)
 			continue ;
 		else if (a == 2)
 			break ;
-		// printf("c: %c\n",s[i]);
 		i++;
 	}
 	return (i);
