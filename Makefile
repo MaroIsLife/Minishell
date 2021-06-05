@@ -4,7 +4,7 @@ LIB = libft/{ft_atoi,ft_bzero,ft_calloc,ft_isalnum,ft_isalpha,ft_isascii,ft_isdi
 
 
 GN = gnl/{get_next_line,get_next_line_utils}.c
-SRC = commands.c find_argument.c find_command.c find_utils.c main.c misc.c parse.c read.c sigs.c commands_list.c commands_utils.c environement.c ft_split.c helpers.c test2.c  fork_pipes.c
+SRC = commands.c find_argument.c find_command.c find_utils.c main.c misc.c parse.c read.c sigs.c commands_list.c commands_utils.c environement.c ft_split.c helpers.c test2.c  fork_pipes.c count_starts.c
 CC = gcc 
 
 all : $(NAME)
