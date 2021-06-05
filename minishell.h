@@ -70,6 +70,7 @@ typedef struct	s_source
 	int		re_b;
 	char	*ra;
 	int		tmp; // Temp Variable to use on anything to avoid norminette
+	char	*ctmp;
 	int		ra_b;
 	int		lastexp;
 	int 	count;
@@ -181,6 +182,11 @@ int is_equal(char *s1, char *s2);
 char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc);
 char    *ft_strjoinchar(char *s, char c);
 int 	ft_search(char **src, char *value);
+
+
+int		count_start(char *s, t_source *src, int start, int *i);
+int		count_start_two(char *s, t_source *src, int *start, int **i);
+
 
 
 #endif

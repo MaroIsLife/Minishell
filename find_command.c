@@ -51,64 +51,11 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	if (s[0] == '|' || s[i] == '\\')
 		return 0;
 	while(s[i] == ' ' || s[i] == '|')
-	{
 		i++;
-	}
 	start = i;
-		// printf("Start: %d\n",start);
-	char *sp = ft_strdup("");
-	while (s[start] != '\0' && s[start] != '\n')
-	{
-		finding_quotes(s, start, src);
-		if (s[start] == '$' && src->squotes == 0 && src->dquotes == 0 && s[start + 1] != '?')
-		{
-				// start++;
-				finding_quotes(s, ++start, src);
-				if (src->squotes == 1 || src->dquotes == 1)
-				{
-					start++;
-					i = start;
-					continue ;
-				}
-				while (s[start] != '\0' && s[start] != '$' && s[start] != ' ')
-				{
-					sp = ft_strdup(ft_strjoinchar(sp, s[start]));
-					start++;
-				}
-				if (get_x_env(src->our_envp, src, sp) == 0)
-				{
-					free(sp);
-					sp = ft_strdup("");
-					while (s[start] == ' ')
-						start++;
-					i = start;
-					src->dollarused = 1;
-					continue ;
-				}
-					// printf("sp: %s\n",sp);
-		}
-		if (s[start] == '>' || s[start] == '<')
-		{
-			if (s[start + 1] == '>')
-				start = start + 2;
-			else
-				start++;
-			while (s[start] == ' ')
-				start++;
-			while (s[start] != ' ' && s[start] != '\0')
-				start++;
-			file_found = 1;
-		}
-		if ((s[start] == ' ' || s[start] == '|') && src->dquotes == 0 && src->squotes == 0 && file_found == 0)
-			break ;
-		else
-			file_found = 0;
-		if (s[start] != '\0')
-			start++;
-	}
-	src->ra_b = 0;
-	free(sp);
-	// printf("i: %d\n",i);
+	start = count_start(s, src, start, &i);
+
+	// printf("start: %d\n", start);
 	// src->ra = malloc((start + 1) * sizeof(char));
 	src->ra = malloc((4096) * sizeof(char));
 	while (i < start)
@@ -151,6 +98,6 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	}
 	src->ra[src->ra_b] = '\0';
 	src->offset = i;
-	printf("Offset: %d\n",src->offset);
+	// printf("Offset: %d\n",src->offset);
 	return (src->ra);
 }

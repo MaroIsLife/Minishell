@@ -143,13 +143,11 @@ int		find_equal_length(char **envp,int c, int b)
 	int length;
 
 	length = 0;
-
 	while (envp[c][b] != '=' && envp[c][b] != '\0')
 	{
 		b++;
 		length++;
 	}
-	
 	return length; 
 }
 
@@ -190,9 +188,6 @@ int		init_question_red(t_source *src,int ret)
 	free(s);
 	return (ret + 1);
 }
-
-
-
 
 int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 {
@@ -274,7 +269,5 @@ int		get_env_value_red(char *s, int *z, t_source *src, int i)
 		c++;
 	}
 	free(temp);
-	// if (src->re == '\0')
-		// printf("ZEROOO %s\n",src->re);
 	return (i);
 }
