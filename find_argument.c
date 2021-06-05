@@ -1,11 +1,11 @@
 #include "minishell.h"
-int		arg_if_space(char *s,int *i, t_source *src)
+int		arg_if_space(char *s,int **i, t_source *src)
 {
-	if (s[*i] == ' ' && (src->dquotes == 1 || src->squotes == 1))
-		src->re[src->re_b++] = s[*i];
-	while (s[*i + 1] == ' ' && !(src->dquotes == 0 || src->squotes == 0))
-		(*i)++;
-	return (*i);
+	if (s[**i] == ' ' && (src->dquotes == 1 || src->squotes == 1))
+		src->re[src->re_b++] = s[**i];
+	while (s[**i + 1] == ' ' && !(src->dquotes == 0 || src->squotes == 0))
+		(**i)++;
+	return (**i);
 }
 int check_offset (int offset, char *s)
 {
@@ -70,7 +70,7 @@ int		count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 	}
 	return(count);
 }
-char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
+char	*find_file_name(int **i, char *s, t_source *src, t_node *head)
 {
 	int			b;
 
@@ -80,31 +80,31 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 		src->p->next->next = NULL;
 		src->p = src->p->next;
 	}
-	if (s[*i] == '>' && s[*i + 1] == '>')
+	if (s[**i] == '>' && s[**i + 1] == '>')
 	{
 		if (src->fd_r_c != 50)
 			src->fd_r_c = 1;
 		src->p->c = 94;
-		(*i) = (*i) + 2;
+		(**i) = (**i) + 2;
 	}
-	else if (s[*i] == '>')
+	else if (s[**i] == '>')
 	{
 		if (src->fd_r_c != 50)
 			src->fd_r_c = 1;
-		(*i)++;
+		(**i)++;
 		src->p->c = '>';
 	}
-	else if (s[*i] == '<')
+	else if (s[**i] == '<')
 	{
 		if(src->fd_r_c == 1)
 			src->fd_r_c = 50;
-		(*i)++;
+		(**i)++;
 		src->p->c = '<';
 	}
 	b = 0;
-	while (s[*i] == ' ')
-		(*i)++;	
-	b = *i;
+	while (s[**i] == ' ')
+		(**i)++;	
+	b = **i;
 	while (s[b] != '\0' && s[b] != '\n' && s[b] != '>' && s[b] != '<')
 	{
 		finding_quotes(s,b,src);
@@ -120,20 +120,20 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 	// src->p->filename = malloc((b + 1) * sizeof(char));
 	src->p->filename = malloc((4096 + 1) * sizeof(char));
 	b = 0;
-	while (s[*i] != '\0' && s[*i] != '\n' && s[*i] != '>' && s[*i] != '<')
+	while (s[**i] != '\0' && s[**i] != '\n' && s[**i] != '>' && s[**i] != '<')
 	{
-		finding_quotes(s,*i,src);
-		if (s[*i] == ' ' && src->dquotes == 0 && src->squotes == 0)
+		finding_quotes(s,**i,src);
+		if (s[**i] == ' ' && src->dquotes == 0 && src->squotes == 0)
 			break ;
-		if (s[*i] == '$' && src->squotes == 0)
+		if (s[**i] == '$' && src->squotes == 0)
 		{
 
 			char *tmp = ft_strdup("");
 			(*i)++;
-			while (s[*i] != '\0' && s[*i] != '$')
+			while (s[**i] != '\0' && s[**i] != '$')
 			{	
-				 tmp = ft_strdup(ft_strjoinchar(tmp ,s[*i]));
-				if (ft_search(src->our_envp, tmp) && !ft_isalpha(s[(*i) + 1]))       
+				 tmp = ft_strdup(ft_strjoinchar(tmp ,s[**i]));
+				if (ft_search(src->our_envp, tmp) && !ft_isalpha(s[(**i) + 1]))       
 				{
 					char* rev = get_x_env(src->our_envp, src, tmp);
 					int j = 0;
@@ -148,13 +148,76 @@ char	*find_file_name(int *i, char *s, t_source *src, t_node *head)
 			}
 		}
 		else
-			src->p->filename[b++] = s[(*i)++];
+			src->p->filename[b++] = s[(**i)++];
 	}
 	src->p->filename[b] = '\0';
 	// prwintf("Filename: %s\n",src->p->filename);
 	// printf("%s\n",src->p->filename);
 	src->allocate = 1;
 	return (0);
+}
+
+int		find_argument_three(char *s, t_source *src, int *i, t_node *head)
+{
+	if ((s[(*i)] == '>' || s[(*i)] == '<') && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
+	{
+		find_file_name(&i, s, src, head);
+		return 1 ; // continue;
+	}
+	else if (s[(*i)] == ' ')
+	{
+		if (s[(*i)] == ' ' && (src->dquotes == 1 || src->squotes == 1))
+			arg_if_space(s, &i, src);
+		else if (s[(*i)] == ' ' && (src->dquotes == 0 || src->squotes == 0) && (s[(*i) + 1] != '>' && s[(*i) + 1] != '<'))
+			return 2 ;
+	}
+	else if ((s[(*i)] == '|' || s[(*i)] == ';') && (src->dquotes == 0 && src->aslash == 0))
+	{
+		if (src->squotes == 1)	
+			src->re[src->re_b++] = s[(*i)];
+		else
+			return (2); //break
+	}
+	else if ((s[(*i)] == '\"') && src->squotes == 0 && src->aslash == 0)
+		finding_quotes(s, (*i), src);
+	else if ((s[(*i)] == '\'') && src->dquotes == 0 && src->aslash == 0)
+		finding_quotes(s, (*i), src);
+	else if (s[(*i)] == '$' && src->aslash == 0 && (ft_isalpha(s[(*i) + 1]) == 1 || s[(*i) + 1] == '?') && src->squotes == 0)
+		(*i) = get_env_value_arg(s, src->our_envp, src, (*i)) - 1;
+	else if (s[(*i)] == '\\' && src->aslash == 0)
+	{
+		src->tmp = finding_aslash(s,(*i), src);
+		if (src->aslash == 0 && src->tmp != 1)
+		{
+			src->re[src->re_b++] = s[(*i)];
+			src->tmp = 0;
+		}
+	}
+	else if ((s[(*i)] == '\"' || s[(*i)] == '\'' || s[(*i)] == '\\' || s[(*i)] == ';' || s[(*i)] == '|' || s[(*i)] == '$' || s[(*i)] == '>' || s[(*i)] == '<') && src->aslash == 1)
+	{
+		src->re[src->re_b++] = s[(*i)];
+		src->aslash = 0;
+	}
+	else
+		src->re[src->re_b++] = s[(*i)];
+	return (0);
+}
+
+int		find_argument_two(char *s, t_source *src, int i, t_node *head)
+{
+	int a;
+
+	while (s[i] != '\n' && s[i] != '\0')
+	{
+		a = find_argument_three(s, src, &i, head);
+		if (a == 1)
+			continue ;
+		else if (a == 2)
+			break ;
+		// printf("c: %c\n",s[i]);
+		i++;
+	}
+	return (i);
 }
 
 
@@ -170,57 +233,7 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 		i++;
 	src->re = malloc((4096) * sizeof(char));
 	src->re_b = 0;
-	while (s[i] != '\n' && s[i] != '\0')
-	{
-		if ((s[i] == '>' || s[i] == '<') && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
-		{
-			find_file_name(&i, s, src, head);
-			continue ;
-		}
-		else if (s[i] == ' ')
-		{
-			if (s[i] == ' ' && (src->dquotes == 1 || src->squotes == 1))
-				arg_if_space(s, &i, src);
-			else if (s[i] == ' ' && (src->dquotes == 0 || src->squotes == 0) && (s[i + 1] != '>' && s[i + 1] != '<'))
-				break ;
-		}
-		else if ((s[i] == '|' || s[i] == ';') && (src->dquotes == 0 && src->aslash == 0))
-		{
-			if (src->squotes == 1)	
-				src->re[src->re_b++] = s[i];
-			else
-				break ;
-		}
-		else if ((s[i] == '\"') && src->squotes == 0 && src->aslash == 0)
-		{
-			finding_quotes(s, i, src);
-		}
-		else if ((s[i] == '\'') && src->dquotes == 0 && src->aslash == 0)
-		{
-			finding_quotes(s, i, src);
-		}
-		else if (s[i] == '$' && src->aslash == 0 && (ft_isalpha(s[i + 1]) == 1 || s[i + 1] == '?') && src->squotes == 0)
-		{
-			i = get_env_value_arg(s, src->our_envp, src, i) - 1;
-		}
-		else if (s[i] == '\\' && src->aslash == 0)
-		{
-			src->tmp = finding_aslash(s,i, src);
-			if (src->aslash == 0 && src->tmp != 1)
-			{
-				src->re[src->re_b++] = s[i];
-				src->tmp = 0;
-			}
-		}
-		else if ((s[i] == '\"' || s[i] == '\'' || s[i] == '\\' || s[i] == ';' || s[i] == '|' || s[i] == '$' || s[i] == '>' || s[i] == '<') && src->aslash == 1)
-		{
-			src->re[src->re_b++] = s[i];
-			src->aslash = 0;
-		}
-		else
-			src->re[src->re_b++] = s[i];
-		i++;
-	}
+	find_argument_two(s, src, i, head);
 	if (src->dquotes == 1 || src->squotes == 1 || src->aslash == 1)
 	{
 		printf("Error\n");
