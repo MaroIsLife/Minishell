@@ -90,6 +90,7 @@ typedef struct s_pipe {
 	char			*cmd;
 	char			**arg;
 	int				find_red;
+	char			*filename;
     struct s_pipe	*next;
 }	t_pipe;
 

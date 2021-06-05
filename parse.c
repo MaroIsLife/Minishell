@@ -86,6 +86,8 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 			arg[i] = find_argument(pipe[src->c], head, src, envp);
 			i++;
 		}
+		if (head->filename != NULL)
+			p->filename = head->filename;
 		arg[i] = NULL;
 		init_arg_pipe(arg, p);
 		p->next = (t_pipe *)malloc(sizeof(t_pipe));
