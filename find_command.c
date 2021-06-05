@@ -4,6 +4,7 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	char	*temp;
 	int		b;
 	int		c;
+	int length;
 
 	i = i + 1;
 	b = 0;
@@ -21,9 +22,11 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	}
 	temp[b] = '\0';
 	b = 0;
+	length = ft_strlen(temp);
 	while (envp[c] != NULL)
 	{
-		if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
+		// if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
+		if (ft_strncmp(src->our_envp[c], temp, length) == 0 && src->our_envp[c][length] == '=')
 		{
 			while (envp[c][b] != '=' && envp[c][b] != '\0')
 				b++;
