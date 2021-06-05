@@ -13,7 +13,7 @@ void handler(int c)
 
 	if (g_global.ret != NULL)
 	{
-		free(g_global.ret);
+		// free(g_global.ret);
 		g_global.ret = NULL;
 	}
 
