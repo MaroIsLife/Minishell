@@ -26,7 +26,10 @@ void handler(int c)
 
 void handler2(int c)
 {
+	// write(1,"\b\b  \b\b",sizeof("\b\b  \b\b"));
 	write(2,"Quit: ",6);
 	fprintf(stderr, "%d", c);
 	write(2,"\n",1);
+	print_prompt1();
+	g_global.fsignal = 1;
 }
