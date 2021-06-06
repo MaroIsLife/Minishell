@@ -62,6 +62,38 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	p->arg[b] = NULL;
 }
 
+t_filename		*new_file(char *s, t_source *src)
+{
+	t_filename *tmp;
+
+		tmp = (t_filename *) malloc(sizeof(t_filename));
+		tmp->next = NULL;
+		tmp->filename = ft_strdup(s);
+		tmp->c = src->p->c;
+		return (tmp);
+}
+
+void init_file(t_source *src)
+{
+	t_filename	*tmp;
+	if (src->npipe > 0 && src->foundred == 1)
+	{
+		if (src->ptemp->pipef == NULL)
+			src->ptemp->pipef = new_file(src->p->filename, src);
+		else
+		{
+			tmp = src->ptemp->pipef;
+			while (1)
+			{
+					if (!tmp || tmp->next == NULL)
+						break ;
+				tmp = tmp->next;
+			}
+			tmp = new_file(src->p->filename, src);
+		}
+	}
+}
+
 t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 {
 	t_pipe *tmp;
@@ -71,8 +103,10 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 
 		tmp = (t_pipe *) malloc(sizeof(t_pipe));
 		tmp->next = NULL;
-		tmp->pipef = (t_filename *)malloc(sizeof(t_filename));
-		tmp->pipef->next = NULL;
+		// tmp->pipef = (t_filename *)malloc(sizeof(t_filename));
+		// tmp->pipef->next = NULL;
+		tmp->pipef = NULL;
+		src->ptemp = tmp;
 		tmp->cmd = find_command(pipe[src->c], head, src, src->our_envp);
 		count = count_argument(pipe[src->c], src->offset, src);
 		i = 0;
@@ -80,6 +114,7 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 		while (i < count)
 		{
 			arg[i] = find_argument(pipe[src->c], head, src, src->our_envp);
+			init_file(src);
 			i++;
 		}
 		arg[i] = NULL;
@@ -99,38 +134,44 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 	i = 0;
 	while (c < src->npipe)
 	{
-		// printf("Here\n");
+		printf("Here\n");
 		src->offset = src->offset; //Whie pipe[c][offset] == '|' offset ++    try putting two pipes near eachother
-		src->ptemp = head->pipe;
+		// src->ptemp = head->pipe;
 		if (head->pipe == NULL)
 		{
+						// printf("One\n");
 			head->pipe = new_pipe(pipe, src, head);
+			tmp = head->pipe;
 		}
 		else
 		{
-			tmp =  head->pipe;
-			while (1)
-			{
-					if (!tmp || tmp->next == NULL)
-					break ;
-				tmp = tmp->next;
-			}
-			tmp = new_pipe(pipe, src, head);
+			// printf("Two\n");
+			tmp->next = new_pipe(pipe, src, head); 
+			// while (1)
+			// {
+			// 		if (!tmp || tmp->next == NULL)
+			// 			break ;
+			// 	tmp = tmp->next;
+			// }
+			// tmp = new_pipe(pipe, src, head);
 		}
+		// printf("file: %s\n",tmp->pipef->filename);
 		c++;
 	}
-	// if (head->pipe == NULL)
+	// tmp->next = NULL;
+	// if (head->pipe == NULL)-
 	// 	printf("NULL\n");
+	// tmp = head->pipe;
 	// while (1)
 	// {
-	// 	printf("Cmd: %s\n",head->pipe->cmd);
+	// 	// printf("Filename: %s\n",tmp->pipef->filename);
 	// 	// printf("Here\n");
 	// 	int po = 0;
-	// 	while (head->pipe->arg[po] != NULL)
-	// 		printf("Arg: %s\n",head->pipe->arg[po++]);
-	// 	if (head->pipe->next == NULL)
+	// 	// while (head->pipe->arg[po] != NULL)
+	// 	// 	printf("Arg: %s\n",head->pipe->arg[po++]);
+	// 	if (tmp->next == NULL)
 	// 		break ;
-	// 	head->pipe = head->pipe->next;
+	// 	tmp = tmp->next;
 	// }
 }
 
