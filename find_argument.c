@@ -70,6 +70,18 @@ int		count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 	}
 	return(count);
 }
+
+t_filename		*new_file(char *s, t_source *src)
+{
+	t_filename *tmp;
+
+		tmp = (t_filename *) malloc(sizeof(t_filename));
+		tmp->next = NULL;
+		tmp->filename = ft_strdup(s);
+		tmp->c = src->p->c;
+		return (tmp);
+}
+
 char	*find_file_name(int **i, char *s, t_source *src, t_node *head)
 {
 	int			b;
@@ -151,11 +163,34 @@ char	*find_file_name(int **i, char *s, t_source *src, t_node *head)
 			src->p->filename[b++] = s[(**i)++];
 	}
 	src->p->filename[b] = '\0';
+	if (src->npipe > 0 && src->foundred == 1)
+	{
+		
+		if (!src->ptemp->pipef)
+		{
+			printf("Here\n");
+			src->ptemp->pipef = new_file(src->p->filename, src);
+		}
+		else
+		{
+			t_filename	*tmp = src->ptemp->pipef;
+			while (1)
+			{
+					if (!tmp || tmp->next == NULL)
+					break ;
+				tmp = tmp->next;
+			}
+			// tmp->c = src->p->c;
+			// tmp->filename = ft_strdup(src->p->filename);
+			tmp = new_file(src->p->filename, src);
+		}
+	}
 	// prwintf("Filename: %s\n",src->p->filename);
 	// printf("%s\n",src->p->filename);
 	src->allocate = 1;
 	return (0);
 }
+
 
 int		find_argument_three(char *s, t_source *src, int *i, t_node *head)
 {
