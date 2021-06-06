@@ -119,19 +119,19 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 		}
 		c++;
 	}
-	if (head->pipe == NULL)
-		printf("NULL\n");
-	while (1)
-	{
-		printf("Cmd: %s\n",head->pipe->cmd);
-		// printf("Here\n");
-		int po = 0;
-		while (head->pipe->arg[po] != NULL)
-			printf("Arg: %s\n",head->pipe->arg[po++]);
-		if (head->pipe->next == NULL)
-			break ;
-		head->pipe = head->pipe->next;
-	}
+	// if (head->pipe == NULL)
+	// 	printf("NULL\n");
+	// while (1)
+	// {
+	// 	printf("Cmd: %s\n",head->pipe->cmd);
+	// 	// printf("Here\n");
+	// 	int po = 0;
+	// 	while (head->pipe->arg[po] != NULL)
+	// 		printf("Arg: %s\n",head->pipe->arg[po++]);
+	// 	if (head->pipe->next == NULL)
+	// 		break ;
+	// 	head->pipe = head->pipe->next;
+	// }
 }
 
 void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
