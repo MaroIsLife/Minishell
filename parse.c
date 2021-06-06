@@ -76,6 +76,7 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 	while (c < src->npipe)
 	{
 		src->offset = src->offset; //Whie pipe[c][offset] == '|' offset ++    try putting two pipes near eachother
+		src->ptemp = p;
 		p->cmd = find_command(pipe[src->c], head, src, envp);
 		// printf("Pipe command: %s\n",p->cmd);
 		count = count_argument(pipe[src->c], src->offset, src);
@@ -88,19 +89,20 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 		}
 		if (src->p != NULL)
 		{
-			if (src->p->filename != NULL)
-			{
-				printf("La place de la femme est la cuisine\n");
-				printf("%s\n",src->p->filename);
-				p->filename = ft_strdup(src->p->filename);
-			}
+			// if (src->p->filename != NULL)
+			// {
+			// 	p->filename = ft_strdup(src->p->filename);
+			// 	printf("filename: %s\n", p->filename);
+			// }
+			printf("filename: %s\n", p->pipef->filename);
 		}
-		// printf("filename: %s\n", p->filename);
 		arg[i] = NULL;
 		init_arg_pipe(arg, p);
 		p->next = (t_pipe *)malloc(sizeof(t_pipe));
 		p->next->next = NULL;
 		p = p->next;
+		p->pipef = (t_filename *)malloc(sizeof(t_filename));
+		p->pipef->next = NULL;
 		c++;
 	}
 }

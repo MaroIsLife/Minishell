@@ -183,6 +183,9 @@ void	ms_loop(t_source *src, char **envp)
 			head->next = NULL;
 			head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
 			head->pipe->next = NULL;
+			head->pipe->pipef = NULL;
+			// head->pipe->pipef = (t_filename *) malloc(sizeof(t_filename));
+			// head->pipe->pipef->next = NULL;
 			first = head;
 			find_for_split(pipes[c], src);
 			src->allocate = 0;

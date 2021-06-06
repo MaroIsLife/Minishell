@@ -40,11 +40,14 @@ typedef struct s_stack
 	struct s_stack	*next;
 }                t_stack;
 
-// typedef struct s_export {
-// 	char				*name;
-// 	char				*value; // With or without =
-//     struct s_export	*next;
-// }	t_expochar **args, rt;
+typedef struct s_pipe {
+	char			*cmd;
+	char			**arg;
+	int				find_red;
+	t_filename		*pipef;
+    struct s_pipe	*next;
+}	t_pipe;
+
 typedef struct	s_source
 {
 	int		cmdlen; // Contains input's length without counting \n
@@ -79,6 +82,8 @@ typedef struct	s_source
 	// int		return_value;
 	int		fd_r_c;
 	t_filename	*p;
+	t_pipe		*ptemp;
+	int			p_temp_i;
 }				t_source;
 
 
@@ -87,13 +92,6 @@ typedef struct s_termc {
 	int				help;
 }	t_termc;
 
-typedef struct s_pipe {
-	char			*cmd;
-	char			**arg;
-	int				find_red;
-	char			*filename;
-    struct s_pipe	*next;
-}	t_pipe;
 
 
 typedef struct s_node {
