@@ -181,9 +181,9 @@ void	ms_loop(t_source *src, char **envp)
 		{
 			head = (t_node *) malloc(sizeof(t_node));
 			head->next = NULL;
+			head->pipe = NULL;
 			// head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
 			// head->pipe->next = NULL;
-			head->pipe = NULL;
 			// printf("Here\n");
 			// head->pipe->pipef = NULL;
 			// head->pipe->pipef = (t_filename *) malloc(sizeof(t_filename));
