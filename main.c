@@ -181,12 +181,15 @@ void	ms_loop(t_source *src, char **envp)
 		{
 			head = (t_node *) malloc(sizeof(t_node));
 			head->next = NULL;
-			head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
-			head->pipe->next = NULL;
-			head->pipe->pipef = NULL;
+			// head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
+			// head->pipe->next = NULL;
+			head->pipe = NULL;
+			// printf("Here\n");
+			// head->pipe->pipef = NULL;
 			// head->pipe->pipef = (t_filename *) malloc(sizeof(t_filename));
 			// head->pipe->pipef->next = NULL;
 			first = head;
+
 			find_for_split(pipes[c], src);
 			src->allocate = 0;
 
@@ -201,7 +204,7 @@ void	ms_loop(t_source *src, char **envp)
 			src->squotes = 0;
 			i = 0;
 			src->c = c;
-			init_parse(src, head, envp, pipes);
+			init_parse(src, head, src->our_envp, pipes); //CHANGED FROM ENVP TO OUR_ENVP
 			i = 0;
 			// if (ft_strncmp(head->cmd,"\0", 1) == 0)
 				// printf("Cmd: %s\n",head->cmd);

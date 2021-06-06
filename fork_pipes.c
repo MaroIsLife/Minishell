@@ -71,17 +71,18 @@ fork_pips (int n, t_node *head,  t_source *src)
   int in, fd [2];
   t_pipe *tmp = head->pipe;
   in = 0;
+  	
   for (i = 0; i < n - 1; ++i)
     {
       pipe (fd);
       if (i == 0)
           pid = spawn_proc (in, fd , head ,src);
       else
-       {
-       if (tmp->next == NULL)
-          break;
-         pid = spawn_proc2 (in, fd , tmp, src);
-       tmp = tmp->next;
+      {
+        if (tmp->next == NULL)
+            break;
+          pid = spawn_proc2 (in, fd , tmp, src);
+        tmp = tmp->next;
        }
       close (fd [1]); 
       if (i != 0)

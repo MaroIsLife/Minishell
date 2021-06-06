@@ -166,7 +166,7 @@ char	*find_file_name(int **i, char *s, t_source *src, t_node *head)
 	if (src->npipe > 0 && src->foundred == 1)
 	{
 		
-		if (!src->ptemp->pipef)
+		if (src->ptemp->pipef == NULL)
 		{
 			printf("Here\n");
 			src->ptemp->pipef = new_file(src->p->filename, src);
