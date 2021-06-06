@@ -184,6 +184,10 @@ char    *ft_strjoinchar(char *s, char c);
 int 	ft_search(char **src, char *value);
 
 
+t_filename		*new_file(char *s, t_source *src);
+void init_file(t_source *src);
+
+
 int		count_start(char *s, t_source *src, int start, int *i);
 int		count_start_two(char *s, t_source *src, int *start, int **i);
 

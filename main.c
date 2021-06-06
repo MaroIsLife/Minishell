@@ -6,10 +6,6 @@
 # include "minishell.h"
 
 
-void	clearScreen()
-{
-  write(1, "\e[1;1H\e[2J", 10);
-}
 
 char	*get_x_env(char **envp, t_source *src, char *envv_name)
 {
@@ -182,6 +178,9 @@ void	ms_loop(t_source *src, char **envp)
 			head = (t_node *) malloc(sizeof(t_node));
 			head->next = NULL;
 			head->pipe = NULL;
+			// src->ptemp->pipef = NULL;
+			// head->pipe->pipef = NULL;
+
 			// head->pipe = (t_pipe *) malloc(sizeof(t_pipe));
 			// head->pipe->next = NULL;
 			// printf("Here\n");

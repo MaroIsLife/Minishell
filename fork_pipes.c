@@ -31,6 +31,7 @@ int spawn_proc (int in,  int *out, t_node *tmp, t_source *src)
           close (out[0]);
         }
       close(out[0]);
+      printf("[%d] filename %s\n", src->foundred , tmp->first_filename->filename);
      command_list(tmp->cmd, tmp->arg, src);
      exit(0);
     }
@@ -57,6 +58,7 @@ int spawn_proc2 (int in,  int *out, t_pipe *tmp, t_source *src)
           close (out[0]);
         }
       close(out[0]);
+    printf(" filename %s\n" ,tmp->pipef->filename );
      command_list(tmp->cmd, tmp->arg, src);
      exit(0);
     }
@@ -97,6 +99,7 @@ if (x == 0)
     dup2 (in, 0);
     close(in);
     close (fd[0]);
+     printf("filename %s\n" ,tmp->pipef->filename );
     command_list(tmp->cmd, tmp->arg, src);
     exit(0);
     } 
