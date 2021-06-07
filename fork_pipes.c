@@ -12,6 +12,24 @@
 
 # include "minishell.h"
 
+void  red_open_with_pipe (t_filename *tmp)
+{
+ 
+
+  while (1)
+  {
+      write (2 , "filename: ", 10);
+      write (2, tmp->filename, strlen(tmp->filename));
+      write (2 , "\n", 1);
+      if (tmp->next == NULL)
+        break ;
+      // printf ("filename: %s\n",here->next->filename);
+      tmp = tmp->next;
+  }
+}
+
+
+
 int spawn_proc (int in,  int *out, t_node *tmp, t_source *src)
 {
   pid_t pid;
@@ -31,7 +49,11 @@ int spawn_proc (int in,  int *out, t_node *tmp, t_source *src)
           close (out[0]);
         }
       close(out[0]);
-      printf("[%d] filename %s\n", src->foundred , tmp->first_filename->filename);
+      if (tmp->first_filename)
+       {
+         write(2, "You are here 1", 14);; 
+          red_open_with_pipe(tmp->first_filename);
+       }
      command_list(tmp->cmd, tmp->arg, src);
      exit(0);
     }
@@ -58,7 +80,10 @@ int spawn_proc2 (int in,  int *out, t_pipe *tmp, t_source *src)
           close (out[0]);
         }
       close(out[0]);
-    printf(" filename %s\n" ,tmp->pipef->filename );
+      if (tmp->pipef != NULL)
+        { write(2, "You are here 2\n", 15);
+          red_open_with_pipe(tmp->pipef);
+        }
      command_list(tmp->cmd, tmp->arg, src);
      exit(0);
     }
@@ -99,7 +124,11 @@ if (x == 0)
     dup2 (in, 0);
     close(in);
     close (fd[0]);
-     printf("filename %s\n" ,tmp->pipef->filename );
+
+    if (tmp->pipef->filename != NULL)
+        { write(2, "You are here 3\n", 15);
+         red_open_with_pipe(tmp->pipef);
+        }
     command_list(tmp->cmd, tmp->arg, src);
     exit(0);
     } 
