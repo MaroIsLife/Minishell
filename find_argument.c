@@ -173,6 +173,7 @@ char	*find_file_name(int **i, char *s, t_source *src, t_node *head)
 	// 	}
 	// }
 	// printf("%s\n",src->p->filename);
+	init_file(src);
 	src->allocate = 1;
 	return (0);
 }

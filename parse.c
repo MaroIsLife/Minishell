@@ -73,24 +73,28 @@ t_filename		*new_file(char *s, t_source *src)
 		return (tmp);
 }
 
+t_filename *get_last_node(t_filename *tmp)
+{
+	while (tmp)
+	{
+		if (tmp->next == NULL)
+			return (tmp);
+		tmp = tmp->next;
+	}
+	return (tmp);
+}
+
 void init_file(t_source *src)
 {
 	t_filename	*tmp;
 	if (src->npipe > 0 && src->foundred == 1)
 	{
-		if (src->ptemp->pipef == NULL)
-			src->ptemp->pipef = new_file(src->p->filename, src);
+
+		tmp = get_last_node(src->ptemp->pipef);
+		if (tmp == NULL)
+				src->ptemp->pipef = new_file(src->p->filename, src);
 		else
-		{
-			tmp = src->ptemp->pipef;
-			while (1)
-			{
-					if (!tmp || tmp->next == NULL)
-						break ;
-				tmp = tmp->next;
-			}
-			tmp = new_file(src->p->filename, src);
-		}
+			tmp->next = new_file(src->p->filename, src);
 	}
 }
 
@@ -114,7 +118,8 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 		while (i < count)
 		{
 			arg[i] = find_argument(pipe[src->c], head, src, src->our_envp);
-			init_file(src);
+			// printf("Fname: %s\n",src->p->filename);
+			// init_file(src);
 			i++;
 		}
 		arg[i] = NULL;
@@ -134,7 +139,7 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 	i = 0;
 	while (c < src->npipe)
 	{
-		printf("Here\n");
+		// printf("Here\n");
 		src->offset = src->offset; //Whie pipe[c][offset] == '|' offset ++    try putting two pipes near eachother
 		// src->ptemp = head->pipe;
 		if (head->pipe == NULL)
@@ -158,6 +163,7 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 		// printf("file: %s\n",tmp->pipef->filename);
 		c++;
 	}
+
 	// tmp->next = NULL;
 	// if (head->pipe == NULL)-
 	// 	printf("NULL\n");
