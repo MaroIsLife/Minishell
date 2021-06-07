@@ -144,13 +144,12 @@ int    ft_execute(char *cmd, char **args,t_source *src, char **envp)
 		path = get_correct_path(s, varg); // We should also add current PWD
 	}
 	if (path != 0)
-	{
+	{	g_global.ffork = 1;
 		if ((g_global.id = fork()) == 0)
 		{
 			// signal(SIGINT,SIG_DFL);
 			if (execve(path , &varg[0], src->our_envp) == -1) //Should i send ENVP or OUR-ENV AND WHAT IS THE DIFFERENCE???!
 			{
-
 				// char *err = strerror(errno);
 				// printf("minishell: %s: %s\n", varg[0], strerror(errno));
 				write(2,"minishell: ",11);
@@ -164,6 +163,7 @@ int    ft_execute(char *cmd, char **args,t_source *src, char **envp)
 		else
 		{
 			wait(&g_global.id);
+			g_global.ffork = 0;
 			if (WIFSIGNALED(g_global.id))
 				g_global.return_value = WTERMSIG(g_global.id) + 128;
 			else 
