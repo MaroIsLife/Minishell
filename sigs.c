@@ -27,9 +27,14 @@ void handler(int c)
 void handler2(int c)
 {
 	// write(1,"\b\b  \b\b",sizeof("\b\b  \b\b"));
-	write(2,"Quit: ",6);
-	fprintf(stderr, "%d", c);
-	write(2,"\n",1);
-	print_prompt1();
-	g_global.fsignal = 1;
+	// printf("fsignal: %d\n",g_global.fsignal);
+	if (g_global.ffork == 1)
+	{
+		write(1,"\b\b  \b\b",6);
+		write(2,"Quit: ",6);
+		fprintf(stderr, "%d", c);
+		write(2,"\n",1);
+		// print_prompt1();
+		// g_global.fsignal = 0;
+	}
 }

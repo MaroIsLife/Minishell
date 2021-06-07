@@ -107,6 +107,7 @@ typedef struct s_node {
 
 typedef struct s_global {
 	int		fsignal;
+	int		ffork;
 	int		id;
 	int		return_value;
 	char 	*ret;

@@ -149,7 +149,6 @@ void	ms_loop(t_source *src, char **envp)
 			continue ;
 		}
 		// printf("cmd: %s\n",cmd);
-		// printf("Data1: %s\n",head1->data);
 		g_global.fsignal  = 0;
 		if (cmd == NULL) // ^D
 		{
