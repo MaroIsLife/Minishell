@@ -30,6 +30,7 @@ typedef struct s_filename {
 	char				*filename;
 	char				c;
 	char				r;
+	int					fd_r_c;
     struct s_filename	*next;
 }	t_filename;
 
@@ -78,6 +79,7 @@ typedef struct	s_source
 	int		lastexp;
 	int 	count;
 	int 	allocate;
+	int		ispipered;
 	char 	**filenames;
 	// int		return_value;
 	int		fd_r_c;
@@ -157,6 +159,7 @@ void	ft_pwd (void);
 int		ft_isdollar(int c);
 char	*where_home(t_source *src);
 void	red_open(t_node *head, t_source *src);
+void	red_open_pipe(t_filename *tmp);
 int 	fork_pips(int npipe, t_node *head, t_source *src);
 
 //Signals

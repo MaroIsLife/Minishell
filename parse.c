@@ -87,7 +87,7 @@ t_filename *get_last_node(t_filename *tmp)
 void init_file(t_source *src)
 {
 	t_filename	*tmp;
-	if (src->npipe > 0 && src->foundred == 1)
+	if (src->npipe > 0 && src->foundred == 1 && src->ispipered == 1)
 	{
 
 		tmp = get_last_node(src->ptemp->pipef);
@@ -115,6 +115,8 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 		count = count_argument(pipe[src->c], src->offset, src);
 		i = 0;
 		arg = malloc((count + 1) * sizeof(char *));
+		src->ispipered = 1;
+		src->fd_r_c = 0;
 		while (i < count)
 		{
 			arg[i] = find_argument(pipe[src->c], head, src, src->our_envp);
@@ -123,6 +125,8 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 			i++;
 		}
 		arg[i] = NULL;
+		if (src->fd_r_c == 50 && tmp->pipef != NULL)
+			tmp->pipef->fd_r_c = 50;
 		init_arg_pipe(arg, tmp);
 	return (tmp);
 }
@@ -190,6 +194,7 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 	t_pipe *p;
 
 	src->dollarused = 0;
+	src->ispipered = 0;
 	head->cmd = find_command(pipe[src->c], head, src, envp);
 	// free(src->ra);
 	// printf("Cmd: %s\n",head->cmd);
