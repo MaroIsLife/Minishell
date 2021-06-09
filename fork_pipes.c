@@ -23,7 +23,7 @@ void  red_open_with_pipe (t_filename *tmp)
       write (2 , "\n", 1);
       if (tmp->next == NULL)
         break ;
-      // printf ("filename: %s\n",here->next->filename);
+      printf ("filename: %s\n",tmp->filename);
       tmp = tmp->next;
   }
 }
@@ -49,11 +49,11 @@ int spawn_proc (int in,  int *out, t_node *tmp, t_source *src)
           close (out[0]);
         }
       close(out[0]);
-      if (tmp->first_filename)
+      if (tmp->first_filename != NULL)
        {
-         write(2, "You are here 1", 14);; 
-          red_open_with_pipe(tmp->first_filename);
+          red_open_pipe(tmp->first_filename);
        }
+      write(2, "You are here 1\n", 15);; 
      command_list(tmp->cmd, tmp->arg, src);
      exit(0);
     }
@@ -82,7 +82,7 @@ int spawn_proc2 (int in,  int *out, t_pipe *tmp, t_source *src)
       close(out[0]);
       if (tmp->pipef != NULL)
         { write(2, "You are here 2\n", 15);
-          red_open_with_pipe(tmp->pipef);
+          red_open_pipe(tmp->pipef);
         }
      command_list(tmp->cmd, tmp->arg, src);
      exit(0);
@@ -126,8 +126,9 @@ if (x == 0)
     close (fd[0]);
 
     if (tmp->pipef->filename != NULL)
-        { write(2, "You are here 3\n", 15);
-         red_open_with_pipe(tmp->pipef);
+        { 
+          write(2, "You are here 3\n", 15);
+         red_open_pipe(tmp->pipef);
         }
     command_list(tmp->cmd, tmp->arg, src);
     exit(0);

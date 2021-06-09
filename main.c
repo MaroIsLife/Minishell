@@ -200,6 +200,7 @@ void	ms_loop(t_source *src, char **envp)
 
 			src->dquotes = 0;
 			src->squotes = 0;
+			src->fd_r_c = 0;
 			i = 0;
 			src->c = c;
 			init_parse(src, head, src->our_envp, pipes); //CHANGED FROM ENVP TO OUR_ENVP
