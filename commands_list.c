@@ -153,6 +153,10 @@ char	*get_correct_path(char **s, char **varg)
 			free(tmp2);
 		i++;
 	}
+	// i = 0;
+	// while (s[i])
+	// 	free(s[i++]);
+	// free(s);
 	return (0);
 }
 
@@ -173,7 +177,7 @@ int    ft_execute(char *cmd, char **args,t_source *src, char **envp)
 		return(0);
 	}
 	if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/'))
-		path = cmd;
+		path = ft_strdup(cmd);
 	else 
 	{
 		if (get_x_env(src->our_envp, src, "PATH") == 0)
@@ -186,7 +190,12 @@ int    ft_execute(char *cmd, char **args,t_source *src, char **envp)
 			return(0);
 		}
 		s = get_env_path(src->our_envp, src);
-		path = get_correct_path(s, varg); // We should also add current PWD
+		path = get_correct_path(s, varg);
+		int index = 0;
+		while (s[index])
+			free(s[index++]);
+		free(s);
+		 // We should also add current PWD
 	}
 	if (path != 0)
 	{	g_global.ffork = 1;
@@ -223,6 +232,12 @@ int    ft_execute(char *cmd, char **args,t_source *src, char **envp)
 			write(2,": command not found\n",20);
 		g_global.return_value = 127;
 	}
+	int index = 0;
+	while (varg[index])
+			free(varg[index++]);
+		free(varg);
+	
+	free(path);
 	return (0);	
 }
 

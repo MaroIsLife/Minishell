@@ -29,11 +29,13 @@ void	lstadd_dlist(t_stack **alst, t_stack *new)
 t_stack		*lstnewc(void *data)
 {
 	t_stack	*p;
+	
 	p = (t_stack*)malloc(sizeof(t_stack));
 	if (!p)
 		return (NULL);
 	p->data = data;
 	p->next = NULL;
 	p->prev = NULL;
+	free(data);
 	return (p);
 }
