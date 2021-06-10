@@ -105,9 +105,9 @@ void	ms_loop(t_source *src, char **envp)
 
 	init_env(src,envp);
 	src->user = get_x_env(src->our_envp, src, "USER"); 
-	 // This Retrieves the USER's logname and stores it in src->user NOT ALLOCATED
 	src->pwd = get_x_env(src->our_envp, src, "PWD");
-	set_x_env(envp, src, "TESST", "test");
+	 // This Retrieves the USER's logname and stores it in src->user NOT ALLOCATED
+	// set_x_env(envp, src, "TESST", "test");
 	g_global.return_value = 0;
 	//............................
 	t_termc *termc;
@@ -139,7 +139,7 @@ void	ms_loop(t_source *src, char **envp)
 		// cmd = read_line();
 		g_global.ret = NULL;
 		cmd = term_loop(&head1, &tmp, termc);
-		free(g_global.ret);
+		// free(g_global.ret);
 		int b = 0;
 		while (cmd[b] == ' ') // space as a command
 			b++;
@@ -234,7 +234,8 @@ void	ms_loop(t_source *src, char **envp)
 						}
 						wait(&id);
 					}
-			}	
+			}
+			// free(head->cmd);	
 			c++;
 		}
 		int p = 0;
@@ -244,6 +245,7 @@ void	ms_loop(t_source *src, char **envp)
 			p++;
 		}
 		free(pipes);
+		system("leaks a.out");
 	}
 }
 

@@ -43,7 +43,7 @@ char    *ft_strjoinchar(char *s, char c)
 	}
     str[i] = c;
     str[i + 1] = '\0';
-    // free(s);
+    free(s);
     return (str);
 }
 
@@ -143,7 +143,7 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			else
 			{
 				// printf("Made it here\n");
-				g_global.ret = "";
+				g_global.ret = ft_strdup("");
 				termc->help = 0;
 				write(1, g_global.ret, strlen(g_global.ret));
 			}
@@ -184,7 +184,8 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 							*tmp = (*tmp)->next;
 						g_global.ret = (char*)(*tmp)->data;
 					}
-					write(1, (*tmp)->data, strlen((*tmp)->data));
+					if ((*tmp)->data != NULL)
+						write(1, (*tmp)->data, strlen((*tmp)->data));
 				}
 			termc->edit = 0;
 			// else
@@ -230,8 +231,9 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			termc->edit = 0;
 			// if (termc->help == 0)
 			// strcpy(s, g_global.ret);
-			s = g_global.ret;
-			g_global.ret = ft_strdup("");
+			s = ft_strdup(g_global.ret);
+			free(g_global.ret);
+			// g_global.ret = ft_strdup("");
 			return (s);
 			// continue ;
 		}
