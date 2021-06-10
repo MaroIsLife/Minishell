@@ -51,9 +51,9 @@ int spawn_proc (int in,  int *out, t_node *tmp, t_source *src)
       close(out[0]);
       if (tmp->first_filename != NULL)
        {
+         write(2, "You are here 1\n", 15);; 
           red_open_pipe(tmp->first_filename);
        }
-      write(2, "You are here 1\n", 15);; 
      command_list(tmp->cmd, tmp->arg, src);
      exit(0);
     }
@@ -125,7 +125,7 @@ if (x == 0)
     close(in);
     close (fd[0]);
 
-    if (tmp->pipef->filename != NULL)
+    if (tmp->pipef != NULL)
         { 
           write(2, "You are here 3\n", 15);
          red_open_pipe(tmp->pipef);

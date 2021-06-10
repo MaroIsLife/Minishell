@@ -6,7 +6,7 @@ void	red_open_pipe(t_filename *tmp)
 	int			fd2;
 	t_filename	*p;
 	p = tmp;
-	printf("%s\n",p->filename);
+	// printf("%s\n",p->filename);
 	while (1)
 	{
 		// puts(p->filename);
@@ -31,12 +31,12 @@ void	red_open_pipe(t_filename *tmp)
 			break ;
 		p = p->next;
 	}
-	if (p->fd_r_c == 50)
-	{
-		dup2(fd, 1);
-		dup2(fd2, 0);
-	}
-	else if (p->c == 94 || p->c == '>')
+	// if (p->fd_r_c == 50)
+	// {
+	// 	dup2(fd, 1);
+	// 	dup2(fd2, 0);
+	// }
+	if (p->c == 94 || p->c == '>')
 		dup2(fd, 1);
 	else if (p->c == '<')
 		dup2(fd2, 0);
