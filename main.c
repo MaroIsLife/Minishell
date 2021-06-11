@@ -218,18 +218,15 @@ void	ms_loop(t_source *src, char **envp)
 			{
 			
 					if (src->foundpipe == 1)
-					{ 
-					// fork_pips(src, head);
 						fork_pips (src->npipe + 1, head, src);
-					}
 					if (src->foundred && !src->foundpipe)
 					{	
 						int id = fork();
 						int ge_id;
 						if (id == 0)
 						{
-							red_open(head, src);
-						command_list(head->cmd ,head->arg, src);
+						red_open(head, src);
+							command_list(head->cmd ,head->arg, src);
 						exit(0);
 						}
 						wait(&id);
