@@ -153,10 +153,6 @@ char	*get_correct_path(char **s, char **varg)
 			free(tmp2);
 		i++;
 	}
-	// i = 0;
-	// while (s[i])
-	// 	free(s[i++]);
-	// free(s);
 	return (0);
 }
 
@@ -211,6 +207,11 @@ int    ft_execute(char *cmd, char **args,t_source *src, char **envp)
 				write(2,": ",2);
 				write(2,strerror(errno),ft_strlen(strerror(errno)));
 				write(2,"\n",1);
+				i = 0;
+				while (varg[i])
+					free(varg[i++]);
+				free(varg);
+				free(path);
 				exit(0);
 			}
 		}
@@ -236,7 +237,6 @@ int    ft_execute(char *cmd, char **args,t_source *src, char **envp)
 	while (varg[index])
 			free(varg[index++]);
 		free(varg);
-	
 	free(path);
 	return (0);	
 }

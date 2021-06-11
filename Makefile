@@ -10,7 +10,7 @@ CC = gcc
 all : $(NAME)
 
 $(NAME):
-	@$(CC) $(SRC) $(GN) $(LIB) -g -lcurses && ./a.out   
+	@$(CC) $(SRC) $(GN) $(LIB) -g -lcurses  && ./a.out   
 	
 clean :
 	rm -fr a.out a.out.dSYM

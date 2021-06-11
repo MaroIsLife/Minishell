@@ -28,8 +28,6 @@ void  red_open_with_pipe (t_filename *tmp)
   }
 }
 
-
-
 int spawn_proc (int in,  int *out, t_node *tmp, t_source *src)
 {
   pid_t pid;
@@ -41,12 +39,10 @@ int spawn_proc (int in,  int *out, t_node *tmp, t_source *src)
           dup2 (in, 0);
           close (in);
         }
-
       if (out[1] != 1)
         {
           dup2 (out[1], 1);
           close (out[1]);
-          close (out[0]);
         }
       close(out[0]);
       if (tmp->first_filename != NULL)
