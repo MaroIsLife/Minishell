@@ -33,7 +33,7 @@ t_stack		*lstnewc(void *data)
 	p = (t_stack*)malloc(sizeof(t_stack));
 	if (!p)
 		return (NULL);
-	p->data = data;
+	p->data = ft_strdup((char *)data);
 	p->next = NULL;
 	p->prev = NULL;
 	free(data);

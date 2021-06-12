@@ -123,8 +123,16 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 				// tputs(tgetstr("dm",NULL), 1, ft_putc);
 				tputs(tgetstr("dc",NULL), 1, ft_putc);
 				// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
+			
+				//check Heeeere.
 				if (!termc->edit)
-					g_global.ret = strdup(g_global.ret);
+					{
+						// free (g_global.ret);
+						// g_global.ret = NULL;
+						// puts(g_global.ret);
+						// g_global.ret = strdup(g_global.ret);
+						// puts(g_global.ret);
+					}
 				g_global.ret[i] = '\0';
 				// tputs(tgetstr("ed",NULL), 1, ft_putc);
 			}
@@ -233,7 +241,7 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			// strcpy(s, g_global.ret);
 			s = ft_strdup(g_global.ret);
 			free(g_global.ret);
-			// g_global.ret = ft_strdup("");
+			// g_global.ret = "";
 			return (s);
 			// continue ;
 		}

@@ -115,7 +115,7 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	// printf("start: %d\n", start);
 	// src->ra = malloc((start + 1) * sizeof(char));
 	src->ra = malloc((4096) * sizeof(char));
-	i = find_command_two(s,src, i,head);
+	i = find_command_two(s, src, i,head);
 	src->ra[src->ra_b] = '\0';
 	src->offset = i;
 	// printf("Offset: %d\n",src->offset);

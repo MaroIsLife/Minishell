@@ -7,7 +7,7 @@ void change_pwd_env(t_source *src)
 	int c = 0;
 	while (src->our_envp[i] != NULL)
 	{
-		if (ft_strncmp(src->our_envp[i],"PWD=", 4) == 0)
+		if (ft_strncmp(src->our_envp[i], "PWD=", 4) == 0)
 		{
 			// puts ("FOUND");
 			char *s;

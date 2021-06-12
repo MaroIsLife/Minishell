@@ -111,9 +111,11 @@ char	*where_home(t_source *src)
 }
 void	ft_pwd (void)
 {
-	char* s = malloc (100);
-
-	printf ("%s\n",getcwd(s, 100));
+	char *s;
+	
+	s = malloc(100 * sizeof(char));
+	printf("%s\n", getcwd(s, 100));
+	// printf ("%s\n", s1);
 	free (s);
 }
 void ft_cd(char **args, t_source *src, char *home)
