@@ -19,14 +19,14 @@ void init_arg(t_node *head, char **arg)
 
 	i = 0;
 	b = 0;
+
 	while (arg[i] != NULL)
 	{
 		if (arg[i][0] != '\0')
 			b++;
 		i++;
 	}
-	if (b != 0)
-	{
+
 		head->arg = malloc((b + 1) * sizeof(char *));
 		i = 0;
 		b = 0;
@@ -36,8 +36,11 @@ void init_arg(t_node *head, char **arg)
 				head->arg[b++] = arg[i];
 			i++;
 		}
+	
 		head->arg[b] = NULL;
-	}
+	
+
+	
 }
 
 void init_arg_pipe(char **arg, t_pipe *p)
@@ -157,35 +160,12 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 		}
 		else
 		{
-			// printf("Two\n");
 			tmp->next = new_pipe(pipe, src, head); 
-			// while (1)
-			// {
-			// 		if (!tmp || tmp->next == NULL)
-			// 			break ;
-			// 	tmp = tmp->next;
-			// }
-			// tmp = new_pipe(pipe, src, head);
 		}
 		// printf("file: %s\n",tmp->pipef->filename);
 		c++;
 	}
 
-	// tmp->next = NULL;
-	// if (head->pipe == NULL)-
-	// 	printf("NULL\n");
-	// tmp = head->pipe;
-	// while (1)
-	// {
-	// 	// printf("Filename: %s\n",tmp->pipef->filename);
-	// 	// printf("Here\n");
-	// 	int po = 0;
-	// 	// while (head->pipe->arg[po] != NULL)
-	// 	// 	printf("Arg: %s\n",head->pipe->arg[po++]);
-	// 	if (tmp->next == NULL)
-	// 		break ;
-	// 	tmp = tmp->next;
-	// }
 }
 
 void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
@@ -213,7 +193,11 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 		i++;
 	}
 	arg[i] = NULL;
-	init_arg(head, arg);
+	// check here;
+	if (count != 0)
+		init_arg(head, arg);
+	else
+		head->arg = NULL;
 	i = 0;
 	while (arg[i] != NULL)
 	{

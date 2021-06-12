@@ -94,7 +94,8 @@ int  calc_args (char **args)
 	int i;
 
 	i  = 0;
-	while (args[i])
+	
+	while (args && args[i] != NULL)
 		i++;
 	return (i);
 }
@@ -108,7 +109,7 @@ char	**ft_valide_args(char *cmd, char **args, int count)
 	b = 1;
 	varg = malloc (sizeof(char*) * (count + 2));
 	varg[0] = ft_strdup(cmd);
-	while (args[i] != NULL)
+	while (args && args[i] != NULL)
 		varg[b++] = args[i++];
 	varg[b] = NULL;
 	return (varg);
@@ -162,7 +163,7 @@ int    ft_execute(char *cmd, char **args,t_source *src, char **envp)
 	char	*path;
 	static int	i;
 	char	**varg;
-
+	
   	varg = ft_valide_args(cmd,args, calc_args(args));
 	if (cmd[0] == '\0')
 	{
