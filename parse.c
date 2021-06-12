@@ -195,8 +195,8 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 
 	src->dollarused = 0;
 	src->ispipered = 0;
-	head->cmd = find_command(pipe[src->c], head, src, envp);
-	// free(src->ra);
+	head->cmd = ft_strdup(find_command(pipe[src->c], head, src, envp));
+	free(src->ra);
 	// printf("Cmd: %s\n",head->cmd);
 	count = count_argument(pipe[src->c], src->offset, src);
 	// printf("Count: %d\n",count);
@@ -212,12 +212,13 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 	arg[i] = NULL;
 	init_arg(head, arg);
 	i = 0;
-	// while (head->arg[i] != NULL)
-	// {
-	// 	printf("%d Arg: |%s|\n",i, head->arg[i]);
-	// 	i++;
-	// }
+	while (arg[i] != NULL)
+	{
+		free(arg[i]);
+		i++;
+	}
 	i = 0;
+	free(arg);
 	p = head->pipe;
 	if (src->foundpipe == 1)
 	{

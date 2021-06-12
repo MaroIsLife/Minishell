@@ -5,7 +5,26 @@
 # include <string.h>
 # include "minishell.h"
 
+void freeList(t_node* head)
+{
+   t_node* tmp;
+	char *c_tmp;
+	int i;
 
+   while (head != NULL)
+    {
+       tmp = head;
+       head = head->next;
+       free(tmp->cmd);
+	  	i = 0;
+		// while (tmp->arg && tmp->arg[i])
+		// 	free(tmp->arg[i++]);
+		// free(tmp->arg);
+	  	free(tmp->pipe);
+	   free(tmp);
+    }
+
+}
 
 char	*get_x_env(char **envp, t_source *src, char *envv_name)
 {
@@ -172,6 +191,7 @@ void	ms_loop(t_source *src, char **envp)
 		 * PIPE implumetation : Craete FD{2} and it redirect from 1>0 then use dup to dup 
 		 * EZPZ 
 		 * */
+
 		while (pipes[c] != NULL)
 		{
 			head = (t_node *) malloc(sizeof(t_node));
@@ -197,26 +217,17 @@ void	ms_loop(t_source *src, char **envp)
 			src->c = c;
 			init_parse(src, head, src->our_envp, pipes); //CHANGED FROM ENVP TO OUR_ENVP
 			i = 0;
-			// if (ft_strncmp(head->cmd,"\0", 1) == 0)
-				// printf("Cmd: %s\n",head->cmd);
 			if (!head->cmd)
 			{
 				c++;
 				continue ;
 			}
-			// while (head->arg[i] != NULL)
-			// 	printf("Arg: %s\n",head->arg[i++]);
 			src->offset = 0;
 			g_global.return_value = 0;
-		/*
-		commande list should only take t_source and cmd and args
-		to make it accepet out-put from standard and from pipe NODE.
-		*/
 			if (src->foundred == 0 && src->foundpipe == 0)
 				command_list(head->cmd ,head->arg,  src);
 			else
 			{
-			
 					if (src->foundpipe == 1)
 						fork_pips (src->npipe + 1, head, src);
 					if (src->foundred && !src->foundpipe)
@@ -232,15 +243,17 @@ void	ms_loop(t_source *src, char **envp)
 						wait(&id);
 					}
 			}
-			// free(head->cmd);	
 			c++;
+			freeList(head);
 		}
+		// free(termc);
 		int p = 0;
 		while (pipes[p] != NULL)
 		{
 			free(pipes[p]);
 			p++;
 		}
+		printf("\np: %d\n",p);
 		free(pipes);
 		system("leaks a.out");
 	}

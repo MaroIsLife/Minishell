@@ -107,7 +107,7 @@ char	**ft_valide_args(char *cmd, char **args, int count)
 	i = 0;
 	b = 1;
 	varg = malloc (sizeof(char*) * (count + 2));
-	varg[0] = cmd;
+	varg[0] = ft_strdup(cmd);
 	while (args[i] != NULL)
 		varg[b++] = args[i++];
 	varg[b] = NULL;
@@ -248,7 +248,7 @@ void command_list(char *cmd, char **args,t_source *src)
 	*/
 	if (ft_strncmp(cmd, "cd", 2) == 0 && cmd[2] == '\0')
 		ft_cd(args, src, where_home(src));
-	else if (ft_strncmp(cmd,"echo",4) == 0 && cmd[4] == '\0')
+	else if (ft_strncmp(cmd, "echo",4) == 0 && cmd[4] == '\0')
 		ft_echo(args);
 	else if (ft_strncmp(cmd, "env", 3) == 0 && cmd[3] == '\0')
 		print_env(src);
@@ -261,7 +261,9 @@ void command_list(char *cmd, char **args,t_source *src)
 	else if (ft_strncmp(cmd, "exit", 4) == 0 && cmd[4] == '\0')
 		ft_exit(args, src);
 	else if ((src->dollarused == 1 && cmd[0] == '\0'))
+	{
 		;
+	}
 	else
 		ft_execute(cmd, args, src, src->our_envp);
 }
