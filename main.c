@@ -17,12 +17,15 @@ void freeList(t_node* head)
        head = head->next;
        free(tmp->cmd);
 	  	i = 0;
-		// while (tmp->arg && tmp->arg[i])
-		// 	free(tmp->arg[i++]);
-		// free(tmp->arg);
-	  	free(tmp->pipe);
-	   free(tmp);
+	if (tmp->arg)
+	{	puts("are you here");
+		while (tmp->arg[i])
+			free(tmp->arg[i++]);}
+		free(tmp->arg);
     }
+	if (tmp->pipe)
+		free(tmp->pipe);
+	free(tmp);
 
 }
 
@@ -225,7 +228,10 @@ void	ms_loop(t_source *src, char **envp)
 			src->offset = 0;
 			g_global.return_value = 0;
 			if (src->foundred == 0 && src->foundpipe == 0)
-				command_list(head->cmd ,head->arg,  src);
+				{
+					
+					command_list(head->cmd ,head->arg,  src);
+					}
 			else
 			{
 					if (src->foundpipe == 1)

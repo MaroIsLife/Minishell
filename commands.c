@@ -7,7 +7,7 @@ void    ft_echo(char **args)
 	
 	newlines = 0;
 	i = 0;
-	while (args[i] != NULL)
+	while (args && args[i] != NULL)
 	{
 		if (ft_strncmp(args[0], "-n", 2) == 0 && args[0][2] == '\0')
 		{
@@ -22,8 +22,16 @@ void    ft_echo(char **args)
 		ft_putstr_fd(" ", 1);
 		i++;
 	}
+	// if (args)
+	// {
+	// 	i = 0;
+	// 	while (args[i])
+	// 		free(args[i++]);
+	// 	free(args);
+	// }
 	if (newlines == 0)
 		ft_putstr_fd("\n", 1);
+
 }
 int ft_strlen_eq(char *src)
 {
@@ -531,7 +539,7 @@ int		ft_exit(char **args, t_source *src)
 	int ret;
 
 	b = 0;
-	if (args[0] == NULL)
+	if (!args)
 		exit(0);
 	while (args[0][b] != '\0')
 	{
