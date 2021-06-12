@@ -13,7 +13,8 @@
 # include "gnl/get_next_line.h"
 # include "libft/libft.h"
 # include <termios.h>
-# include <termcap.h>
+// # include <termcap.h>
+# include <term.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 
@@ -189,7 +190,7 @@ int 	ft_search(char **src, char *value);
 
 
 t_filename		*new_file(char *s, t_source *src);
-void init_file(t_source *src);
+void init_filee(t_source *src);
 
 
 int		count_start(char *s, t_source *src, int start, int *i);
