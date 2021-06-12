@@ -3,16 +3,16 @@
 void    ft_echo(char **args)
 {
 	int i;
-	int newline;
+	int newlines;
 	
-	newline = 0;
+	newlines = 0;
 	i = 0;
 	while (args[i] != NULL)
 	{
 		if (ft_strncmp(args[0], "-n", 2) == 0 && args[0][2] == '\0')
 		{
 			i++;
-			newline = 1;
+			newlines = 1;
 			if (args[1] == NULL)
 				break ;
 		}
@@ -22,7 +22,7 @@ void    ft_echo(char **args)
 		ft_putstr_fd(" ", 1);
 		i++;
 	}
-	if (newline == 0)
+	if (newlines == 0)
 		ft_putstr_fd("\n", 1);
 }
 int ft_strlen_eq(char *src)

@@ -25,16 +25,19 @@ void init_arg(t_node *head, char **arg)
 			b++;
 		i++;
 	}
-	head->arg = malloc((b + 1) * sizeof(char *));
-	i = 0;
-	b = 0;
-	while (arg[i] != NULL)
+	if (b != 0)
 	{
-		if (arg[i][0] != '\0')
-			head->arg[b++] = arg[i];
-		i++;
+		head->arg = malloc((b + 1) * sizeof(char *));
+		i = 0;
+		b = 0;
+		while (arg[i] != NULL)
+		{
+			if (arg[i][0] != '\0')
+				head->arg[b++] = arg[i];
+			i++;
+		}
+		head->arg[b] = NULL;
 	}
-	head->arg[b] = NULL;
 }
 
 void init_arg_pipe(char **arg, t_pipe *p)
@@ -84,7 +87,7 @@ t_filename *get_last_node(t_filename *tmp)
 	return (tmp);
 }
 
-void init_file(t_source *src)
+void init_filee(t_source *src)
 {
 	t_filename	*tmp;
 	if (src->npipe > 0 && src->foundred == 1 && src->ispipered == 1)
@@ -121,7 +124,7 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 		{
 			arg[i] = find_argument(pipe[src->c], head, src, src->our_envp);
 			// printf("Fname: %s\n",src->p->filename);
-			// init_file(src);
+			// init_filee(src);
 			i++;
 		}
 		arg[i] = NULL;
