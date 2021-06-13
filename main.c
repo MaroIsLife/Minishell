@@ -259,9 +259,9 @@ void	ms_loop(t_source *src, char **envp)
 			free(pipes[p]);
 			p++;
 		}
-		printf("\np: %d\n",p);
+		// printf("\np: %d\n",p);
 		free(pipes);
-		system("leaks a.out");
+		// system("leaks a.out");
 	}
 }
 
