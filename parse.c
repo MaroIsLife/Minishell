@@ -33,7 +33,7 @@ void init_arg(t_node *head, char **arg)
 		while (arg[i] != NULL)
 		{
 			if (arg[i][0] != '\0')
-				head->arg[b++] = arg[i];
+				head->arg[b++] = ft_strdup(arg[i]);
 			i++;
 		}
 	
@@ -193,18 +193,13 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 		i++;
 	}
 	arg[i] = NULL;
-	// check here;
-	if (count != 0)
-		init_arg(head, arg);
-	else
-		head->arg = NULL;
+	init_arg(head, arg);
 	i = 0;
 	while (arg[i] != NULL)
 	{
 		free(arg[i]);
 		i++;
 	}
-	i = 0;
 	free(arg);
 	p = head->pipe;
 	if (src->foundpipe == 1)

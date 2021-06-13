@@ -12,8 +12,8 @@ CC = gcc
 all : $(NAME)
 
 $(NAME):
-	@$(CC) $(SRC) $(GN) $(LIB) -g -lcurses  && ./a.out  
-	# @$(CC) $(SRC) $(GN) $(LIB) -g -ltermcap	-fsanitize=address  && ./a.out 
+	# @$(CC) $(SRC) $(GN) $(LIB) -g -lcurses  && ./a.out  
+	@$(CC) $(SRC) $(GN) $(LIB) -g -ltermcap	&& valgrind ./a.out 
 	
 clean :
 	rm -fr a.out a.out.dSYM

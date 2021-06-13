@@ -13,8 +13,8 @@
 # include "gnl/get_next_line.h"
 # include "libft/libft.h"
 # include <termios.h>
-// # include <termcap.h>
-# include <term.h>
+# include <termcap.h>
+// # include <term.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 
