@@ -18,16 +18,41 @@ void freeList(t_node* head)
        free(tmp->cmd);
 	  	i = 0;
 	if (tmp->arg)
-	{	puts("are you here");
+	{
 		while (tmp->arg[i])
 			free(tmp->arg[i++]);}
 		free(tmp->arg);
     }
-	if (tmp->pipe)
-		free(tmp->pipe);
 	free(tmp);
 
 }
+
+void freeList_pipe(t_pipe* head)
+{
+ 	t_pipe* tmp;
+	char *c_tmp;
+	int i;
+
+	i = 0;
+   while (head != NULL)
+    {
+       tmp = head;
+       head = head->next;
+       free(tmp->cmd);
+	  	
+	if (tmp->arg)
+	{
+		while (tmp->arg[i])
+			free(tmp->arg[i++]);}
+		free(tmp->arg);
+    }
+
+	free(tmp);
+
+}
+
+
+
 
 char	*get_x_env(char **envp, t_source *src, char *envv_name)
 {
@@ -235,7 +260,10 @@ void	ms_loop(t_source *src, char **envp)
 			else
 			{
 					if (src->foundpipe == 1)
-						fork_pips (src->npipe + 1, head, src);
+						{
+							fork_pips (src->npipe + 1, head, src);
+							freeList_pipe(head->pipe);
+							}
 					if (src->foundred && !src->foundpipe)
 					{	
 						int id = fork();

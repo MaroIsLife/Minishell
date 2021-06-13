@@ -62,7 +62,7 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	while (arg[i] != NULL)
 	{
 		if (arg[i][0] != '\0')
-			p->arg[b++] = arg[i];
+			p->arg[b++] = ft_strdup(arg[i]);
 		i++;
 	}
 	p->arg[b] = NULL;
@@ -118,6 +118,7 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 		tmp->pipef = NULL;
 		src->ptemp = tmp;
 		tmp->cmd = find_command(pipe[src->c], head, src, src->our_envp);
+		free(src->ra);
 		count = count_argument(pipe[src->c], src->offset, src);
 		i = 0;
 		arg = malloc((count + 1) * sizeof(char *));
@@ -134,6 +135,10 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 		if (src->fd_r_c == 50 && tmp->pipef != NULL)
 			tmp->pipef->fd_r_c = 50;
 		init_arg_pipe(arg, tmp);
+	i = 0;
+	while (arg[i])
+		free(arg[i++]);
+	free(arg);
 	return (tmp);
 }
 
@@ -178,7 +183,7 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 
 	src->dollarused = 0;
 	src->ispipered = 0;
-	head->cmd = ft_strdup(find_command(pipe[src->c], head, src, envp));
+	head->cmd = find_command(pipe[src->c], head, src, envp);
 	free(src->ra);
 	// printf("Cmd: %s\n",head->cmd);
 	count = count_argument(pipe[src->c], src->offset, src);
