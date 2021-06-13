@@ -539,8 +539,9 @@ int		ft_exit(char **args, t_source *src)
 	int ret;
 
 	b = 0;
-	if (!args)
-		exit(0);
+
+	if (args[0] == NULL)
+		exit(g_global.return_value);
 	while (args[0][b] != '\0')
 	{
 		if (ft_isdigit(args[0][b]) != 1)
@@ -573,6 +574,7 @@ int		ft_exit(char **args, t_source *src)
 		write(1,"exit\n",6);
 		exit(ret);
 	}
+	return (0);
 }
 /*
 void command_unset(t_commands *tmp ,char **envp)

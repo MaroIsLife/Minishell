@@ -195,7 +195,7 @@ void init_filee(t_source *src);
 
 int		count_start(char *s, t_source *src, int start, int *i);
 int		count_start_two(char *s, t_source *src, int *start, int **i);
-
+void freeList(t_node* head);
 
 
 #endif
