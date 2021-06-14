@@ -22,8 +22,8 @@ void init_arg(t_node *head, char **arg)
 
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != '\0')
-			b++;
+		// if (arg[i][0] != '\0')
+		b++;
 		i++;
 	}
 
@@ -32,15 +32,11 @@ void init_arg(t_node *head, char **arg)
 		b = 0;
 		while (arg[i] != NULL)
 		{
-			if (arg[i][0] != '\0')
-				head->arg[b++] = ft_strdup(arg[i]);
+			// if (arg[i][0] != '\0')
+			head->arg[b++] = ft_strdup(arg[i]);
 			i++;
 		}
-	
-		head->arg[b] = NULL;
-	
-
-	
+		head->arg[b] = NULL;	
 }
 
 void init_arg_pipe(char **arg, t_pipe *p)
@@ -52,8 +48,8 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	b = 0;
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != '\0')
-			b++;
+		// if (arg[i][0] != '\0')
+		b++;
 		i++;
 	}
 	p->arg = malloc((b + 1) * sizeof(char *));
@@ -61,8 +57,8 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	b = 0;
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != '\0')
-			p->arg[b++] = ft_strdup(arg[i]);
+		// if (arg[i][0] != '\0')
+		p->arg[b++] = ft_strdup(arg[i]);
 		i++;
 	}
 	p->arg[b] = NULL;
