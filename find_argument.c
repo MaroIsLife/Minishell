@@ -54,7 +54,7 @@ int		count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 			}
 			if (s[i] == '\0' || s[i] == '\n')
 				return (count);
-			if (s[i] != '>' && jump == 0) // Add != <
+			if (s[i] != '>' && s[i] != '<' && jump == 0) // Add != <
 				count++;
 			else
 				jump = 0;
@@ -184,6 +184,7 @@ int		find_argument_three(char *s, t_source *src, int *i, t_node *head)
 	if ((s[(*i)] == '>' || s[(*i)] == '<') && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
 	{
 		find_file_name(&i, s, src, head);
+		src->tmp2 = 1;
 		return 1 ; // continue;
 	}
 	else if (s[(*i)] == ' ')
@@ -201,13 +202,7 @@ int		find_argument_three(char *s, t_source *src, int *i, t_node *head)
 			return (2); //break
 	}
 	else if ((s[(*i)] == '\"') && src->squotes == 0 && src->aslash == 0)
-	{
-		// if (s[(*i)] == '\"' && s[(*i) - 1] == '\"')
-		// {
-		// 	src->re[src->re_b++] = '\0';
-		// }
 		finding_quotes(s, (*i), src);
-	}
 	else if ((s[(*i)] == '\'') && src->dquotes == 0 && src->aslash == 0)
 		finding_quotes(s, (*i), src);
 	else if (s[(*i)] == '$' && src->aslash == 0 && (ft_isalpha(s[(*i) + 1]) == 1 || s[(*i) + 1] == '?') && src->squotes == 0)
@@ -260,6 +255,7 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 		i++;
 	src->re = malloc((4096) * sizeof(char));
 	src->re_b = 0;
+	src->tmp2 = 0;
 	i = find_argument_two(s, src, i, head);
 	if (src->dquotes == 1 || src->squotes == 1 || src->aslash == 1)
 	{
@@ -268,6 +264,12 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 	}
 	src->offset = i;
 	// printf("Offset Arg: %d\n",src->offset);
-	src->re[src->re_b] = '\0';
+	if (src->tmp2 == 1)
+	{
+		src->re[src->re_b++] = 127;
+		src->re[src->re_b] = '\0';
+	}
+	else
+		src->re[src->re_b] = '\0';
 	return ((src->re));
 }

@@ -76,6 +76,7 @@ typedef struct	s_source
 	char	*ra;
 	int		tmp; // Temp Variable to use on anything to avoid norminette
 	char	*ctmp;
+	int		tmp2;
 	int		ra_b;
 	int		lastexp;
 	int 	count;
