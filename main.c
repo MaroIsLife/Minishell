@@ -26,20 +26,38 @@ void freeList(t_node* head)
 	free(tmp);
 
 }
+int num_of_node(t_pipe *tmp)
+{
+	int i;
 
+	i = 0;
+	while (tmp)
+	{
+		if (tmp->next == NULL)
+			return (i);
+		tmp = tmp->next;
+		i++;
+	}
+	return (i);
+}
 void freeList_pipe(t_pipe* head)
 {
  	t_pipe* tmp;
 	char *c_tmp;
 	int i;
+	int n = num_of_node(head);
 
+	// printf ("===========%d=========\n", n);
 	i = 0;
    while (head != NULL)
     {
-       tmp = head;
+		write (2, "how here\n", 9);
+	   tmp = head;
        head = head->next;
        free(tmp->cmd);
-	  	
+	   if (tmp->pipef)
+	   	free(tmp->pipef);
+	
 	if (tmp->arg)
 	{
 		while (tmp->arg[i])
@@ -48,6 +66,7 @@ void freeList_pipe(t_pipe* head)
     }
 
 	free(tmp);
+
 
 }
 

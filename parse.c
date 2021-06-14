@@ -71,7 +71,7 @@ void init_arg_pipe(char **arg, t_pipe *p)
 t_filename		*new_file(char *s, t_source *src)
 {
 	t_filename *tmp;
-
+		// puts ("did  enter");
 		tmp = (t_filename *) malloc(sizeof(t_filename));
 		tmp->next = NULL;
 		tmp->filename = ft_strdup(s);
