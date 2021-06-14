@@ -86,6 +86,7 @@ char		*ft_strdup(const char *s1)
 		p[i] = s1[i];
 		i++;
 	}
+	// p[i] = '\0';
 	return (p);
 }
 

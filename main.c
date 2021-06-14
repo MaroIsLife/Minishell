@@ -280,11 +280,27 @@ void	ms_loop(t_source *src, char **envp)
 					if (src->foundpipe == 1)
 						{
 							fork_pips (src->npipe + 1, head, src);
-							// if (head->pipe)
-							// 	freeList_pipe(head->pipe);
-								// write (2, "here WE ARE\n", 12);
+							t_pipe *here;
 							
+							t_pipe *next;
+							int cont;
+
+							here = head->pipe;
+							while (here != NULL)
+							{
+								cont = 0;
+								next = here->next;
+								free (here->cmd);
+								while (here->arg[cont])
+									free(here->arg[cont++]);		
+								free(here->arg);
+								free(here);
+								here = next;
+
 							}
+							head->pipe = NULL;
+
+						}
 					if (src->foundred && !src->foundpipe)
 					{	
 						int id = fork();
@@ -303,6 +319,9 @@ void	ms_loop(t_source *src, char **envp)
 		// free(termc);
 		// freeList(head);
 		free(head->cmd);
+		int n = 0;
+		while (head->arg[n])
+			free(head->arg[n++]);
 		free(head->arg);
 		free(head);
 		int p = 0;

@@ -162,6 +162,7 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 
 	c = 0;
 	i = 0;
+	// head->pipe = NULL;// (t_pipe *) malloc(sizeof(t_pipe));
 	while (c < src->npipe)
 	{
 		// printf("Here\n");
@@ -170,22 +171,15 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 		
 		tmp = get_last_node_p(head->pipe);
 		if (tmp == NULL)
-				head->pipe = new_pipe(pipe, src, head);
+				{
+					write(2, "made it IF\n", 11);
+					head->pipe = new_pipe(pipe, src, head);
+				}
 		else
+		{	write(2, "made it ELSE\n", 13);
 			tmp->next = new_pipe(pipe, src, head);
+		}
 	
-	
-	
-		// if (head->pipe == NULL)
-		// {
-		// 				// printf("One\n");
-		// 	head->pipe = new_pipe(pipe, src, head);
-		// 	tmp = head->pipe;
-		// }
-		// else
-		// {
-		// 	tmp->next = new_pipe(pipe, src, head); 
-		// }
 		c++;
 	}
 
@@ -224,9 +218,10 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 		i++;
 	}
 	free(arg);
-	p = head->pipe;
+	// p = head->pipe;
 	if (src->foundpipe == 1)
 	{
+		head->pipe = NULL;
 		loop_pipe(src, envp, head, pipe);
 	}
 }

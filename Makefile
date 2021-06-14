@@ -13,7 +13,7 @@ all : $(NAME)
 
 $(NAME):
 	# @$(CC) $(SRC) $(GN) $(LIB) -g -lcurses && valgrind  --leak-check=full --show-leak-kinds=all ./a.out
-	@$(CC) $(SRC) $(GN) $(LIB) -g -ltermcap -fsanitize=address && ./a.out
+	@$(CC) $(SRC) $(GN) $(LIB) -g -ltermcap -fsanitize=address 
 	
 clean :
 	rm -fr a.out a.out.dSYM
