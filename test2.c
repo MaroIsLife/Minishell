@@ -193,7 +193,9 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 						g_global.ret = (char*)(*tmp)->data;
 					}
 					if ((*tmp)->data != NULL)
-						write(1, (*tmp)->data, strlen((*tmp)->data));
+					{
+			
+						write(1, (*tmp)->data, strlen((*tmp)->data));}
 				}
 			termc->edit = 0;
 			// else
