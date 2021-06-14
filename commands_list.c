@@ -213,7 +213,7 @@ int    ft_execute(char *cmd, char **args,t_source *src, char **envp)
 					free(varg[i++]);
 				free(varg);
 				free(path);
-				exit(0);
+				exit(-1);
 			}
 		}
 		else
