@@ -82,6 +82,7 @@ int spawn_proc2 (int in,  int *out, t_pipe *tmp, t_source *src)
           red_open_pipe(tmp->pipef);
         }
      command_list(tmp->cmd, tmp->arg, src);
+
      exit(0);
     }
   return pid;
@@ -128,6 +129,7 @@ if (x == 0)
          red_open_pipe(tmp->pipef);
         }
     command_list(tmp->cmd, tmp->arg, src);
+
     exit(0);
     } 
 int ret; 
