@@ -5,70 +5,70 @@
 # include <string.h>
 # include "minishell.h"
 
-// 	void freeList(t_node* head)
-// 	{
-// 	t_node* tmp;
-// 		char *c_tmp;
-// 		int i;
+	void freeList(t_node* head)
+	{
+	t_node* tmp;
+		char *c_tmp;
+		int i;
 
-// 	while (head != NULL)
-// 		{
-// 		tmp = head;
-// 		head = head->next;
-// 		free(tmp->cmd);
-// 			i = 0;
-// 		if (tmp->arg)
-// 		{
-// 			while (tmp->arg[i])
-// 				free(tmp->arg[i++]);}
-// 			free(tmp->arg);
-// 		}
-// 		free(tmp);
+	while (head != NULL)
+		{
+		tmp = head;
+		head = head->next;
+		free(tmp->cmd);
+			i = 0;
+		if (tmp->arg)
+		{
+			while (tmp->arg[i])
+				free(tmp->arg[i++]);}
+			free(tmp->arg);
+		}
+		free(tmp);
 
-// 	}
-// int num_of_node(t_pipe *tmp)
-// {
-// 	int i;
+	}
+int num_of_node(t_pipe *tmp)
+{
+	int i;
 
-// 	i = 0;
-// 	while (tmp)
-// 	{
-// 		if (tmp->next == NULL)
-// 			return (i);
-// 		tmp = tmp->next;
-// 		i++;
-// 	}
-// 	return (i);
-// }
-// void freeList_pipe(t_pipe* head)
-// {
-//  	t_pipe* tmp;
-// 	char *c_tmp;
-// 	int i;
-// 	int n = num_of_node(head);
+	i = 0;
+	while (tmp)
+	{
+		if (tmp->next == NULL)
+			return (i);
+		tmp = tmp->next;
+		i++;
+	}
+	return (i);
+}
+void freeList_pipe(t_pipe* head)
+{
+ 	t_pipe* tmp;
+	char *c_tmp;
+	int i;
+	int n = num_of_node(head);
 
-// 	// printf ("===========%d=========\n", n);
-// 	i = 0;
-//    while (head != NULL)
-//     {
-// 		write (2, "how here\n", 9);
-// 	   tmp = head;
-//        head = head->next;
-//        free(tmp->cmd);
-// 	   if (tmp->pipef)
-// 	   	free(tmp->pipef);
+	// printf ("===========%d=========\n", n);
+	i = 0;
+   while (head != NULL)
+    {
+		write (2, "how here\n", 9);
+	   tmp = head;
+       head = head->next;
+       free(tmp->cmd);
+	   if (tmp->pipef)
+	   	free(tmp->pipef);
 	
-// 	if (tmp->arg)
-// 	{
-// 		while (tmp->arg[i])
-// 			free(tmp->arg[i++]);}
-// 		free(tmp->arg);
-//     }
+	if (tmp->arg)
+	{
+		while (tmp->arg[i])
+			free(tmp->arg[i++]);}
+		free(tmp->arg);
+    }
 
-// 	free(tmp);
+	free(tmp);
 
 
-// }
+}
 
 
 
@@ -273,7 +273,6 @@ void	ms_loop(t_source *src, char **envp)
 			g_global.return_value = 0;
 			if (src->foundred == 0 && src->foundpipe == 0)
 				{
-					
 					command_list(head->cmd ,head->arg,  src);
 					}
 			else
@@ -281,7 +280,9 @@ void	ms_loop(t_source *src, char **envp)
 					if (src->foundpipe == 1)
 						{
 							fork_pips (src->npipe + 1, head, src);
-
+							// if (head->pipe)
+							// 	freeList_pipe(head->pipe);
+								// write (2, "here WE ARE\n", 12);
 							
 							}
 					if (src->foundred && !src->foundpipe)
