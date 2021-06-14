@@ -110,7 +110,7 @@ char	**ft_valide_args(char *cmd, char **args, int count)
 	varg = malloc (sizeof(char*) * (count + 2));
 	varg[0] = ft_strdup(cmd);
 	while (args && args[i] != NULL)
-		varg[b++] = args[i++];
+		varg[b++] = ft_strdup(args[i++]);
 	varg[b] = NULL;
 	return (varg);
 }

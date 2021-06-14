@@ -43,7 +43,7 @@ char    *ft_strjoinchar(char *s, char c)
 	}
     str[i] = c;
     str[i + 1] = '\0';
-    free(s);
+    // free(s);
     return (str);
 }
 
@@ -105,7 +105,7 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 		}
 		else if (d >= 32 && d < 127)
 		{
-			g_global.ret = ft_strjoinchar(g_global.ret, d);
+			g_global.ret = ft_strdup(ft_strjoinchar(g_global.ret, d));
 			write(1, &d ,1);
 		}
 		else if (d == KEY_REMOVE)
