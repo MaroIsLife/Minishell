@@ -12,7 +12,7 @@ int find_space(t_source *src, int i)
 	return (c);
 }
 
-void init_arg(t_node *head, char **arg)
+void init_arg(t_node *head, char **arg, t_source *src)
 {
 	int b;
 	int i;
@@ -22,18 +22,17 @@ void init_arg(t_node *head, char **arg)
 
 	while (arg[i] != NULL)
 	{
-		// if (arg[i][0] != '\0')
-		b++;
+		if (arg[i][0] != 127)
+			b++;
 		i++;
 	}
-
 		head->arg = malloc((b + 1) * sizeof(char *));
 		i = 0;
 		b = 0;
 		while (arg[i] != NULL)
 		{
-			// if (arg[i][0] != '\0')
-			head->arg[b++] = ft_strdup(arg[i]);
+			if (arg[i][0] != 127)
+				head->arg[b++] = ft_strdup(arg[i]);
 			i++;
 		}
 		head->arg[b] = NULL;	
@@ -48,8 +47,8 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	b = 0;
 	while (arg[i] != NULL)
 	{
-		// if (arg[i][0] != '\0')
-		b++;
+		if (arg[i][0] != '\0')
+			b++;
 		i++;
 	}
 	p->arg = malloc((b + 1) * sizeof(char *));
@@ -57,8 +56,8 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	b = 0;
 	while (arg[i] != NULL)
 	{
-		// if (arg[i][0] != '\0')
-		p->arg[b++] = ft_strdup(arg[i]);
+		if (arg[i][0] != '\0')
+			p->arg[b++] = ft_strdup(arg[i]);
 		i++;
 	}
 	p->arg[b] = NULL;
@@ -200,13 +199,14 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 	src->dquotes = 0;
 	src->squotes = 0;
 	arg = malloc((count + 1) * sizeof(char *));
+	src->tmp2 = 0;
 	while (i < count)
 	{
 		arg[i] = find_argument(pipe[src->c], head, src, envp);
 		i++;
 	}
 	arg[i] = NULL;
-	init_arg(head, arg);
+	init_arg(head, arg, src);
 	i = 0;
 	while (arg[i] != NULL)
 	{
