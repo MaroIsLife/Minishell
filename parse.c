@@ -47,7 +47,7 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	b = 0;
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != '\0')
+		if (arg[i][0] != 127)
 			b++;
 		i++;
 	}
@@ -56,7 +56,7 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	b = 0;
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != '\0')
+		if (arg[i][0] != 127)
 			p->arg[b++] = ft_strdup(arg[i]);
 		i++;
 	}
