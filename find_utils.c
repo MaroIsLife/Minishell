@@ -69,6 +69,7 @@ int		finding_aslash(char *s, int i, t_source *src)
 			src->aslash = 0; //convert to return 0 or 1 for norminette?
 	return 0;
 }
+
 int		finding_aslash2(char *s, int i, t_source *src)
 {
 		if (s[i] == '\\' && s[i + 1] == '\'' && src->dquotes == 1)
