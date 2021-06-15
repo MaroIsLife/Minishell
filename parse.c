@@ -21,6 +21,10 @@ void init_arg(t_node *head, char **arg, t_source *src, int tmp2)
 	i = 0;
 	b = 0;
 
+	if(tmp2 == 1)
+		c = 0;
+	else
+		c = 127;
 	while (arg[i] != NULL)
 	{
 		if (arg[i][0] != c && tmp2 == 0)
@@ -39,16 +43,21 @@ void init_arg(t_node *head, char **arg, t_source *src, int tmp2)
 		head->arg[b] = NULL;	
 }
 
-void init_arg_pipe(char **arg, t_pipe *p)
+void init_arg_pipe(char **arg, t_pipe *p, int tmp2)
 {
 	int b;
 	int i;
+	char c;
 
 	i = 0;
 	b = 0;
+	if(tmp2 == 1)
+		c = 0;
+	else
+		c = 127;
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != 0)
+		if (arg[i][0] != c && tmp2 == 0)
 			b++;
 		i++;
 	}
@@ -57,7 +66,7 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	b = 0;
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != 0)
+		if (arg[i][0] != c && tmp2 == 0)
 			p->arg[b++] = ft_strdup(arg[i]);
 		i++;
 	}
@@ -132,6 +141,7 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 		arg = malloc((count + 1) * sizeof(char *));
 		src->ispipered = 1;
 		src->fd_r_c = 0;
+		src->tmp2 = 0;
 		while (i < count)
 		{
 			arg[i] = find_argument(pipe[src->c], head, src, src->our_envp);
@@ -140,7 +150,7 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 		arg[i] = NULL;
 		if (src->fd_r_c == 50 && tmp->pipef != NULL)
 			tmp->pipef->fd_r_c = 50;
-		init_arg_pipe(arg, tmp);
+		init_arg_pipe(arg, tmp, src->tmp2);
 	i = 0;
 	while (arg[i])
 		free(arg[i++]);
