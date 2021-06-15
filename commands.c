@@ -310,46 +310,87 @@ int ft_alloc_count(char **envp, char **args)
 	return (i);
 }
 
+void free2DArray(char** array){
+	int i = 0;
+	while (array[i] != NULL)
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
 
 void 	ft_expn_add(char *add, t_source *src ,char **our_envp, char **args)
 {
 	int id;
-
+	char **tmp1;
+	char **tmp2;
 	
 	id = found_eq(add);
 	if (id)
 		{
+			tmp1 = src->our_envp;
+			tmp2 = src->export;
 			src->our_envp = our_realloc(src->our_envp, sizeof(char*) * (ft_alloc_count(src->our_envp,args) + 2) ); //here
 			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, args) + 2) ); //here
 			src->our_envp[src->lastenv++] = ft_strdup(add);
 			src->export[src->lastexp++] = ft_strdup(add);
 			src->export[src->lastexp] = NULL;
 			src->our_envp[src->lastenv] = NULL;
+			int i = 0;
+			while (tmp1[i] != NULL)
+			{
+				free(tmp1[i]);
+				i++;
+			}
+			free(tmp1);
+			i = 0;
+			while (tmp2[i] != NULL)
+			{
+				free(tmp2[i]);
+				i++;
+			}
+			free(tmp2);
+
+			// free2DArray(tmp1);
+			// free2DArray(tmp2);
 		}
 	else 
 		{
+			tmp1 = src->export;
 			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, args) + 2) ); //here
 			src->export[src->lastexp++] = ft_strdup(add);
 			src->export[src->lastexp] = NULL;
-
+			// free2DArray(tmp1);
+			int i = 0;
+			while (tmp1[i] != NULL)
+			{
+				free(tmp1[i]);
+				i++;
+			}
+			free(tmp1);
 		}
 }
 
-void	ft_expn_chng(char *add, t_source *src ,char **envp)
+void	ft_expn_chng(char *add, t_source *src ,char **envp, char **args)
 {
 	int i;
-
+	char **tmp;
+	char *s_tmp;
+	
 	i = 0;
 	while (src->export[i] != NULL)
 	{
 		char *see = src->export[i];
 		// if (ft_strncmp(add, src->export[i], ft_strlen_eq(add)) == 0)
-			if (is_equal(add, src->export[i]))
+		if (is_equal(add, src->export[i]))
 		{
-			// src->export[i] = NULL;
-			//change only if there is an equle
 			if (found_eq(add))
-				src->export[i] = ft_strdup(add);
+				{
+					s_tmp = src->export[i];
+					src->export[i] = ft_strdup(add);
+					free (s_tmp);
+					}
 			// src->our_envp[src->lastenv++] = ft_strdup(add);
 			if (i == src->lastexp)
 				src->export[++i] = NULL;
@@ -362,9 +403,11 @@ void	ft_expn_chng(char *add, t_source *src ,char **envp)
 			replace_env(envp, src, add);
 		else
 			{
-				src->our_envp = our_realloc(src->our_envp, sizeof(char*) * (arg_counter(src->our_envp) + 2) );
+				tmp = src->our_envp;
+				src->our_envp = our_realloc(src->our_envp, sizeof(char*) * (ft_alloc_count(src->our_envp, args) + 2) );
 				src->our_envp[src->lastenv++] = ft_strdup(add);
 				src->our_envp[src->lastenv] = NULL;
+				// free2DArray(tmp);
 			}
 
 	}
@@ -385,13 +428,12 @@ void	ft_set_enxp(char **args, t_source *src, char **envp)
 		int n = check_exsyn(args[i]);
 		if (n)
 			{
-				printf ("[%d]\n", n);
 				write (2, "not a valid identifier\n", 23);
 				i++;
 				continue ;
 			}
 		if (ft_search(src->export, args[i]))
-			ft_expn_chng(args[i], src, src->our_envp);
+			ft_expn_chng(args[i], src, src->our_envp, args);
 		else
 			ft_expn_add(args[i], src, src->our_envp, args);
 		i++;
