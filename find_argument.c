@@ -22,8 +22,8 @@ int		count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 	int i;
 	int jump;
 	int count;
-	i = check_offset (src->offset - 1, s);
-	// i = src->offset - 1;
+	// i = check_offset (src->offset - 1, s);
+	i = src->offset;
 	count = 0;
 	jump = 0;
 	if (s[0] == '\n')
@@ -85,22 +85,28 @@ char	*find_file_name(int **i, char *s, t_source *src, t_node *head)
 	}
 	if (s[**i] == '>' && s[**i + 1] == '>')
 	{
-		if (src->fd_r_c != 50)
+		if (src->fd_r_c == 2) // src.fdrc == 2 if < comes first and fdrc == 50 if > comes first
+			src->fd_r_c = 50;
+		else if (src->fd_r_c != 50)
 			src->fd_r_c = 1;
 		src->p->c = 94;
 		(**i) = (**i) + 2;
 	}
 	else if (s[**i] == '>')
 	{
-		if (src->fd_r_c != 50)
+		if (src->fd_r_c == 2)
+			src->fd_r_c = 50;
+		else if (src->fd_r_c != 50)
 			src->fd_r_c = 1;
 		(**i)++;
 		src->p->c = '>';
 	}
 	else if (s[**i] == '<')
 	{
-		if(src->fd_r_c == 1)
+		if (src->fd_r_c == 1)
 			src->fd_r_c = 50;
+		else if (src->fd_r_c == 0)
+			src->fd_r_c = 2;
 		(**i)++;
 		src->p->c = '<';
 	}
@@ -172,7 +178,6 @@ char	*find_file_name(int **i, char *s, t_source *src, t_node *head)
 	// 		tmp = new_file(src->p->filename, src);
 	// 	}
 	// }
-	// printf("%s\n",src->p->filename);
 	init_filee(src);
 	src->allocate = 1;
 	return (0);
@@ -183,8 +188,8 @@ int		find_argument_three(char *s, t_source *src, int *i, t_node *head)
 {
 	if ((s[(*i)] == '>' || s[(*i)] == '<') && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
 	{
-		find_file_name(&i, s, src, head);
 		src->tmp2 = 1;
+		find_file_name(&i, s, src, head);
 		return 1 ; // continue;
 	}
 	else if (s[(*i)] == ' ')
@@ -247,15 +252,13 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 {
 	int		i;
 	char	*re;
-	i = check_offset (src->offset, s);
-	// i = src->offset;
-	// here!!!!!!!!!!!
+	// i = check_offset (src->offset, s);
+	i = src->offset;
 	//  i = 0;
 	while (s[i] == ' ')
 		i++;
 	src->re = malloc((4096) * sizeof(char));
 	src->re_b = 0;
-	src->tmp2 = 0;
 	i = find_argument_two(s, src, i, head);
 	if (src->dquotes == 1 || src->squotes == 1 || src->aslash == 1)
 	{
@@ -264,12 +267,14 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 	}
 	src->offset = i;
 	// printf("Offset Arg: %d\n",src->offset);
-	if (src->tmp2 == 1)
-	{
-		src->re[src->re_b++] = 127;
+	// if (src->tmp2 == 0)
+	// {
+	// 	src->re[src->re_b++] = 127;
+	// 	src->re[src->re_b] = '\0';
+	// }
+	// else
+	// {
 		src->re[src->re_b] = '\0';
-	}
-	else
-		src->re[src->re_b] = '\0';
+	// }
 	return ((src->re));
 }

@@ -55,6 +55,7 @@ void	red_open(t_node *head, t_source *src)
 	while (1)
 	{
 		// puts(p->filename);
+	// printf("Filename: %s\n",p->filename);
 	if (p->c == 94)
 		fd = open(p->filename, O_RDWR | O_APPEND | O_CREAT, 0777);
 	else if (p->c == '>')
@@ -78,8 +79,9 @@ void	red_open(t_node *head, t_source *src)
 	}
 	if (src->fd_r_c == 50)
 	{
-		dup2(fd, 1);
+		// printf("Made it here 50\n");
 		dup2(fd2, 0);
+		dup2(fd, 1);
 	}
 	else if (p->c == 94 || p->c == '>')
 		dup2(fd, 1);
@@ -87,6 +89,7 @@ void	red_open(t_node *head, t_source *src)
 		dup2(fd2, 0);
 
 	close(fd);
+	close(fd2);
 	//Close fd2 too
 }
 int  calc_args (char **args)
