@@ -12,17 +12,18 @@ int find_space(t_source *src, int i)
 	return (c);
 }
 
-void init_arg(t_node *head, char **arg, t_source *src)
+void init_arg(t_node *head, char **arg, t_source *src, int tmp2)
 {
 	int b;
 	int i;
+	char c;
 
 	i = 0;
 	b = 0;
 
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != 127)
+		if (arg[i][0] != c && tmp2 == 0)
 			b++;
 		i++;
 	}
@@ -31,7 +32,7 @@ void init_arg(t_node *head, char **arg, t_source *src)
 		b = 0;
 		while (arg[i] != NULL)
 		{
-			if (arg[i][0] != 127)
+			if (arg[i][0] != c && tmp2 == 0)
 				head->arg[b++] = ft_strdup(arg[i]);
 			i++;
 		}
@@ -47,7 +48,7 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	b = 0;
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != 127)
+		if (arg[i][0] != 0)
 			b++;
 		i++;
 	}
@@ -56,7 +57,7 @@ void init_arg_pipe(char **arg, t_pipe *p)
 	b = 0;
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != 127)
+		if (arg[i][0] != 0)
 			p->arg[b++] = ft_strdup(arg[i]);
 		i++;
 	}
@@ -194,7 +195,7 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 	free(src->ra);
 	// printf("Cmd: %s\n",head->cmd);
 	count = count_argument(pipe[src->c], src->offset, src);
-	// printf("Count: %d\n",count);
+	// printf("Arg Count: %d\n",count);
 	src->count = count;
 	src->dquotes = 0;
 	src->squotes = 0;
@@ -203,10 +204,12 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 	while (i < count)
 	{
 		arg[i] = find_argument(pipe[src->c], head, src, envp);
+		// printf("arg[%d]: %s\n",i, arg[i]);
 		i++;
 	}
 	arg[i] = NULL;
-	init_arg(head, arg, src);
+	// printf("tmp2 %d\n",src->tmp2);
+	init_arg(head, arg, src, src->tmp2);
 	i = 0;
 	while (arg[i] != NULL)
 	{

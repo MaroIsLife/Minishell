@@ -118,6 +118,5 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	i = find_command_two(s, src, i,head);
 	src->ra[src->ra_b] = '\0';
 	src->offset = i;
-	// printf("Offset: %d\n",src->offset);
 	return (ft_strdup(src->ra));
 }
