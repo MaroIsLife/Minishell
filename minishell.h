@@ -108,6 +108,13 @@ typedef struct s_node {
     struct s_node	*next;
 }   t_node;
 
+typedef struct s_filetmp {
+	int			b;
+	char		*tmp;
+	int			j;
+	char		*rev;
+}		t_filetmp;
+
 
 typedef struct s_global {
 	int		fsignal;
