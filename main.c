@@ -310,6 +310,8 @@ void	ms_loop(t_source *src, char **envp)
 							red_open(head, src);
 							command_list(head->cmd ,head->arg, src);
 						exit(0);
+					
+						
 						}
 						wait(&id);
 					}
@@ -318,11 +320,23 @@ void	ms_loop(t_source *src, char **envp)
 		}
 		// free(termc);
 		// freeList(head);
+			t_filename *here;
+			t_filename *next;
+
+			here = head->first_filename;
+			while (here != NULL)
+			{
+				next = here->next;
+				free(here->filename);
+				free(here);
+				here = next;
+			}
 		free(head->cmd);
 		int n = 0;
 		while (head->arg[n])
 			free(head->arg[n++]);
 		free(head->arg);
+	
 		free(head);
 		int p = 0;
 		while (pipes[p] != NULL)
