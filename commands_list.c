@@ -250,8 +250,11 @@ void command_list(char *cmd, char **args,t_source *src)
 	/*
 	insted of Sending Head node only send double and single array for pips
 	*/
+	char *home;
+
+	home = where_home(src);
 	if (ft_strncmp(cmd, "cd", 2) == 0 && cmd[2] == '\0')
-		ft_cd(args, src, where_home(src));
+			ft_cd(args, src, home);
 	else if (ft_strncmp(cmd, "echo",4) == 0 && cmd[4] == '\0')
 		ft_echo(args);
 	else if (ft_strncmp(cmd, "env", 3) == 0 && cmd[3] == '\0')
@@ -270,4 +273,5 @@ void command_list(char *cmd, char **args,t_source *src)
 	}
 	else
 		ft_execute(cmd, args, src, src->our_envp);
+	free(home);
 }

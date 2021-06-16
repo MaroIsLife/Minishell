@@ -63,8 +63,6 @@ char		*ft_strjoin(char *dst, char *src)
 		b++;
 	}
 	p[i] = '\0';
-	// free(dst);
-	// free(src);
 	return (p);
 }
 

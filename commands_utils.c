@@ -43,8 +43,9 @@ void set_old_env(t_source *src, char * pwd)
 		{
 			check = 1;
 			free(src->our_envp[i]);
+			src->our_envp[i] = NULL;
 			src->our_envp[i] = ft_strjoin("OLD", pwd);
-			set_old_env(src, src->our_envp[i]);
+			// set_old_env(src, src->our_envp[i]);
 			break ;
 		}
 		i++;
@@ -66,6 +67,7 @@ void set_old_pwd(t_source *src , char *pwd)
 		{
 			
 			free(src->export[i]);
+			src->export[i] = NULL;
 			src->export[i] = ft_strjoin("OLD", pwd);
 			set_old_env(src, src->export[i]);
 			break ;

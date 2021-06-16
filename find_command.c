@@ -23,15 +23,15 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	temp[b] = '\0';
 	b = 0;
 	length = ft_strlen(temp);
-	while (envp[c] != NULL)
+	while (src->our_envp[c] != NULL)
 	{
 		// if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
 		if (ft_strncmp(src->our_envp[c], temp, length) == 0 && src->our_envp[c][length] == '=')
 		{
-			while (envp[c][b] != '=' && envp[c][b] != '\0')
+			while (src->our_envp[c][b] != '=' && src->our_envp[c][b] != '\0')
 				b++;
-				while (envp[c][++b] != '\0')
-					src->ra[src->ra_b++] = envp[c][b];
+				while (src->our_envp[c][++b] != '\0')
+					src->ra[src->ra_b++] = src->our_envp[c][b];
 				src->ra[src->ra_b] = '\0';
 				break ;
 		}
@@ -39,6 +39,7 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	}
 		// printf("MAde it here %s\n",src->ra);
 	free(temp);
+	temp = NULL;
 	return (i);
 }
 
