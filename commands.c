@@ -47,7 +47,8 @@ int ft_strlen_eq(char *src)
 void	replace_env(char **envp, t_source *src, char *value)
 {
 	int i;
-
+	char *tmp;
+	
 	i = 0;
 	while (src->our_envp[i] != NULL)
 	{
@@ -56,7 +57,9 @@ void	replace_env(char **envp, t_source *src, char *value)
 
 		if (ft_strncmp(value, src->our_envp[i], ft_strlen_eq(value)) == 0)
 			{
+				tmp = src->our_envp[i];
 				src->our_envp[i] = ft_strdup(value);
+				free (tmp);
 				if (i == src->lastenv)
 					src->our_envp[i] = NULL;
 			}
