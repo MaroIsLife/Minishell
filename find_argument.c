@@ -158,24 +158,6 @@ int		find_file_name(int **i, char *s, t_source *src, t_node *head)
 			src->p->filename[b++] = s[(**i)++];
 	}
 	src->p->filename[b] = '\0';
-	// if (src->npipe > 0 && src->foundred == 1)
-	// {
-		
-	// 	// printf("Here\n");
-	// 	if (src->ptemp->pipef == NULL)
-	// 		src->ptemp->pipef = new_file(src->p->filename, src);
-	// 	else
-	// 	{
-	// 		t_filename	*tmp = src->ptemp->pipef;
-	// 		while (1)
-	// 		{
-	// 				if (!tmp || tmp->next == NULL)
-	// 					break ;
-	// 			tmp = tmp->next;
-	// 		}
-	// 		tmp = new_file(src->p->filename, src);
-	// 	}
-	// }
 	init_filee(src);
 	src->allocate = 1;
 	return (1);
@@ -294,15 +276,6 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 		printf("Dquotes: %d, Squotes: %d, Aslash: %d\n",src->dquotes,src->squotes,src->aslash);
 	}
 	src->offset = i;
-	// printf("Offset Arg: %d\n",src->offset);
-	// if (src->tmp2 == 0)
-	// {
-	// 	src->re[src->re_b++] = 127;
-	// 	src->re[src->re_b] = '\0';
-	// }
-	// else
-	// {
-		src->re[src->re_b] = '\0';
-	// }
+	src->re[src->re_b] = '\0';
 	return ((src->re));
 }

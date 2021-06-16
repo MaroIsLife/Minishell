@@ -25,7 +25,6 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	length = ft_strlen(temp);
 	while (src->our_envp[c] != NULL)
 	{
-		// if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
 		if (ft_strncmp(src->our_envp[c], temp, length) == 0 && src->our_envp[c][length] == '=')
 		{
 			while (src->our_envp[c][b] != '=' && src->our_envp[c][b] != '\0')
@@ -37,7 +36,6 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 		}
 		c++;
 	}
-		// printf("MAde it here %s\n",src->ra);
 	free(temp);
 	temp = NULL;
 	return (i);
@@ -81,7 +79,7 @@ int		find_command_three(char *s, t_source *src, t_node *head, int *i)
 			while (s[(*i)] == '>' || s[(*i)] == '<') //TEST THIS WITH ls>out1>out2 or >out1>out2 ls
 				find_file_name(&i, s, src, head);
 			(*i)++;
-			return 1 ;
+			return (1);
 		}
 		else if (s[(*i)] == '\\' && src->aslash == 1)
 			find_command_four(s, src, &i, 3);
