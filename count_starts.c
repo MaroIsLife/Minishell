@@ -2,6 +2,8 @@
 
 int		count_start_two(char *s, t_source *src, int *start, int **i)
 {
+	char *tmp;
+
 	finding_quotes(s, ++(*start), src);
 	if (src->squotes == 1 || src->dquotes == 1)
 	{
@@ -11,7 +13,9 @@ int		count_start_two(char *s, t_source *src, int *start, int **i)
 	}
 	while (s[*start] != '\0' && s[*start] != '$' && s[*start] != ' ')
 	{
-		src->ctmp = ft_strdup(ft_strjoinchar(src->ctmp, s[*start]));
+		tmp = src->ctmp;
+		src->ctmp = ft_strjoinchar(src->ctmp, s[*start]);
+		free(tmp);
 		(*start)++;
 	}
 	if (get_x_env(src->our_envp, src, src->ctmp) == 0)
@@ -24,6 +28,7 @@ int		count_start_two(char *s, t_source *src, int *start, int **i)
 		src->dollarused = 1;
 		return (1);
 	}
+	// free(src->ctmp);
 	return (0);
 }
 
@@ -64,5 +69,6 @@ int		count_start(char *s, t_source *src, int start, int *i)
 	}
 	src->ra_b = 0;
 	free(src->ctmp);
+	src->ctmp = NULL;
 	return (start);
 }
