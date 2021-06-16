@@ -124,7 +124,7 @@ t_global g_global;
 //Parsing
 void	init_parse(t_source *src, t_node *head, char **envp, char **pipe);
 char	*find_command(char *s, t_node *head, t_source *src, char **envp);
-char	*find_file_name(int **i, char *s, t_source *src, t_node *head);
+int		find_file_name(int **i, char *s, t_source *src, t_node *head);
 char	*find_argument(char *s, t_node *head, t_source *src, char **envp);
 int		count_argument(char *s, int offset, t_source *src);
 void	find_for_split(char *cmd, t_source *src);

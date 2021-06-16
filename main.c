@@ -1,4 +1,4 @@
-# include <unistd.h>
+#include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <errno.h>
@@ -307,7 +307,7 @@ void	ms_loop(t_source *src, char **envp)
 						int ge_id;
 						if (id == 0)
 						{
-						red_open(head, src);
+							red_open(head, src);
 							command_list(head->cmd ,head->arg, src);
 						exit(0);
 						}

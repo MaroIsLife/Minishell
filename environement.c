@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int		ft_isdollar(int c)
+int	ft_isdollar(int c)
 {
 	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_')
 	{

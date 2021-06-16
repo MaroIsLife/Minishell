@@ -54,10 +54,8 @@ int		finding_aslash(char *s, int i, t_source *src)
 {
 		if (s[i] == '\\' && s[i + 1] == '\'' && src->dquotes == 1)
 			src->aslash = 0;
-		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'' || s[i + 1] == '$' || s[i + 1] == '>' || s[i + 1] == '<' || s[i + 1] == ';') && src->aslash == 0 && src->squotes == 0)
-		{
+		else if (s[i] == '\\' && (s[i + 1] == '\"' || s[i + 1] == '\\' || s[i + 1] == '\'' || s[i + 1] == '$' || s[i + 1] == '>' || s[i + 1] == '<' || s[i + 1] == ';' || s[i + 1] == '|') && src->aslash == 0 && src->squotes == 0)
 			src->aslash = 1;
-		}
 		else if (s[i] == '\\' && (src->dquotes == 0 && src->squotes == 0))
 		{
 			if (ft_isascii(s[i + 1]) == 0)
@@ -121,7 +119,6 @@ void	find_for_split(char *cmd, t_source *src)
 
 	while (cmd[i] != '\0')
 	{
-		finding_quotes_cmd(cmd,i, src);
 		if (cmd[i] == '|' && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
 		{
 			src->foundpipe = 1;
@@ -132,6 +129,7 @@ void	find_for_split(char *cmd, t_source *src)
 			src->foundred = 1;
 			src->nred++;
 		}
+		finding_quotes_cmd(cmd,i, src);
 		i++;
 	}
 	if (src->dquotes == 1 || src->squotes == 1 || src->aslash == 1)

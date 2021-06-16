@@ -10,7 +10,7 @@ int		arg_if_space(char *s,int ***i, t_source *src)
 int check_offset (int offset, char *s)
 {
 	int i = 0;
-
+	
 	while (s[i] == ' ')
 		i++;
 	if (s[i] == '>' || s[i] == '<')
@@ -70,8 +70,7 @@ int		count_argument(char *s, int offset, t_source *src) //CONVERT TO SPLIT?
 }
 
 
-
-char	*find_file_name(int **i, char *s, t_source *src, t_node *head)
+int		find_file_name(int **i, char *s, t_source *src, t_node *head)
 {
 	int			b;
 
@@ -179,7 +178,7 @@ char	*find_file_name(int **i, char *s, t_source *src, t_node *head)
 	// }
 	init_filee(src);
 	src->allocate = 1;
-	return (0);
+	return (1);
 }
 
 void	find_argument_five(char *s, t_source *src, int ***i, int option)
@@ -216,12 +215,13 @@ int		find_argument_four(char *s, t_source *src, int **i, int option)
 			arg_if_space(s, &i, src);
 			return (0);
 		}
-		else if (s[(**i)] == ' ' && (src->dquotes == 0 || src->squotes == 0) && (s[(**i) + 1] != '>' && s[(**i) + 1] != '<'))
+		else if (s[(**i)] == ' ' && (src->dquotes == 0 || src->squotes == 0)
+			&& (s[(**i) + 1] != '>' && s[(**i) + 1] != '<'))
 			return (2);
 	}
 	else if (option == 4)
 	{
-		if (src->squotes == 1)	
+		if(src->squotes == 1)	
 		{
 			src->re[src->re_b++] = s[(**i)];
 			return (0);
@@ -232,28 +232,28 @@ int		find_argument_four(char *s, t_source *src, int **i, int option)
 		return (0);
 }
 
-
 int		find_argument_three(char *s, t_source *src, int *i, t_node *head)
 {
-	if ((s[(*i)] == '>' || s[(*i)] == '<') 
-	&& src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
-	{
-		find_file_name(&i, s, src, head);
-		return (1) ; // continue;
-	}
+	if ((s[(*i)] == '>' || s[(*i)] == '<')
+		&& src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
+		return (find_file_name(&i, s, src, head));
 	else if (s[(*i)] == ' ')
-		return(find_argument_four(s, src, &i, 3));
-	else if ((s[(*i)] == '|' || s[(*i)] == ';') && (src->dquotes == 0 && src->aslash == 0))
-		return (find_argument_four(s,src, &i, 4));
+		return (find_argument_four(s, src, &i, 3));
+	else if ((s[(*i)] == '|' || s[(*i)] == ';')
+		&& (src->dquotes == 0 && src->aslash == 0))
+		return (find_argument_four(s, src, &i, 4));
 	else if ((s[(*i)] == '\"') && src->squotes == 0 && src->aslash == 0)
 		finding_quotes(s, (*i), src);
 	else if ((s[(*i)] == '\'') && src->dquotes == 0 && src->aslash == 0)
 		finding_quotes(s, (*i), src);
-	else if (s[(*i)] == '$' && src->aslash == 0 && (ft_isalpha(s[(*i) + 1]) == 1 || s[(*i) + 1] == '?') && src->squotes == 0)
+	else if (s[(*i)] == '$' && src->aslash == 0 && (ft_isalpha(s[(*i) + 1]) == 1
+			|| s[(*i) + 1] == '?') && src->squotes == 0)
 		(*i) = get_env_value_arg(s, src->our_envp, src, (*i)) - 1;
 	else if (s[(*i)] == '\\' && src->aslash == 0)
 		find_argument_four(s, src, &i, 1);
-	else if ((s[(*i)] == '\"' || s[(*i)] == '\'' || s[(*i)] == '\\' || s[(*i)] == ';' || s[(*i)] == '|' || s[(*i)] == '$' || s[(*i)] == '>' || s[(*i)] == '<') && src->aslash == 1)
+	else if ((s[(*i)] == '\"' || s[(*i)] == '\'' || s[(*i)] == '\\' || s[(*i)]
+			 == ';' || s[(*i)] == '|' || s[(*i)] == '$' || s[(*i)] == '>'
+			|| s[(*i)] == '<') && src->aslash == 1)
 		find_argument_four(s, src, &i, 2);
 	else
 		src->re[src->re_b++] = s[(*i)];
@@ -275,7 +275,6 @@ int		find_argument_two(char *s, t_source *src, int i, t_node *head)
 	}
 	return (i);
 }
-
 
 char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 {
