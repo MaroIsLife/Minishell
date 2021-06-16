@@ -79,12 +79,13 @@ void	red_open(t_node *head, t_source *src)
 	}
 	if (src->fd_r_c == 50)
 	{
-		// printf("Made it here 50\n");
 		dup2(fd2, 0);
 		dup2(fd, 1);
 	}
 	else if (p->c == 94 || p->c == '>')
+	{
 		dup2(fd, 1);
+	}
 	else if (p->c == '<')
 		dup2(fd2, 0);
 
@@ -97,7 +98,6 @@ int  calc_args (char **args)
 	int i;
 
 	i  = 0;
-	
 	while (args && args[i] != NULL)
 		i++;
 	return (i);

@@ -21,13 +21,13 @@ void init_arg(t_node *head, char **arg, t_source *src, int tmp2)
 	i = 0;
 	b = 0;
 
-	if(tmp2 == 1)
+	if (tmp2 == 1)
 		c = 0;
 	else
 		c = 127;
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != c && tmp2 == 0)
+		if (arg[i][0] != c)
 			b++;
 		i++;
 	}
@@ -36,7 +36,7 @@ void init_arg(t_node *head, char **arg, t_source *src, int tmp2)
 		b = 0;
 		while (arg[i] != NULL)
 		{
-			if (arg[i][0] != c && tmp2 == 0)
+			if (arg[i][0] != c)
 				head->arg[b++] = ft_strdup(arg[i]);
 			i++;
 		}
@@ -51,13 +51,13 @@ void init_arg_pipe(char **arg, t_pipe *p, int tmp2)
 
 	i = 0;
 	b = 0;
-	if(tmp2 == 1)
+	if (tmp2 == 1)
 		c = 0;
 	else
 		c = 127;
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != c && tmp2 == 0)
+		if (arg[i][0] != c)
 			b++;
 		i++;
 	}
@@ -66,7 +66,7 @@ void init_arg_pipe(char **arg, t_pipe *p, int tmp2)
 	b = 0;
 	while (arg[i] != NULL)
 	{
-		if (arg[i][0] != c && tmp2 == 0)
+		if (arg[i][0] != c)
 			p->arg[b++] = ft_strdup(arg[i]);
 		i++;
 	}
@@ -178,11 +178,10 @@ void loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 		tmp = get_last_node_p(head->pipe);
 		if (tmp == NULL)
 				{
-					write(2, "made it IF\n", 11);
 					head->pipe = new_pipe(pipe, src, head);
 				}
 		else
-		{	write(2, "made it ELSE\n", 13);
+		{
 			tmp->next = new_pipe(pipe, src, head);
 		}
 	
@@ -214,7 +213,6 @@ void init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 	while (i < count)
 	{
 		arg[i] = find_argument(pipe[src->c], head, src, envp);
-		// printf("arg[%d]: %s\n",i, arg[i]);
 		i++;
 	}
 	arg[i] = NULL;
