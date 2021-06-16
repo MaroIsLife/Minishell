@@ -126,6 +126,7 @@ void	ft_pwd (void)
 	// printf ("%s\n", s1);
 	free (s);
 }
+
 void ft_cd(char **args, t_source *src, char *home)
 {
 	int sign;
@@ -147,8 +148,6 @@ void ft_cd(char **args, t_source *src, char *home)
 		printf ("Error: %s\n", strerror(errno));
 	change_pwd_env(src);
 	change_pwd_export(src);
-
-
 }
 
 
@@ -338,14 +337,14 @@ void 	ft_expn_add(char *add, t_source *src ,char **our_envp, char **args)
 			src->export[src->lastexp] = NULL;
 			src->our_envp[src->lastenv] = NULL;
 			int i = 0;
-			while (tmp1[i] != NULL)
+			while (tmp1[i] != NULL && tmp1[i][0] != 0)
 			{
 				free(tmp1[i]);
 				i++;
 			}
 			free(tmp1);
 			i = 0;
-			while (tmp2[i] != NULL)
+			while (tmp2[i] != NULL && tmp2[i][0] != 0)
 			{
 				free(tmp2[i]);
 				i++;
