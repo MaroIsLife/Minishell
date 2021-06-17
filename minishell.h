@@ -127,7 +127,6 @@ typedef struct s_global {
 
 t_global g_global;
 
-
 //Parsing
 void	init_parse(t_source *src, t_node *head, char **envp, char **pipe);
 char	*find_command(char *s, t_node *head, t_source *src, char **envp);
@@ -151,15 +150,29 @@ void	print_prompt1();
 void	print_prompt2();
 char	*read_line();
 void	ms_loop(t_source *src, char **envp);
-
-
 // Built in functions
 int		ft_exit(char **args, t_source *src);
 void	command_list(char *cmd, char **args, t_source *src);
 void	ft_echo(char **args);
+//export
+int		ft_strlen_eq(char *src);
 void	print_env(t_source *src);
 void	ft_export(char **args, t_source *src);
 char	*search_env(t_node *head, t_source *src, char **envp, int offset);
+void 	ft_sort(t_source *src);
+char	**our_realloc(char **s, int count);
+int 	check_exsyn(char *src);
+int	ft_alloc_count(char **envp, char **args);
+void	ft_expn_add_else(char *add, t_source *src, char **args);
+int	arg_counter(char **src);
+void	replace_env(char **envp, t_source *src, char *value);
+void	ft_set_enxp(char **args, t_source *src, char **envp);
+void	ft_expn_chng(char *add, t_source *src, char **envp, char **args);
+int	found_eq(char *src);
+void	em_export(t_source *src);
+void 	ft_expn_add(char *add, t_source *src, char **our_envp, char **args);
+void	ft_expn_add_two(char **tmp1, char **tmp2, int option, int i);
+//end export
 int		ft_unset(char **args,t_source *src);
 void	ft_cd(char **args,t_source *src, char *home);
 void	change_pwd_env(t_source *src);
@@ -170,8 +183,6 @@ char	*where_home(t_source *src);
 void	red_open(t_node *head, t_source *src);
 void	red_open_pipe(t_filename *tmp);
 int 	fork_pips(int npipe, t_node *head, t_source *src);
-
-
 //Execute
 int	ft_execute(char *cmd, char **args, t_source *src, char **envp);
 char	*get_correct_path(char **s, char **varg);
