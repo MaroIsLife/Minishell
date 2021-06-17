@@ -37,8 +37,7 @@ int spawn_proc (int in,  int *out, struct command *cmd)
   return pid;
 }
 
-int
-fork_pipes (int n, struct command *cmd)
+int fork_pipes (int n, struct command *cmd)
 {
   int i;
   pid_t pid;

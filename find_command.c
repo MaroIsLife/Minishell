@@ -4,14 +4,13 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	char	*temp;
 	int		b;
 	int		c;
-	int length;
+	int		length;
 
 	i = i + 1;
 	b = 0;
 	c = 0;
-
 	if (s[i] == '?')
-		return(init_question_cmd(src, i));
+		return (init_question_cmd(src, i));
 	src->dollarused = 1;
 	temp = malloc(4096 * sizeof(char));
 	while (s[i] != '$' && s[i] != '\n' && s[i] != '\0' && s[i] != ' ')
@@ -29,10 +28,10 @@ int		get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 		{
 			while (src->our_envp[c][b] != '=' && src->our_envp[c][b] != '\0')
 				b++;
-				while (src->our_envp[c][++b] != '\0')
-					src->ra[src->ra_b++] = src->our_envp[c][b];
-				src->ra[src->ra_b] = '\0';
-				break ;
+			while (src->our_envp[c][++b] != '\0')
+				src->ra[src->ra_b++] = src->our_envp[c][b];
+			src->ra[src->ra_b] = '\0';
+			break ;
 		}
 		c++;
 	}
@@ -65,27 +64,26 @@ void	find_command_four(char *s, t_source *src, int **i, int option)
 
 int		find_command_three(char *s, t_source *src, t_node *head, int *i)
 {
-
-		if (s[(*i)] == '\'')
-			find_command_four(s, src, &i, 1);
-		else if (s[(*i)] == '\"')
-			find_command_four(s, src, &i, 2);
-		else if (s[(*i)] == '\\' && ft_isascii(s[(*i) + 1]) == 1 && src->dquotes == 0 && src->squotes == 0)
-			src->ra[src->ra_b++] = s[++(*i)];
-		else if (s[(*i)] == '$' && src->squotes == 0 && (ft_isalpha(s[(*i) + 1]) == 1 || s[(*i) + 1] == '?') && src->aslash == 0)
-			(*i) = get_env_value_cmd(s, src->our_envp, src, (*i)) - 1;
-		else if ((s[(*i)] == '>' || s[(*i)] == '<') && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
-		{
-			while (s[(*i)] == '>' || s[(*i)] == '<') //TEST THIS WITH ls>out1>out2 or >out1>out2 ls
-				find_file_name(&i, s, src, head);
-			(*i)++;
-			return (1);
-		}
-		else if (s[(*i)] == '\\' && src->aslash == 1)
-			find_command_four(s, src, &i, 3);
-		else 
-			src->ra[src->ra_b++] = s[(*i)];
-		return (0);
+	if (s[(*i)] == '\'')
+		find_command_four(s, src, &i, 1);
+	else if (s[(*i)] == '\"')
+		find_command_four(s, src, &i, 2);
+	else if (s[(*i)] == '\\' && ft_isascii(s[(*i) + 1]) == 1 && src->dquotes == 0 && src->squotes == 0)
+		src->ra[src->ra_b++] = s[++(*i)];
+	else if (s[(*i)] == '$' && src->squotes == 0 && (ft_isalpha(s[(*i) + 1]) == 1 || s[(*i) + 1] == '?') && src->aslash == 0)
+		(*i) = get_env_value_cmd(s, src->our_envp, src, (*i)) - 1;
+	else if ((s[(*i)] == '>' || s[(*i)] == '<') && src->aslash == 0 && src->dquotes == 0 && src->squotes == 0)
+	{
+		while (s[(*i)] == '>' || s[(*i)] == '<')
+			find_file_name(&i, s, src, head);
+		(*i)++;
+		return (1);
+	}
+	else if (s[(*i)] == '\\' && src->aslash == 1)
+		find_command_four(s, src, &i, 3);
+	else
+		src->ra[src->ra_b++] = s[(*i)];
+	return (0);
 }
 
 int find_command_two(char *s, t_source *src, int i, t_node *head)
@@ -113,21 +111,21 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 
 	file_found = 0;
 	i = src->offset;
-	if (s[0] == '|' || s[i] == '\\')
+	if (s[i] == '|' || s[i] == '\\')
 	{
-		src->ra = malloc(1 * sizeof(char));
-		src->ra[0] = '\0';
-		return 0;
+		src->ra = malloc(2 * sizeof(char));
+		src->ra[0] = s[i];
+		src->ra[1] = '\0';
+		src->dollarused = 1;
+		return (ft_strdup(src->ra));
 	}
-	while(s[i] == ' ' || s[i] == '|')
+	while (s[i] == ' ' || s[i] == '|')
 		i++;
 	start = i;
 	src->ctmp = ft_strdup("");
 	start = count_start(s, src, start, &i);
-	// printf("start: %d\n", start);
-	// src->ra = malloc((start + 1) * sizeof(char));
 	src->ra = malloc((4096) * sizeof(char));
-	i = find_command_two(s, src, i,head);
+	i = find_command_two(s, src, i, head);
 	src->ra[src->ra_b] = '\0';
 	src->offset = i;
 	return (ft_strdup(src->ra));

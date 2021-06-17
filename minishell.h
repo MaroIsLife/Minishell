@@ -76,7 +76,9 @@ typedef struct	s_source
 	char	*ra;
 	int		tmp; // Temp Variable to use on anything to avoid norminette
 	char	*ctmp;
+	char	*ctmp2;
 	int		tmp2;
+	int		stop;
 	int		ra_b;
 	int		lastexp;
 	int 	count;
@@ -145,7 +147,6 @@ int		find_equal_length(char **envp,int c, int b);
 
 char	**ft_split_normal(char *s, char c);
 char	**my_ft_split(char *s, char c, t_source *src);
-void	clear();
 void	print_prompt1();
 void	print_prompt2();
 char	*read_line();
@@ -169,6 +170,15 @@ char	*where_home(t_source *src);
 void	red_open(t_node *head, t_source *src);
 void	red_open_pipe(t_filename *tmp);
 int 	fork_pips(int npipe, t_node *head, t_source *src);
+
+
+//Execute
+int	ft_execute(char *cmd, char **args, t_source *src, char **envp);
+char	*get_correct_path(char **s, char **varg);
+char	**get_env_path(char **envp, t_source *src);
+char	**ft_valide_args(char *cmd, char **args, int count);
+int		calc_args(char **args);
+int		print_cmd_error(char *cmd, int option, int message);
 
 //Signals
 void	ft_signal();

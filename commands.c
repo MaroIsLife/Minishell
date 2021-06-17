@@ -1,71 +1,90 @@
 #include "minishell.h"
 
-void	ft_echo(char **args)
+int     check_bs(char *n)
 {
-	int	i;
-	int	j;
-	int	newlines;
+    int i;
 
-	newlines = 0;
-	i = 0;
-	while (args && args[i] != NULL)
-	{
-		j = 1;
-		if (args[i][0] == '-' && args[i][1] == 'n')
-		{
-			while (args[i][j++] == 'n')
-				;
-			newlines = 1;
-			i++;
-			continue ;
-		}
-		ft_putstr_fd(args[i], 1);
-		if (args[i + 1] == NULL)
-			break ;
-		ft_putstr_fd(" ", 1);
-		i++;
-	}
-	if (newlines == 0)
-		ft_putstr_fd("\n", 1);
+    i = 1;
+    while (n[i] != 0)
+    {
+        if (n[0] != '-')
+            return (2);
+        if (n[i] != 'n')
+            return (1);
+        i++;
+    }
+    return (0);
+}
+void    ft_print_args(char **args, int i)
+{
+    ft_putstr_fd(args[i], 1);
+    if (args[i + 1])
+        ft_putchar_fd(' ', 1);
+}
+
+void    ft_echo (char **args)
+{
+    int i;
+    int nl;
+    int val_arg;
+
+    i = 0;
+    val_arg = 0;
+    nl = 0;
+    while (args && args[i] != NULL)
+    {
+        if (args[i][0] == '-')
+        {
+            if (!check_bs(args[i]) && !val_arg)
+                {
+                    nl = 1;
+                    i++;
+                    if (check_bs(args[i]))
+                        val_arg = 1;
+                    continue;
+                }
+                val_arg = 2;
+        }
+        ft_print_args(args ,i++);
+    }
+    if (nl == 0)
+        ft_putchar_fd('\n', 1);
 }
 
 int	ft_strlen_eq(char *src)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (src[++i])
-		if (src[i]== '=')
+		if (src[i] == '=')
 			break ;
 	return (i);
 }
 
 void	replace_env(char **envp, t_source *src, char *value)
 {
-	int i;
-	char *tmp;
-	
+	int		i;
+	char	*tmp;
+
 	i = 0;
 	while (src->our_envp[i] != NULL)
 	{
-	
-
-
 		if (ft_strncmp(value, src->our_envp[i], ft_strlen_eq(value)) == 0)
-			{
-				tmp = src->our_envp[i];
-				src->our_envp[i] = ft_strdup(value);
-				free (tmp);
-				if (i == src->lastenv)
-					src->our_envp[i] = NULL;
-			}
+		{
+			tmp = src->our_envp[i];
+			src->our_envp[i] = ft_strdup(value);
+			free (tmp);
+			if (i == src->lastenv)
+				src->our_envp[i] = NULL;
+		}
 		i++;
 	}
 }
 
-int arg_counter(char **src)
+int	arg_counter(char **src)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (src[i] != NULL)
@@ -73,21 +92,21 @@ int arg_counter(char **src)
 	return (i);
 }
 
-char **our_realloc(char **s, int count)
+char	**our_realloc(char **s, int count)
 {
-	char **ret = malloc (count);
-	int i = -1;
+	char	**ret;
+	int		i;
+
+	ret = malloc(count);
+	i = -1;
 	while (s[++i])
 		ret[i] = ft_strdup(s[i]);
-
 	return (ret);
 }
 
 void	print_env(t_source *src)
 {
-
-
-	int i;
+	int	i;
 
 	i = 0;
 	while (src->our_envp[i] != NULL)
@@ -101,46 +120,45 @@ void	print_env(t_source *src)
 
 char	*where_home(t_source *src)
 {
-	int i = 0;
-	char *home;
-	
+	int		i;
+	char	*home;
+
+	i = 0;
 	while (src->our_envp[i])
 	{
 		if (ft_strncmp(src->our_envp[i], "HOME=", 5) == 0)
 		{
 			home = malloc (ft_strlen(src->our_envp[i] + 5) + 1);
-			ft_strlcpy(home, src->our_envp[i] + 5, ft_strlen(src->our_envp[i] + 5) + 1);
+			ft_strlcpy(home, src->our_envp[i] + 5,
+				ft_strlen(src->our_envp[i] + 5) + 1);
 			return (home);
 		}
-	i++;
+		i++;
 	}
 	return (0);
 }
+
 void	ft_pwd (void)
 {
-	char *s;
-	
+	char	*s;
+
 	s = malloc(100 * sizeof(char));
 	printf("%s\n", getcwd(s, 100));
-	// printf ("%s\n", s1);
 	free (s);
 }
 
-void ft_cd(char **args, t_source *src, char *home)
+void	ft_cd(char **args, t_source *src, char *home)
 {
-	int sign;
+	int	sign;
 
 	sign = 0;
-
-	//puts (args[0]);
 	if (!args[0])
-		{
-			if (!home)
-				write(1, "minishell: cd: HOME not set\n", 23);
-			else
-				chdir(home);
-			free(home);
-		}
+	{
+		if (!home)
+			write(1, "minishell: cd: HOME not set\n", 23);
+		else
+			chdir(home);
+	}
 	else
 		sign = chdir(args[0]);
 	if (sign != 0)
@@ -149,167 +167,182 @@ void ft_cd(char **args, t_source *src, char *home)
 	change_pwd_export(src);
 }
 
-
+void	ft_sort_two(t_source *src, int *i, int *j, int *n)
+{
+	if (src->export[(*i)][0] > src->export[(*j)][0])
+	{
+		src->ctmp2 = src->export[(*i)];
+		src->export[(*i)] = src->export[(*j)];
+		src->export[(*j)] = src->ctmp2;
+	}
+	if (src->export[(*i)][0] == src->export[(*j)][0])
+	{
+		(*n) = 1;
+		while (src->export[(*j)][(*n)] != '\0' && src->export[(*i)][(*n)] != '\0')
+		{
+			if (src->export[(*i)][(*n)] > src->export[(*j)][(*n)])
+			{
+				src->ctmp2 = src->export[(*i)];
+				src->export[(*i)] = src->export[(*j)];
+				src->export[(*j)] = src->ctmp2;
+			}
+			(*n)++;
+		}
+	}
+	(*j)++;
+}
 
 void 	ft_sort(t_source *src)
 {
-	//sorting using strcmp with additiong to the counter i
+	int		i;
+	int		j;
+	int		n;
 
-	char *swap;
-	int i = 0;
-	int j;
-	int n;
+	i = 0;
 	while (i < src->lastexp && src->export[i] != NULL)
 	{
 		j = i + 1;
-		while(j < src->lastexp &&  src->export[j] != NULL)
-		{
-			if (src->export[i][0] > src->export[j][0])
-			{
-				swap = src->export[i];
-				src->export[i] = src->export[j];
-				src->export[j] = swap;
-			}
-			if (src->export[i][0] == src->export[j][0])
-			{
-				n = 1;
-				while (src->export[j][n] != '\0' && src->export[i][n] != '\0')
-				{
-					if (src->export[i][n] > src->export[j][n])
-					{
-						swap = src->export[i];
-						src->export[i] = src->export[j];
-						src->export[j] = swap;
-					}
-					n++;
-				}
-			}
-			j++;
-		}
+		while ((j) < src->lastexp && src->export[(j)] != NULL)
+			ft_sort_two(src, &i, &j, &n);
 		i++;
 	}
 }
+
 void ft_wr_eq(char *s)
 {
+	int	i;
+	int	sign;
+
 	if (s != NULL)
-	{	int i = 0;
-		int sign = 0;
+	{
+		i = 0;
+		sign = 0;
 		while (s[i] != 0)
 		{
 			if (s[i] == '=' && s[i + 1])
-				{
-					sign = 1;
-					write(1,&s[i++], 1);
-					write(1,"\"",1);
-				}
-			write(1,&s[i], 1);
-			  if (s[i] == '=' && !s[i + 1])
-				{
-                    write(1,"\"\"",2);
-                    break ;
-                }
-		i++;
-			if (!s[i] && sign == 1)
-					write(1,"\"",1);
+			{
+				sign = 1;
+				write(1, &s[i++], 1);
+				write(1, "\"", 1);
+			}
+			write(1, &s[i], 1);
+			if (s[i] == '=' && !s[i + 1])
+			{
+				write(1, "\"\"", 2);
+				break ;
+			}
+			if (!s[++i] && sign == 1)
+				write(1, "\"", 1);
 		}
 	}
 }
 
 void	em_export(t_source *src)
 {
+	int	i;
 
-	int i = 0;
+	i = 0;
 	ft_sort(src);
 	while (src->export[i] != NULL)
-		{
-			write (1, "declare -x ", 11);
-			ft_wr_eq(src->export[i]);
-			if (src->export[i][0] != '\0')
-				write(1,"\n",1);
-			i++;
-		}
+	{
+		write (1, "declare -x ", 11);
+		ft_wr_eq(src->export[i]);
+		if (src->export[i][0] != '\0')
+			write(1, "\n", 1);
+		i++;
+	}
 }
 
-
-int found_eq(char *src)
+int	found_eq(char *src)
 {
+	int	i;
+
 	if (src)
 	{
-		int i;
-
 		i = -1;
 		while (src[++i])
-			if (src[i]== '=')
-				return(1);
+			if (src[i] == '=')
+				return (1);
 	}
-		return (0);
+	return (0);
 }
-int is_equal(char *s1, char *s2)
+
+int		is_equal(char *s1, char *s2)
 {
-	int l1 = ft_strlen_eq(s1); //if NULL=SEGFAULT
-	int l2 = ft_strlen_eq(s2); //if NULL=SEGFAULT
-	
+	int	l1;
+	int	l2;
+	int	i;
 
+	l1 = ft_strlen_eq(s1);
+	l2 = ft_strlen_eq(s2);
 	if (l1 != l2)
-		return 0;
-
-	for (int i = 0; i < l1; i++)
+		return (0);
+	i = 0;
+	while (i < l1)
+	{
 		if (s1[i] != s2[i])
-			return 0;
-	return 1;
+			return (0);
+		i++;
+	}
+	return (1);
 }
+
 int ft_search(char **src, char *value)
 {
 	int i;
 
 	i = 0;
-	// printf("%s\n",value);
 	while (src[i] != NULL)
 	{
 		if (is_equal(src[i], value))
-			return(1);
+			return (1);
 		i++;
 	}
 	return (0);
 }
 
-
 int 	check_exsyn(char *src)
 {
-	// if (src[0] >= '0' && src[0] <= '9')
-	// 	return (1);
-	if (src[0] == '_'  || ft_isalpha(src[0]) )
+	int	i;
+
+	if (src[0] == '_' || ft_isalpha(src[0]))
 	{
-		int i = 1;
+		i = 1;
 		while (src[i] != '=' && src[i])
-		{	if (!ft_isalnum(src[i]) && src[i] != '_') 
-				return(1);
-				i++;
-			}
+		{	
+			if (!ft_isalnum(src[i]) && src[i] != '_')
+				return (1);
+			i++;
+		}
 	}
 	else
 		return (1);
 	return (0);
 }
 
-//envp just for testing
 int ft_alloc_count(char **envp, char **args)
 {
-	int i = 0;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
 	while (envp[i])
 		i++;
-	int j = 0;
 	while (args[j] != NULL)
-		{
-			if (ft_search(envp, args[j]))
-				i++;
-			j++;
-		}
+	{
+		if (ft_search(envp, args[j]))
+			i++;
+		j++;
+	}
 	return (i);
 }
 
-void free2DArray(char** array){
-	int i = 0;
+void free2DArray(char	**array)
+{
+	int	i;
+
+	i = 0;
 	while (array[i] != NULL)
 	{
 		free(array[i]);
@@ -318,122 +351,140 @@ void free2DArray(char** array){
 	free(array);
 }
 
-void 	ft_expn_add(char *add, t_source *src ,char **our_envp, char **args)
+void	ft_expn_add_two(char **tmp1, char **tmp2, int option, int i)
 {
-	int id;
-	char **tmp1;
-	char **tmp2;
-	
+	if (option == 1)
+	{
+		while (tmp1[i] != NULL && tmp1[i][0] != 0)
+		{
+			free(tmp1[i]);
+			i++;
+		}
+		free(tmp1);
+		i = 0;
+		while (tmp2[i] != NULL && tmp2[i][0] != 0)
+		{
+			free(tmp2[i]);
+			i++;
+		}
+		free(tmp2);
+	}
+	else if (option == 2)
+	{
+		while (tmp1[i] != NULL)
+		{
+			free(tmp1[i]);
+			i++;
+		}
+		free(tmp1);
+	}
+}
+void	ft_expn_add_else(char *add, t_source *src, char **args)
+{
+	src->export = our_realloc(src->export,
+			sizeof(char *) * (ft_alloc_count(src->export, args) + 2));
+	src->export[src->lastexp++] = ft_strdup(add);
+	src->export[src->lastexp] = NULL;
+}
+
+void 	ft_expn_add(char *add, t_source *src, char **our_envp, char **args)
+{
+	int		id;
+	char	**tmp1;
+	char	**tmp2;
+
 	id = found_eq(add);
 	if (id)
-		{
-			tmp1 = src->our_envp;
-			tmp2 = src->export;
-			src->our_envp = our_realloc(src->our_envp, sizeof(char*) * (ft_alloc_count(src->our_envp,args) + 2) ); //here
-			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, args) + 2) ); //here
-			src->our_envp[src->lastenv++] = ft_strdup(add);
-			src->export[src->lastexp++] = ft_strdup(add);
-			src->export[src->lastexp] = NULL;
-			src->our_envp[src->lastenv] = NULL;
-			int i = 0;
-			while (tmp1[i] != NULL && tmp1[i][0] != 0)
-			{
-				free(tmp1[i]);
-				i++;
-			}
-			free(tmp1);
-			i = 0;
-			while (tmp2[i] != NULL && tmp2[i][0] != 0)
-			{
-				free(tmp2[i]);
-				i++;
-			}
-			free(tmp2);
+	{
+		tmp1 = src->our_envp;
+		tmp2 = src->export;
+		src->our_envp = our_realloc(src->our_envp,
+				sizeof(char *) * (ft_alloc_count(src->our_envp, args) + 2));
+		src->export = our_realloc(src->export,
+				sizeof(char *) * (ft_alloc_count(src->export, args) + 2));
+		src->our_envp[src->lastenv++] = ft_strdup(add);
+		src->export[src->lastexp++] = ft_strdup(add);
+		src->export[src->lastexp] = NULL;
+		src->our_envp[src->lastenv] = NULL;
+		ft_expn_add_two(tmp1, tmp2, 1, 0);
+	}
+	else
+	{
+		tmp1 = src->export;
+		ft_expn_add_else(add, src, args);
+		ft_expn_add_two(tmp1, tmp2, 2, 0);
+	}
+}
 
-			// free2DArray(tmp1);
-			// free2DArray(tmp2);
-		}
-	else 
+void	ft_expn_chng_two(char *add, t_source *src, char **args, char **envp)
+{
+	int		i;
+	char	**tmp;
+
+	if (ft_search(src->our_envp, add))
+		replace_env(envp, src, add);
+	else
+	{
+		tmp = src->our_envp;
+		src->our_envp = our_realloc(src->our_envp,
+				sizeof(char *) * (arg_counter(src->our_envp) + 2));
+		src->our_envp[src->lastenv++] = ft_strdup(add);
+		src->our_envp[src->lastenv] = NULL;
+		i = 0;
+		while (tmp[i] != NULL && tmp[i][0] != 0)
 		{
-			tmp1 = src->export;
-			src->export = our_realloc(src->export, sizeof(char*) * (ft_alloc_count(src->export, args) + 2) ); //here
-			src->export[src->lastexp++] = ft_strdup(add);
-			src->export[src->lastexp] = NULL;
-			// free2DArray(tmp1);
-			int i = 0;
-			while (tmp1[i] != NULL)
-			{
-				free(tmp1[i]);
-				i++;
-			}
-			free(tmp1);
+			free(tmp[i]);
+			tmp[i] = NULL;
+			i++;
 		}
+		free(tmp);
+	}
 }
 
 void	ft_expn_chng(char *add, t_source *src ,char **envp, char **args)
 {
-	int i;
-	char **tmp;
-	char *s_tmp;
-	
+	int		i;
+	char	*s_tmp;
+	char	*see;
+
 	i = 0;
 	while (src->export[i] != NULL)
 	{
-		char *see = src->export[i];
+		see = src->export[i];
 		if (is_equal(add, src->export[i]))
 		{
 			if (found_eq(add))
-				{
-					s_tmp = src->export[i];
-					src->export[i] = ft_strdup(add);
-					free (s_tmp);
-					}
+			{
+				s_tmp = src->export[i];
+				src->export[i] = ft_strdup(add);
+				free (s_tmp);
+			}
 			if (i == src->lastexp)
 				src->export[++i] = NULL;
 		}
 		i++;
 	}
 	if (found_eq(add))
-	{
-		if (ft_search(src->our_envp, add))
-			replace_env(envp, src, add);
-		else
-			{
-				tmp = src->our_envp;
-				src->our_envp = our_realloc(src->our_envp, sizeof(char*) * (arg_counter(src->our_envp) + 2) );
-				src->our_envp[src->lastenv++] = ft_strdup(add);
-				src->our_envp[src->lastenv] = NULL;
-				int i = 0;
-				while (tmp[i] != NULL && tmp[i][0] != 0)
-				{
-					free(tmp[i]);
-					tmp[i] = NULL;
-					i++;
-				}
-				free(tmp);;
-				}
-	}
+		ft_expn_chng_two(add, src, args, envp);
 }
-
-
-
 
 void	ft_set_enxp(char **args, t_source *src, char **envp)
 {
-	int argn;
-	int i;
+	int	argn;
+	int	i;
+	int	n;
 
 	i = 0;
 	argn = arg_counter(args);
 	while (i < argn)
 	{
-		int n = check_exsyn(args[i]);
+		n = check_exsyn(args[i]);
 		if (n)
-			{
-				write (2, "not a valid identifier\n", 23);
-				i++;
-				continue ;
-			}
+		{
+			write (2, "not a valid identifier\n", 23);
+			i++;
+			continue ;
+		}
 		if (ft_search(src->export, args[i]))
 			ft_expn_chng(args[i], src, src->our_envp, args);
 		else
@@ -449,202 +500,3 @@ void	ft_export(char **args, t_source *src)
 	else
 		ft_set_enxp(args, src, src->our_envp);
 }
-
-
-
-
-
-// void	ft_export(t_node *head, t_source *src, char **envp)
-// {
-// 	int		i;
-// 	int		j;
-// 	int		found;
-// 	int		length;
-	
-// 	i = 0;
-// 	if (head->arg[i] == NULL)
-// 		em_export(src);
-// 	else
-// 	{
-// 		while (head->arg[i] != NULL)
-// 		{	
-// 			//  length = ft_strlen_eq(head->arg[i]);
-// 			found = ft_search(src,head->arg[i]);
-// 			if (found)
-// 			 {
-// 				 j = 0;
-// 				while (src->export[j] != NULL)
-// 				{
-// 					length = ft_strlen_eq(src->export[j]);
-// 					if (ft_strncmp(src->export[j], head->arg[i], length) == 0)
-// 					{
-// 						if (length < ft_strlen(head->arg[i]))
-// 						{
-// 							src->export[j] = head->arg[i];
-// 							replace_env(envp, src, head->arg[i], length);
-// 							if (j == src->lastexp)
-// 								src->export[++j] = NULL;
-// 						}
-	
-// 					}
-// 					j++;
-// 				}
-// 			 }
-// 			else
-// 			{
-// 				if (found_eq(head->arg[i]))
-// 				{
-// 					envp[src->lastenv++] = head->arg[i];
-// 					src->export[src->lastexp++] = head->arg[i];
-// 					src->export[src->lastexp] = NULL;
-// 					envp[src->lastenv] = NULL;
-// 				}
-// 				else
-// 				{
-// 					// if ()
-// 					src->export[src->lastexp++] = head->arg[i];
-// 					src->export[src->lastexp] = NULL;
-// 				}
-// 			}
-// 				i++;
-// 		}
-// 	}
-// }
-
-
-
-
-void 	unset_export(t_source *src, char *arg)
-{
-	int i = 0;
-	while (src->export[i] != NULL)
-	{
-	if (is_equal(src->export[i], arg))
-		{
-			while ((src->export[i] != NULL))
-				{
-					src->export[i] = src->export[i + 1];
-					i++;
-				}
-				src->lastexp--;
-				src->export[i] = NULL;
-				break ;
-		}
-	i++;
-	}			
-}
-
-void 	unset_env(t_source *src, char *arg)
-{
-	int i = 0;
-	while (src->our_envp[i] != NULL)
-	{
-	if (is_equal(src->our_envp[i], arg))
-		{
-			while ((src->our_envp[i] != NULL))
-				{
-					src->our_envp[i] = src->our_envp[i + 1];
-					i++;
-				}
-				src->lastenv--;
-				src->our_envp[i] = NULL;
-				break ;
-		}
-	i++;
-	}			
-}
-
-int		ft_unset(char **args,t_source *src)
-{
-	int env;
-	int exp;
-	int j = 0;
-
-	while (args[j])
-	{
-		env = ft_search(src->our_envp, args[j]);
-		exp = ft_search(src->export, args[j]);
-		if (exp)	
-			unset_export(src, args[j]);	
-		/******************************************/
-		if (env)
-			unset_env(src, args[j]);	
-		/******************************************/
-		j++;
-	}
-	return (0);
-}
-
-
-
-int		ft_exit(char **args, t_source *src)
-{
-	int b;
-	int ret;
-
-	b = 0;
-
-	if (args[0] == NULL)
-		exit(g_global.return_value);
-	while (args[0][b] != '\0')
-	{
-		if (ft_isdigit(args[0][b]) != 1)
-		{
-			printf("exit\nminishell: exit: %s: numeric argument required\n",args[0]);
-			//src->return_value = 2;
-			exit(255);
-		}
-		b++;
-	}
-	if (args[1] != NULL) //CHECK IF IT DOESNT LEAVE CHILD PROCESS
-	{
-		printf("exit\nminishell: exit: too many arguments\n");
-		return(0);
-	}
-	ret = ft_atoi(args[0]);
-	// printf("%d\n",ret);
-	if (ret > 255)
-	{
-		write(1,"exit\n",6);
-		exit(ret % 256);
-	}
-	else if (ret < 0)
-	{
-		write(1,"exit\n",6);
-		exit (ret + 256);
-	}
-	else
-	{
-		write(1,"exit\n",6);
-		exit(ret);
-	}
-	return (0);
-}
-/*
-void command_unset(t_commands *tmp ,char **envp)
-{
-    int lenp;
-    int lenarg;
-    int k = 0;
-    lenp = len_of_args(envp);
-    lenarg = nbr_argts(tmp) - 1;
-    while(k < lenarg)
-    {
-        check_syntax(tmp, k ,lenarg);
-        for (int i = 0; i < lenp; i++)
-        {
-            if (strncmp(envp[i], tmp->arguments[k], strlen(tmp->arguments[k])) == 0)
-            {
-                int j = i;
-                while (j < lenp - 1)
-                {
-                    envp[j] = envp[j + 1];
-                    j++;
-                }
-                envp[j] = NULL;
-                lenp = len_of_args(envp);
-            }
-        }
-        k++;
-    }
-}*/
