@@ -183,7 +183,7 @@ int		ft_isdollar(int c);
 char	*where_home(t_source *src);
 void	red_open(t_node *head, t_source *src);
 void	red_open_pipe(t_filename *tmp);
-int 	fork_pips(int npipe, t_node *head, t_source *src);
+void 	fork_pips(int npipe, t_node *head, t_source *src);
 //Execute
 int	ft_execute(char *cmd, char **args, t_source *src, char **envp);
 char	*get_correct_path(char **s, char **varg);
