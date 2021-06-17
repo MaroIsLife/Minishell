@@ -44,8 +44,8 @@ void	ft_execute_child(char **varg, char *path, t_source *src)
 		g_global.ffork = 0;
 		if (WIFSIGNALED(g_global.id))
 			g_global.return_value = WTERMSIG(g_global.id) + 128;
-		else
-			g_global.return_value = WEXITSTATUS(g_global.id) % 128;
+		if (WIFEXITED(g_global.id))
+			g_global.return_value = WEXITSTATUS(g_global.id);
 	}
 }
 

@@ -12,64 +12,53 @@
 
 # include "minishell.h"
 
-void  red_open_with_pipe (t_filename *tmp)
+void  return_fun()
 {
- 
-
-  while (1)
-  {
-      write (2 , "filename: ", 10);
-      write (2, tmp->filename, strlen(tmp->filename));
-      write (2 , "\n", 1);
-      if (tmp->next == NULL)
-        break ;
-      printf ("filename: %s\n",tmp->filename);
-      tmp = tmp->next;
-  }
+  if (WIFSIGNALED(g_global.id))
+		g_global.return_value = WTERMSIG(g_global.id) + 128;
+	if (WIFEXITED(g_global.id))
+		g_global.return_value = WEXITSTATUS(g_global.id);
 }
 
-int spawn_proc (int in,  int *out, t_node *tmp, t_source *src)
+int first_child (int in,  int *out, t_node *tmp, t_source *src)
 {
-  pid_t pid;
-
-  if ((pid = fork ()) == 0)
+  int pid;
+  
+  pid = fork ();
+  if (pid== 0)
     {
       if (in != 0)
         {
-          dup2 (in, 0);
-          close (in);
+			dup2 (in, 0);
+			close (in);
         }
       if (out[1] != 1)
         {
-          dup2 (out[1], 1);
-          close (out[1]);
-		   close (out[0]);
+        	dup2 (out[1], 1);
+          	close (out[1]);
+			close (out[0]);
         }
       close(out[0]);
       if (tmp->first_filename != NULL)
-       {
-         write(2, "You are here 1\n", 15);; 
           red_open_pipe(tmp->first_filename);
-       }
      command_list(tmp->cmd, tmp->arg, src);
-     exit(0);
+     exit(g_global.return_value);
     }
   return pid;
 }
 
-int spawn_proc2 (int in,  int *out, t_pipe *tmp, t_source *src)
+int inner_childs(int in,  int *out, t_pipe *tmp, t_source *src)
 {
-  pid_t pid;
-
-
-  if ((pid = fork ()) == 0)
+  int pid;
+  
+  pid = fork ();
+  if (pid== 0)
     {
       if (in != 0)
         {
           dup2 (in, 0);
           close (in);
         }
-
       if (out[1] != 1)
         {
           dup2 (out[1], 1);
@@ -78,105 +67,69 @@ int spawn_proc2 (int in,  int *out, t_pipe *tmp, t_source *src)
         }
       close(out[0]);
       if (tmp->pipef != NULL)
-        { write(2, "You are here 2\n", 15);
           red_open_pipe(tmp->pipef);
-        }
      command_list(tmp->cmd, tmp->arg, src);
-
-     exit(0);
+     exit(g_global.return_value);
     }
   return pid;
 }
 
-int
-fork_pips (int n, t_node *head,  t_source *src)
+void	last_child(int in, int *fd, t_pipe *tmp, t_source *src)
+{
+	int x;
+ 	int i;
+	int ret; 
+	
+	x = fork();
+	if (x == 0)
+    {
+    	dup2 (in, 0);
+    	close(in);
+    	close (fd[0]);
+		if (tmp->pipef != NULL)
+			red_open_pipe(tmp->pipef);
+		command_list(tmp->cmd, tmp->arg, src);
+    	exit(g_global.return_value);
+    } 
+  	close (fd[0]);
+ 	i = 0;
+ 	while (i < src->npipe + 1)
+  	{
+   		wait(&g_global.id);
+    	i++;
+      return_fun();
+   }
+
+}
+
+int fork_pips (int n, t_node *head,  t_source *src)
 {
   int i;
-  pid_t pid;
-  int in, fd [2];
-  t_pipe *tmp = head->pipe;
+  int in;
+  int fd [2];
+  t_pipe *tmp;
+  
+  tmp = head->pipe;
   in = 0;
-  	
-  for (i = 0; i < n - 1; ++i)
+  i = 0;	
+  while(i < n - 1)
     {
       pipe (fd);
       if (i == 0)
-          pid = spawn_proc (in, fd , head ,src);
+          first_child (in, fd , head ,src);
       else
       {
         if (tmp->next == NULL)
             break;
-          pid = spawn_proc2 (in, fd , tmp, src);
+          inner_childs (in, fd , tmp, src);
         tmp = tmp->next;
        }
       close (fd [1]); 
       if (i != 0)
         close(in);
       in = fd [0];
+	  i++;
     }
-
-pid_t x;
-x = fork();
-if (x == 0)
-    {
-    dup2 (in, 0);
-    close(in);
-    close (fd[0]);
-
-    if (tmp->pipef != NULL)
-        { 
-          write(2, "You are here 3\n", 15);
-         red_open_pipe(tmp->pipef);
-        }
-    command_list(tmp->cmd, tmp->arg, src);
-
-    exit(0);
-    } 
-int ret; 
- waitpid(x,&ret, 0 );
-
-  close (fd[0]);
-  i = 0;
-  while (i < n - 1)
-  {
-   wait(NULL);
-    i++;
-  }
+	last_child(in, fd, tmp, src);
  return (0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
