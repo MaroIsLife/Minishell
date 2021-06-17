@@ -6,7 +6,7 @@ LIB = libft/*.c
 # GN = gnl/{get_next_line,get_next_line_utils}.c
 GN = gnl/*.c
 
-SRC = commands.c find_argument.c find_command.c find_utils.c main.c misc.c parse.c read.c sigs.c commands_list.c commands_utils.c environement.c ft_split.c helpers.c test2.c  fork_pipes.c count_starts.c
+SRC = commands.c find_argument.c find_command.c find_utils.c main.c misc.c parse.c read.c sigs.c commands_list.c commands_utils.c environement.c ft_split.c helpers.c test2.c  fork_pipes.c count_starts.c find_red.c count_argument.c find_arguments_utils.c
 CC = gcc
 
 all : $(NAME)

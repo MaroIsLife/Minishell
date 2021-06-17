@@ -1,20 +1,23 @@
-
 #include "minishell.h"
-void    ft_echo(char **args)
+
+void	ft_echo(char **args)
 {
-	int i;
-	int newlines;
-	
+	int	i;
+	int	j;
+	int	newlines;
+
 	newlines = 0;
 	i = 0;
 	while (args && args[i] != NULL)
 	{
-		if (ft_strncmp(args[0], "-n", 2) == 0 && args[0][2] == '\0')
+		j = 1;
+		if (args[i][0] == '-' && args[i][1] == 'n')
 		{
-			i++;
+			while (args[i][j++] == 'n')
+				;
 			newlines = 1;
-			if (args[1] == NULL)
-				break ;
+			i++;
+			continue ;
 		}
 		ft_putstr_fd(args[i], 1);
 		if (args[i + 1] == NULL)
@@ -22,18 +25,11 @@ void    ft_echo(char **args)
 		ft_putstr_fd(" ", 1);
 		i++;
 	}
-	// if (args)
-	// {
-	// 	i = 0;
-	// 	while (args[i])
-	// 		free(args[i++]);
-	// 	free(args);
-	// }
 	if (newlines == 0)
 		ft_putstr_fd("\n", 1);
-
 }
-int ft_strlen_eq(char *src)
+
+int	ft_strlen_eq(char *src)
 {
 	int i;
 
