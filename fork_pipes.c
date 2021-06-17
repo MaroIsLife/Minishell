@@ -99,10 +99,9 @@ void	last_child(int in, int *fd, t_pipe *tmp, t_source *src)
     	i++;
       return_fun();
    }
-
 }
 
-int fork_pips (int n, t_node *head,  t_source *src)
+void fork_pips (int n, t_node *head,  t_source *src)
 {
   int i;
   int in;
@@ -125,11 +124,9 @@ int fork_pips (int n, t_node *head,  t_source *src)
         tmp = tmp->next;
        }
       close (fd [1]); 
-      if (i != 0)
+      if (i++ != 0)
         close(in);
       in = fd [0];
-	  i++;
     }
 	last_child(in, fd, tmp, src);
- return (0);
 }
