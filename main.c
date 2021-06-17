@@ -70,12 +70,9 @@ void freeList_pipe(t_pipe* head)
 
 }
 
-
-
-
 char	*get_x_env(char **envp, t_source *src, char *envv_name)
 {
-	int 	i;
+	int		i;
 	int		b;
 	int		c;
 	char	*s;
@@ -85,8 +82,9 @@ char	*get_x_env(char **envp, t_source *src, char *envv_name)
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(envp[i], envv_name, ft_strlen(envv_name)) == 0 && envp[i][ft_strlen(envv_name)] == '=')
-			return (ft_strrchr(envp[i],'=') + 1);
+		if (ft_strncmp(envp[i], envv_name, ft_strlen(envv_name)) == 0
+			&& envp[i][ft_strlen(envv_name)] == '=')
+			return (ft_strrchr(envp[i], '=') + 1);
 		i++;
 	}
 	return (0);
@@ -94,7 +92,7 @@ char	*get_x_env(char **envp, t_source *src, char *envv_name)
 
 void	set_x_env(char **envp, t_source *src, char *envv_name, char *value)
 {
-	int 	i;
+	int		i;
 	int		b;
 	int		c;
 	char	*s;
@@ -104,7 +102,8 @@ void	set_x_env(char **envp, t_source *src, char *envv_name, char *value)
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(envp[i], envv_name, ft_strlen(envv_name)) == 0 && envp[i][ft_strlen(envv_name)] == '=')
+		if (ft_strncmp(envp[i], envv_name, ft_strlen(envv_name)) == 0
+			&& envp[i][ft_strlen(envv_name)] == '=')
 		{
 			while (envp[i][c] != '=' && envp[i][c] != '\0')
 				c++;
@@ -141,7 +140,7 @@ void	init_env(t_source *src, char **envp)
 		src->lastexp++;
 		i++;
 	}
-	src->our_envp = malloc(sizeof(char *) * (i + 2)); /* New ENV */
+	src->our_envp = malloc(sizeof(char *) * (i + 2));
 	src->export = malloc(sizeof(char *) * (i + 2));
 	src->our_envp[i] = "\0";
 	i = 0;

@@ -130,6 +130,7 @@ t_global g_global;
 //Parsing
 void	init_parse(t_source *src, t_node *head, char **envp, char **pipe);
 char	*find_command(char *s, t_node *head, t_source *src, char **envp);
+int		get_env_value_cmd(char *s, char **envp, t_source *src, int i);
 int		find_file_name(int **i, char *s, t_source *src, t_node *head);
 int		arg_if_space(char *s, int ***i, t_source *src);
 char	*find_argument(char *s, t_node *head, t_source *src, char **envp);
