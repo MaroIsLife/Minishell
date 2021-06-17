@@ -134,7 +134,6 @@ void	find_for_split(char *cmd, t_source *src)
 	}
 	if (src->dquotes == 1 || src->squotes == 1 || src->aslash == 1)
 		src->founderror = 1;
-	// printf("%d\n",g_find.ndquotes); //Bugged to fix later
 }
 
 int		find_equal_length(char **envp,int c, int b)
@@ -163,7 +162,7 @@ int		init_question_arg(t_source *src, int ret)
 	return (ret + 1);
 }
 
-int		init_question_cmd(t_source *src,int ret)
+int		init_question_cmd(t_source *src, int ret)
 {
 	int		i;
 	char	*s;
@@ -175,7 +174,7 @@ int		init_question_cmd(t_source *src,int ret)
 	free(s);
 	return (ret + 1);
 }
-int		init_question_red(t_source *src,int ret)
+int		init_question_red(t_source *src, int ret)
 {
 	int		i;
 	char	*s;
@@ -213,7 +212,6 @@ int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 	length = ft_strlen(temp);
 	while (src->our_envp[c] != NULL)
 	{
-		// if (ft_strncmp(envp[c], temp, find_equal_length(envp, c, b)) == 0)
 		if (ft_strncmp(src->our_envp[c], temp, length) == 0 && src->our_envp[c][length] == '=')
 		{
 			while (src->our_envp[c][b] != '=' && src->our_envp[c][b] != '\0')
@@ -225,8 +223,6 @@ int		get_env_value_arg(char *s, char **envp, t_source *src, int i)
 		c++;
 	}
 	free(temp);
-	// if (src->re == '\0')
-		// printf("ZEROOO %s\n",src->re);
 	return (i);
 }
 

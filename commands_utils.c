@@ -16,7 +16,6 @@ void	change_pwd_env(t_source *src)
 		{
 			s = malloc(100);
 			s = getcwd(s, 100);
-			puts (s);
 			free(src->our_envp[i]);
 			src->our_envp[i] = NULL;
 			src->our_envp[i] = ft_strjoin("PWD =", s);
@@ -87,7 +86,6 @@ void	change_pwd_export(t_source *src)
 		{
 			s = malloc(100);
 			s = getcwd(s, 100);
-			write(1, s, ft_strlen(s));
 			set_old_pwd(src, src->export[i]);
 			free(src->export[i]);
 			src->export[i] = NULL;
