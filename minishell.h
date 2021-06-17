@@ -97,7 +97,6 @@ typedef struct s_termc {
 }	t_termc;
 
 
-
 typedef struct s_node {
     char			*cmd;
 	char			**arg;
@@ -108,13 +107,12 @@ typedef struct s_node {
     struct s_node	*next;
 }   t_node;
 
-typedef struct s_filetmp {
+typedef struct s_ft {
 	int			b;
 	char		*tmp;
 	int			j;
 	char		*rev;
-}		t_filetmp;
-
+}		t_ft;
 
 typedef struct s_global {
 	int		fsignal;
@@ -132,6 +130,7 @@ t_global g_global;
 void	init_parse(t_source *src, t_node *head, char **envp, char **pipe);
 char	*find_command(char *s, t_node *head, t_source *src, char **envp);
 int		find_file_name(int **i, char *s, t_source *src, t_node *head);
+int		arg_if_space(char *s, int ***i, t_source *src);
 char	*find_argument(char *s, t_node *head, t_source *src, char **envp);
 int		count_argument(char *s, int offset, t_source *src);
 void	find_for_split(char *cmd, t_source *src);

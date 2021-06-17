@@ -93,6 +93,7 @@ int find_command_two(char *s, t_source *src, int i, t_node *head)
 	int start;
 
 	start = i;
+	src->ctmp = ft_strdup("");
 	start = count_start(s, src, start, &i);
 	while (i < start)
 	{
@@ -106,13 +107,12 @@ int find_command_two(char *s, t_source *src, int i, t_node *head)
 
 char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 {
-	int i;
-	int start;
-	int file_found;
+	int	i;
+	int	start;
+	int	file_found;
 
 	file_found = 0;
 	i = src->offset;
-	// printf("bug: %s\n i: %d \n", s, i);
 	if (s[0] == '|' || s[i] == '\\')
 	{
 		src->ra = malloc(1 * sizeof(char));
@@ -122,6 +122,7 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	while(s[i] == ' ' || s[i] == '|')
 		i++;
 	start = i;
+	src->ctmp = ft_strdup("");
 	start = count_start(s, src, start, &i);
 	// printf("start: %d\n", start);
 	// src->ra = malloc((start + 1) * sizeof(char));

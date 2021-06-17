@@ -1,48 +1,49 @@
 #include "minishell.h"
+void	print_errno(char *filename)
+{
+	char	*err;
+
+	err = strerror(errno);
+	write(2, "minishell: ", 11);
+	write(2, filename, ft_strlen(filename));
+	write(2, " ", 1);
+	write(2, err, ft_strlen(err));
+	write(2, "\n", 1);
+	exit(0);
+}
 
 void	red_open_pipe(t_filename *tmp)
 {
 	int			fd;
 	int			fd2;
 	t_filename	*p;
+
 	p = tmp;
-	// printf("%s\n",p->filename);
 	while (1)
 	{
-		// puts(p->filename);
-	if (p->c == 94)
-		fd = open(p->filename, O_RDWR | O_APPEND | O_CREAT, 0777);
-	else if (p->c == '>')
-		fd = open(p->filename, O_RDWR | O_TRUNC | O_CREAT, 0777);
-	else if (p->c == '<')
-		fd2 = open(p->filename, O_RDONLY);
+		if (p->c == 94)
+			fd = open(p->filename, O_RDWR | O_APPEND | O_CREAT, 0777);
+		else if (p->c == '>')
+			fd = open(p->filename, O_RDWR | O_TRUNC | O_CREAT, 0777);
+		else if (p->c == '<')
+			fd2 = open(p->filename, O_RDONLY);
 		if (fd == -1 || fd2 == -1)
-		{
-			// printf("minishell: %s: %s\n",p->filename, strerror(errno));
-			char *err = strerror(errno);
-			write(2, "minishell: ", 11);
-			write(2, p->filename,ft_strlen(p->filename));
-			write(2, " ", 1);
-			write(2, err,ft_strlen(err));
-			write(2, "\n", 1);
-			exit(0);
-		}
+			print_errno(p->filename);
 		if (p->next == NULL)
 			break ;
 		p = p->next;
 	}
-	// if (p->fd_r_c == 50)
-	// {
-	// 	dup2(fd, 1);
-	// 	dup2(fd2, 0);
-	// }
-	if (p->c == 94 || p->c == '>')
+	if (tmp->fd_r_c == 50)
+	{
+		dup2(fd2, 0);
+		dup2(fd, 1);
+	}
+	else if (p->c == 94 || p->c == '>')
 		dup2(fd, 1);
 	else if (p->c == '<')
 		dup2(fd2, 0);
-
 	close(fd);
-	//Close fd2 too
+	close(fd2);
 }
 
 void	red_open(t_node *head, t_source *src)
@@ -50,29 +51,18 @@ void	red_open(t_node *head, t_source *src)
 	int			fd;
 	int			fd2;
 	t_filename	*p;
+
 	p = head->first_filename;
-	// printf("%s\n",p->filename);
 	while (1)
 	{
-		// puts(p->filename);
-	// printf("Filename: %s\n",p->filename);
-	if (p->c == 94)
-		fd = open(p->filename, O_RDWR | O_APPEND | O_CREAT, 0777);
-	else if (p->c == '>')
-		fd = open(p->filename, O_RDWR | O_TRUNC | O_CREAT, 0777);
-	else if (p->c == '<')
-		fd2 = open(p->filename, O_RDONLY);
+		if (p->c == 94)
+			fd = open(p->filename, O_RDWR | O_APPEND | O_CREAT, 0777);
+		else if (p->c == '>')
+			fd = open(p->filename, O_RDWR | O_TRUNC | O_CREAT, 0777);
+		else if (p->c == '<')
+			fd2 = open(p->filename, O_RDONLY);
 		if (fd == -1 || fd2 == -1)
-		{
-			// printf("minishell: %s: %s\n",p->filename, strerror(errno));
-			char *err = strerror(errno);
-			write(2, "minishell: ", 11);
-			write(2, p->filename,ft_strlen(p->filename));
-			write(2, " ", 1);
-			write(2, err,ft_strlen(err));
-			write(2, "\n", 1);
-			exit(0);
-		}
+			print_errno(p->filename);
 		if (p->next == NULL)
 			break ;
 		p = p->next;
@@ -83,16 +73,13 @@ void	red_open(t_node *head, t_source *src)
 		dup2(fd, 1);
 	}
 	else if (p->c == 94 || p->c == '>')
-	{
 		dup2(fd, 1);
-	}
 	else if (p->c == '<')
 		dup2(fd2, 0);
-
 	close(fd);
 	close(fd2);
-	//Close fd2 too
 }
+
 int  calc_args (char **args)
 {
 	int i;
@@ -247,15 +234,12 @@ int    ft_execute(char *cmd, char **args,t_source *src, char **envp)
 
 void command_list(char *cmd, char **args,t_source *src)
 {
-	/*
-	insted of Sending Head node only send double and single array for pips
-	*/
-	char *home;
+	char	*home;
 
 	home = where_home(src);
 	if (ft_strncmp(cmd, "cd", 2) == 0 && cmd[2] == '\0')
-			ft_cd(args, src, home);
-	else if (ft_strncmp(cmd, "echo",4) == 0 && cmd[4] == '\0')
+		ft_cd(args, src, home);
+	else if (ft_strncmp(cmd, "echo", 4) == 0 && cmd[4] == '\0')
 		ft_echo(args);
 	else if (ft_strncmp(cmd, "env", 3) == 0 && cmd[3] == '\0')
 		print_env(src);
@@ -268,9 +252,7 @@ void command_list(char *cmd, char **args,t_source *src)
 	else if (ft_strncmp(cmd, "exit", 4) == 0 && cmd[4] == '\0')
 		ft_exit(args, src);
 	else if ((src->dollarused == 1 && cmd[0] == '\0'))
-	{
 		;
-	}
 	else
 		ft_execute(cmd, args, src, src->our_envp);
 	free(home);
