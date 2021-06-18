@@ -14,10 +14,10 @@
 #include "gnl/get_next_line.h"
 #include "minishell.h"
 
-int		delimc(char *s, char c, t_source *src)
+int	delimc(char *s, char c, t_source *src) 
 {
-	int i;
-	int n;
+	int	i;
+	int	n;
 
 	i = 0;
 	n = 0;
@@ -46,8 +46,7 @@ char		**my_ft_split(char *s, char c, t_source *src)
 	char	**p;
 
 	j = delimc(s, c, src) + 2;
-	if (!(p = (char **)malloc(j * sizeof(char *))))
-		return (NULL);
+	p = (char **)malloc(j * sizeof(char *));
 	k = 0;
 	len = 0;
 	while (k < j - 1)

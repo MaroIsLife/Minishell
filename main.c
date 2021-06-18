@@ -245,23 +245,22 @@ void	ms_loop(t_source *src, char **envp)
 			head->pipe = NULL;
 			head->first_filename = NULL;
 			first = head;
-
 			find_for_split(pipes[c], src);
 			src->allocate = 0;
-
 			if (src->foundred == 1)
 			{
 				head->first_filename = (t_filename *)malloc(sizeof(t_filename));
 				head->first_filename->next = NULL;
 				src->p = head->first_filename;
 			}
-
 			src->dquotes = 0;
 			src->squotes = 0;
 			src->fd_r_c = 0;
 			i = 0;
 			src->c = c;
-			init_parse(src, head, src->our_envp, pipes); //CHANGED FROM ENVP TO OUR_ENVP
+			init_parse(src, head, src->our_envp, pipes);
+			if (src->founderror == 1)
+				write(1, "Found error\n", 12);
 			i = 0;
 			if (!head->cmd)
 			{
@@ -271,9 +270,7 @@ void	ms_loop(t_source *src, char **envp)
 			src->offset = 0;
 			g_global.return_value = 0;
 			if (src->foundred == 0 && src->foundpipe == 0)
-				{
-					command_list(head->cmd ,head->arg,  src);
-					}
+				command_list(head->cmd , head->arg, src);
 			else
 			{
 					if (src->foundpipe == 1)

@@ -9,6 +9,8 @@ void 	unset_export(t_source *src, char *arg)
 	{
 		if (is_equal(src->export[i], arg))
 		{
+			free(src->export[i]);
+			src->export[i] = NULL;
 			while ((src->export[i] != NULL))
 			{
 				src->export[i] = src->export[i + 1];
@@ -31,6 +33,8 @@ void	unset_env(t_source *src, char *arg)
 	{
 		if (is_equal(src->our_envp[i], arg))
 		{
+			free(src->our_envp[i]);
+			src->our_envp[i] = NULL;
 			while ((src->our_envp[i] != NULL))
 			{
 				src->our_envp[i] = src->our_envp[i + 1];
