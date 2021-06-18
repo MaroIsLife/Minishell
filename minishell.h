@@ -87,6 +87,7 @@ typedef struct s_source
 	t_filename	*p;
 	t_pipe		*ptemp;
 	int			p_temp_i;
+	int			fd[2];
 }				t_source;
 
 typedef struct s_node {
