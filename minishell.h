@@ -63,11 +63,9 @@ typedef struct s_source
 	int		foundpipe;
 	int		founderror;
 	int		foundred;
-	char	*user;
 	int		c;
 	int		nred;
 	int		npipe;
-	char	*pwd;
 	int		forkid;
 	char	**export;
 	char	**our_envp;
@@ -91,10 +89,6 @@ typedef struct s_source
 	int			p_temp_i;
 }				t_source;
 
-typedef struct s_termc {
-	int				edit;
-	int				help;
-}	t_termc;
 
 typedef struct s_node {
 	char			*cmd;
@@ -105,6 +99,20 @@ typedef struct s_node {
 	t_filename		*first_filename;
 	struct s_node	*next;
 }	t_node;
+
+typedef struct s_var {
+	t_node	*head;
+	t_node	*first;
+	t_stack	*head1;
+	t_stack	*tmp1;
+	char	*cmd;
+	char	*ret;
+	int		fsignal;
+	char	**pipes;
+	int		count;
+	int		edit;
+	int		help;
+}	t_var;
 
 typedef struct s_ft {
 	int			b;
@@ -153,7 +161,7 @@ char	**my_ft_split(char *s, char c, t_source *src);
 void	print_prompt1();
 void	print_prompt2();
 char	*read_line();
-void	ms_loop(t_source *src, char **envp);
+void	ms_loop(t_source *src, char **envp, t_var *var);
 // Built in functions
 int		ft_exit(char **args, t_source *src);
 void	command_list(char *cmd, char **args, t_source *src);
@@ -216,7 +224,7 @@ t_stack	*lstnewc(void *data);
 ///
 int is_equal(char *s1, char *s2);
 
-char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc);
+char *term_loop(t_stack **head, t_stack **tmp, t_var *var);
 char    *ft_strjoinchar(char *s, char c);
 int 	ft_search(char **src, char *value);
 

@@ -76,10 +76,11 @@ int	ft_putc(int s)
 	return (write(1, &s, 1));
 }
 
-char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
+char *term_loop(t_stack **head, t_stack **tmp, t_var *var)
 {
 	int		d;
 	char	*s;
+	char *tmp2;
 
 	while(1)
 	{
@@ -114,7 +115,7 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 				tputs(tgetstr("le",NULL), 1, ft_putc);
 				tputs(tgetstr("dc",NULL), 1, ft_putc);
 				//check Heeeere.
-				if (!termc->edit)
+				if (!var->edit)
 					{
 						// free (g_global.ret);
 						// g_global.ret = NULL;
@@ -133,16 +134,20 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			if (*tmp && (*tmp)->prev)
 			{
 				*tmp = (*tmp)->prev;
-				g_global.ret = (char *)(*tmp)->data;
+				tmp2 = g_global.ret;
+				g_global.ret = ft_strdup((char *)(*tmp)->data);
+				free(tmp2);
 				write(1, (*tmp)->data, strlen((*tmp)->data));
 			}
 			else
 			{
+				tmp2 = g_global.ret;
 				g_global.ret = ft_strdup("");
-				termc->help = 0;
+				var->help = 0;
+				free(tmp2);
 				write(1, g_global.ret, strlen(g_global.ret));
 			}
-				termc->edit = 0;
+				var->edit = 0;
 		}
 		else if (d == KEY_UP)
 		{
@@ -151,23 +156,27 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			print_prompt1();
 			if (*tmp)
 				{
-					if (!(*tmp)->prev && !termc->help)
+					if (!(*tmp)->prev && !var->help)
 					{
-						g_global.ret = (char*)(*tmp)->data;
-						termc->help = 1;
+						tmp2 = g_global.ret;
+						g_global.ret = ft_strdup((char*)(*tmp)->data);
+						free(tmp2);
+						var->help = 1;
 					}
 					else
 					{
+						tmp2 = g_global.ret;
 						if((*tmp)->next)
 							*tmp = (*tmp)->next;
-						g_global.ret = (char*)(*tmp)->data;
+						g_global.ret = ft_strdup((char*)(*tmp)->data);
+						free(tmp2);
 					}
 					if ((*tmp)->data != NULL)
 					{
-			
-						write(1, (*tmp)->data, strlen((*tmp)->data));}
+						write(1, (*tmp)->data, strlen((*tmp)->data));
+					}
 				}
-			termc->edit = 0;
+			var->edit = 0;
 		}
 		else if (d == ENTER)
 		{
@@ -182,11 +191,12 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			{
 				lstadd_dlist(head, lstnewc(strdup(g_global.ret)));
 				*tmp = *head;
-				termc->help = 0;
+				var->help = 0;
 			}
-			termc->edit = 0;
+			var->edit = 0;
 			s = ft_strdup(g_global.ret);
-			free(g_global.ret);
+			// free(g_global.ret);
+			// g_global.ret = NULL;
 			return (s);
 		}
 	}
