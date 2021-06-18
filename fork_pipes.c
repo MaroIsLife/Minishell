@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   fork_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aymaatou <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aymaatou <aymaatou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/27 15:30:30 by aymaatou          #+#    #+#             */
-/*   Updated: 2021/06/03 18:51:29 by aymaatou         ###   ########.fr       */
+/*   Updated: 2021/06/18 23:36:05 by aymaatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
-
+/**
+ *  TO DO: SWICH BETWEEN FILE DISCREPTORS (in out) with (fd - fd2)
+ */
 void  return_fun()
 {
   if (WIFSIGNALED(g_global.id))
