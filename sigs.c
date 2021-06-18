@@ -19,3 +19,16 @@ void	handler2(int c)
 		write(2, "\n", 1);
 	}
 }
+
+void	sigs(void)
+{
+	signal(SIGTERM, SIG_IGN);
+	signal(SIGINT, handler);
+	signal(SIGQUIT, handler2);
+	if (g_global.fsignal == 0)
+	{
+		print_prompt1();
+		g_global.fsignal = 1;
+	}
+	g_global.ret = NULL;
+}

@@ -137,9 +137,20 @@ typedef struct s_global {
 t_global	g_global;
 
 //Parsing
+char	*ms_get_cmd(t_source *src, t_var *var);
+void	ms_init(t_source *src, t_var *var, char **envp);
+void	ms_nodes(t_var *var, t_source *src, char **pipes, int c);
+void	init_env(t_source *src, char **envp);
+void	ms_pipe_one(t_source *src, t_var *var);
 void	init_arg_pipe(char **arg, t_pipe *p, int tmp2);
+char	*get_x_env(char **envp, t_source *src, char *envv_name);
+void	freeList_pipe(t_pipe *head);
+void	freeList(t_node *head);
+int	num_of_node(t_pipe *tmp);
+void	init(t_source *src);
+void		sigs(void);
 t_filename	*get_last_node(t_filename *tmp);
-t_pipe	*get_last_node_p(t_pipe *tmp);
+t_pipe		*get_last_node_p(t_pipe *tmp);
 void	init_arg(t_node *head, char **arg, t_source *src, int tmp2);
 void	init_parse(t_source *src, t_node *head, char **envp, char **pipe);
 char	*find_command(char *s, t_node *head, t_source *src, char **envp);
@@ -230,10 +241,12 @@ int is_equal(char *s1, char *s2);
 
 char *term_loop(t_stack **head, t_stack **tmp, t_var *var);
 char    *ft_strjoinchar(char *s, char c);
+int	get_char(void);
 int 	ft_search(char **src, char *value);
-
-
+int	ft_putc(int s);
+void	ft_key_remove(t_var *var);
 t_filename		*new_file(char *s, t_source *src);
+void	ft_key_down(t_stack **tmp, t_var *var);
 void init_filee(t_source *src);
 
 
