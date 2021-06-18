@@ -90,33 +90,6 @@ char	*get_x_env(char **envp, t_source *src, char *envv_name)
 	return (0);
 }
 
-void	set_x_env(char **envp, t_source *src, char *envv_name, char *value)
-{
-	int		i;
-	int		b;
-	int		c;
-	char	*s;
-
-	b = 0;
-	c = 0;
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		if (ft_strncmp(envp[i], envv_name, ft_strlen(envv_name)) == 0
-			&& envp[i][ft_strlen(envv_name)] == '=')
-		{
-			while (envp[i][c] != '=' && envp[i][c] != '\0')
-				c++;
-			c++;
-			while (value[b] != '\0')
-				envp[i][c++] = value[b++];
-			envp[i][c] = '\0';
-			break ;
-		}
-		i++;
-	}
-}
-
 void	init(t_source *src)
 {
 	src->founderror = 0;
@@ -157,8 +130,21 @@ void	init_env(t_source *src, char **envp)
 	src->lastexp++;
 }
 
+void	sigs()
+{
+	signal(SIGTERM, SIG_IGN);
+	signal(SIGINT, handler);
+	signal(SIGQUIT, handler2);
+	if (g_global.fsignal == 0)
+	{
+		print_prompt1();
+		g_global.fsignal = 1;
+	}
+	g_global.ret = NULL;
+}
 
-void	ms_loop(t_source *src, char **envp)
+
+void	ms_loop(t_source *src, char **envp, t_var *var)
 {
 	char	*cmd;
 	int		count;
@@ -167,77 +153,41 @@ void	ms_loop(t_source *src, char **envp)
 	t_node	*first;
 	char	**pipes;
 	int		fsignal;
-
-	init_env(src,envp);
-	src->user = get_x_env(src->our_envp, src, "USER"); 
-	src->pwd = get_x_env(src->our_envp, src, "PWD");
-	 // This Retrieves the USER's logname and stores it in src->user NOT ALLOCATED
-	// set_x_env(envp, src, "TESST", "test");
-	g_global.return_value = 0;
-	//............................
-	t_termc *termc;
 	t_stack *head1;
 	t_stack *tmp;
 	char	*ret;
 
-	termc = (t_termc *) malloc(sizeof(t_termc));
-	termc->edit = 0;
-	termc->help = 0;
-	// g_global.ret = malloc(1 * sizeof(char));
-	// g_global.ret[0] = '\0';
+	init_env(src,envp);
+	g_global.return_value = 0;
+	var->edit = 0;
+	var->help = 0;
 	g_global.ret = NULL;
   	tgetent(NULL, getenv("TERM"));
 	tmp = NULL;
 	head1 = NULL;
-	signal(SIGTERM, SIG_IGN);
 	while(1)
 	{
-		// printf("\U0001F600"); //Useless Emoji
-		signal(SIGINT,handler); // ^C
-		signal(SIGQUIT,handler2);
-		if (g_global.fsignal  == 0)
-		{
-			print_prompt1();
-			g_global.fsignal  = 1;
-		}
-		// signal(SIGQUIT,handler); // ^/
-		// cmd = read_line();
-		g_global.ret = NULL;
-		cmd = term_loop(&head1, &tmp, termc);
-		// free(g_global.ret);
+		sigs();
+		cmd = term_loop(&head1, &tmp, var);
 		int b = 0;
-		while (cmd[b] == ' ') // space as a command
+		while (cmd[b] == ' ')
 			b++;
 		if (cmd[b] == '\0')
 		{
 			print_prompt1();
+			free(cmd);
+			free(g_global.ret);
 			continue ;
 		}
-		// printf("cmd: %s\n",cmd);
-		g_global.fsignal  = 0;
-		if (cmd == NULL) // ^D
-		{
-			write(1,"exit\n",6);
-			exit(0);
-		}
-		// if (ft_strncmp(cmd, "exit", 4) == 0)
-		// 	exit(0);export
-		// 	clearScreen();
-	
-		init(src); // MOVE INIT() TO WHILE PIPE != NULL??
-		pipes = my_ft_split(cmd,';', src);
+		g_global.fsignal = 0;
+		init(src);
+		pipes = my_ft_split(cmd, ';', src);
 		free(cmd);
+		free(g_global.ret);
 		int c;
-		int o =0;
+		int o = 0;
 		c = 0;
 		src->fd_r_c = 0;
-
-
-		/**
-		 * PIPE implumetation : Craete FD{2} and it redirect from 1>0 then use dup to dup 
-		 * EZPZ 
-		 * */
-
 		while (pipes[c] != NULL)
 		{
 			head = (t_node *) malloc(sizeof(t_node));
@@ -270,7 +220,7 @@ void	ms_loop(t_source *src, char **envp)
 			src->offset = 0;
 			g_global.return_value = 0;
 			if (src->foundred == 0 && src->foundpipe == 0)
-				command_list(head->cmd , head->arg, src);
+				command_list(head->cmd, head->arg, src);
 			else
 			{
 					if (src->foundpipe == 1)
@@ -349,12 +299,10 @@ void	ms_loop(t_source *src, char **envp)
 int     main(int argc, char **argv, char **envp)
 {
 	t_source src;
+	t_var	var;
 	// clear();
 
-	ms_loop(&src, envp);
+	ms_loop(&src, envp, &var);
 	
-	//echo kjlkj l> bl$lkjlkjlkj
-	//Enter then Delete without any Value
-	//Space then Enter
 	return (0);
 }
