@@ -27,6 +27,8 @@ int first_child (int in,  int *out, t_node *tmp, t_source *src)
   pid = fork ();
   if (pid== 0)
     {
+      if (tmp->first_filename != NULL)
+          red_open_pipe(tmp->first_filename);
       if (in != 0)
         {
 			dup2 (in, 0);
@@ -39,8 +41,6 @@ int first_child (int in,  int *out, t_node *tmp, t_source *src)
 			close (out[0]);
         }
       close(out[0]);
-      if (tmp->first_filename != NULL)
-          red_open_pipe(tmp->first_filename);
      command_list(tmp->cmd, tmp->arg, src);
      exit(g_global.return_value);
     }
@@ -54,6 +54,8 @@ int inner_childs(int in,  int *out, t_pipe *tmp, t_source *src)
   pid = fork ();
   if (pid== 0)
     {
+      if (tmp->pipef != NULL)
+          red_open_pipe(tmp->pipef);
       if (in != 0)
         {
           dup2 (in, 0);
@@ -66,8 +68,6 @@ int inner_childs(int in,  int *out, t_pipe *tmp, t_source *src)
           close (out[0]);
         }
       close(out[0]);
-      if (tmp->pipef != NULL)
-          red_open_pipe(tmp->pipef);
      command_list(tmp->cmd, tmp->arg, src);
      exit(g_global.return_value);
     }
@@ -83,11 +83,11 @@ void	last_child(int in, int *fd, t_pipe *tmp, t_source *src)
 	x = fork();
 	if (x == 0)
     {
+		if (tmp->pipef != NULL)
+			red_open_pipe(tmp->pipef);
     	dup2 (in, 0);
     	close(in);
     	close (fd[0]);
-		if (tmp->pipef != NULL)
-			red_open_pipe(tmp->pipef);
 		command_list(tmp->cmd, tmp->arg, src);
     	exit(g_global.return_value);
     } 
