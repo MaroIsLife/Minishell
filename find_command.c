@@ -74,14 +74,14 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 
 	file_found = 0;
 	i = src->offset;
-	if (s[i] == '|' || s[i] == '\\')
-	{
-		src->ra = malloc(2 * sizeof(char));
-		src->ra[0] = s[i];
-		src->ra[1] = '\0';
-		src->dollarused = 1;
-		return (ft_strdup(src->ra));
-	}
+	// if (s[i] == '|' || s[i] == '\\')
+	// {
+	// 	src->ra = malloc(2 * sizeof(char));
+	// 	src->ra[0] = s[i];
+	// 	src->ra[1] = '\0';
+	// 	src->dollarused = 1;
+	// 	return (ft_strdup(src->ra));
+	// }
 	while (s[i] == ' ' || s[i] == '|')
 		i++;
 	start = i;

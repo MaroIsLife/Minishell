@@ -49,52 +49,41 @@ char    *ft_strjoinchar(char *s, char c)
 
 int             get_char()
 {
-		char    c;
-		int		total;
-		struct	termios term , init; //init made to reset to default
+	char			c;
+	int				total;
+	struct termios	term;
+	struct termios	init;
 
-		tcgetattr(0, &term); //get terminal attributes and store them in in the struct
-		tcgetattr(0, &init); //set terminal attributes in the struct
-		term.c_lflag &= ~(ICANON); //Set to Non Canonical, Reads instantly without waiting for "ENTER" key, Maximum length is 4096
-		term.c_lflag &= ~(ECHO);  // Stops the keys read from printing in terminal
-		term.c_cc[VMIN] = 0;  // VMIN   Minimum number of characters for noncanonical read (MIN).
-		term.c_cc[VTIME] = 0;  //VTIME Timeout in deciseconds for noncanonical read (TIME).
-		tcsetattr(0, TCSANOW, &term); //Set Atrributes of termios (Update Changes)
-		total = 0;
-		while (read(0, &c, 1) <= 0);
+	tcgetattr(0, &term);
+	tcgetattr(0, &init);
+	term.c_lflag &= ~(ICANON);
+	term.c_lflag &= ~(ECHO);
+	term.c_cc[VMIN] = 0;
+	term.c_cc[VTIME] = 0;
+	tcsetattr(0, TCSANOW, &term);
+	total = 0;
+	while (read(0, &c, 1) <= 0)
+		;
+	total += c;
+	while (read(0, &c, 1) > 0)
 		total += c;
-		while (read(0, &c, 1) > 0)
-				total += c;
-		tcsetattr(0, TCSANOW, &init); // Reset to Default because it doesn't work when cmd = cat, sort etc..
-		return (total);
+	tcsetattr(0, TCSANOW, &init);
+	return (total);
 }
 
-// void    print_prompt1()
-// {
-// 		write(1,"\033[0;32mMaro-&-Ma3toub$ \033[0;39m",sizeof("\033[0;32mMaro-&-Ma3toub$ \033[0;39m"));
-// }
-
-
-int ft_putc(int s)
+int	ft_putc(int s)
 {
-	return write(1,&s,1);
+	return (write(1, &s, 1));
 }
 
 char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 {
 	int		d;
 	char	*s;
-	// t_stack *tmp;
-	// head = (t_stack *) malloc(sizeof(t_stack));
-	// head->next = NULL;
-	// head->prev = NULL;
-	// tmp = head;
-	// tmp = NULL;
 
 	while(1)
 	{
 		d = get_char();
-		// fprintf(stderr,"d = %d",d);
 		if (d == 4)
 		{
 			if (g_global.ret == NULL)
@@ -123,10 +112,7 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 				while (i < (strlen(g_global.ret) - 1))
 					i++;
 				tputs(tgetstr("le",NULL), 1, ft_putc);
-				// tputs(tgetstr("dm",NULL), 1, ft_putc);
 				tputs(tgetstr("dc",NULL), 1, ft_putc);
-				// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
-			
 				//check Heeeere.
 				if (!termc->edit)
 					{
@@ -137,7 +123,6 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 						// puts(g_global.ret);
 					}
 				g_global.ret[i] = '\0';
-				// tputs(tgetstr("ed",NULL), 1, ft_putc);
 			}
 		}
 		else if (d == KEY_DOWN)
@@ -153,37 +138,19 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 			}
 			else
 			{
-				// printf("Made it here\n");
 				g_global.ret = ft_strdup("");
 				termc->help = 0;
 				write(1, g_global.ret, strlen(g_global.ret));
 			}
 				termc->edit = 0;
-			
-			// else
-			// 	g_global.ret[0] = 0;
-			// s = tgoto(tgetstr("ch", NULL), 0 ,0);
-			// write(1, s, strlen(s)); 
-			// s = tgetstr("dl", NULL); //Get the string entry id 'ce' means clear from the cursor to the end of the current line.
-			// write(1, s, strlen(s)); // execute the string entry id
 		}
 		else if (d == KEY_UP)
 		{
 			tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
 			tputs(tgetstr("dl",NULL), 1, ft_putc);
 			print_prompt1();
-			// if (tmp)
-			// {
-			// 	// fprintf(stderr, "%s", tmp->next);
-
-			// 	write(1, tmp->data, strlen(tmp->data));
-			// 	if(tmp->next != NULL)
-			// 		tmp = tmp->next;
-			// 	g_global.ret = tmp->data;
-			// }
 			if (*tmp)
 				{
-					// printf("made it here\n");
 					if (!(*tmp)->prev && !termc->help)
 					{
 						g_global.ret = (char*)(*tmp)->data;
@@ -201,24 +168,9 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 						write(1, (*tmp)->data, strlen((*tmp)->data));}
 				}
 			termc->edit = 0;
-			// else
-			// 	g_global.ret = "";
-			// else 
-			// {
-			// 	g_global.ret[0] = 0;
-			// }
-			// t_stack *tmp;
-			// tmp = head;
-			// while (tmp)
-			// {
-			// 	printf("%s\n", (char*)tmp->data);
-			// 	tmp = tmp->next;
-			// }
 		}
 		else if (d == ENTER)
 		{
-			// tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putc);
-			// tputs(tgetstr("dl",NULL), 1, ft_putc);
 			if (g_global.ret == NULL)
 			{
 				write(1,"\n",1);
@@ -226,31 +178,17 @@ char *term_loop(t_stack **head, t_stack **tmp, t_termc *termc)
 				continue ;
 			}
 			write(1,"\n",1);
-			// print_prompt1();
-			// s = tgetstr("ch", NULL);
-			// write(1, s, strlen(s)); 
-			// s = tgetstr("dl", NULL); //Get the string entry id 'ce' means clear from the cursor to the end of the current line.
-			// write(1, s, strlen(s)); // execute the string entry id
-				// fprintf(stderr, "Else made it here");
 			if (g_global.ret[0] != 0)
 			{
 				lstadd_dlist(head, lstnewc(strdup(g_global.ret)));
-				// fprintf(stderr, "%s", tmp);
 				*tmp = *head;
 				termc->help = 0;
-				// printf("Data: %s\n",(*head)->data);
-				// printf("%s\n",tmp->data);
 			}
 			termc->edit = 0;
-			// if (termc->help == 0)
-			// strcpy(s, g_global.ret);
 			s = ft_strdup(g_global.ret);
 			free(g_global.ret);
-			// g_global.ret = "";
 			return (s);
-			// continue ;
 		}
 	}
-	// printf("\ng_global.ret: %s\n",ret);
     return (0);	
 }
