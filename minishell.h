@@ -52,43 +52,42 @@ typedef struct s_pipe {
 
 typedef struct s_source
 {
-	int		cmdlen;
-	int		offset;
-	int		dquotes;
-	int		squotes;
-	int		aslash;
-	int		lastenv;
-	int		dollarused;
-	char	**redsplit;
-	int		foundpipe;
-	int		founderror;
-	int		foundred;
-	int		c;
-	int		nred;
-	int		npipe;
-	int		forkid;
-	char	**export;
-	char	**our_envp;
-	char	*re;
-	int		re_b;
-	char	*ra;
-	int		tmp;
-	char	*ctmp;
-	char	*ctmp2;
-	int		tmp2;
-	int		stop;
-	int		ra_b;
-	int		lastexp;
-	int		count;
-	int		allocate;
-	int		ispipered;
-	char	**filenames;
-	int		fd_r_c;
+	int			cmdlen;
+	int			offset;
+	int			dquotes;
+	int			squotes;
+	int			aslash;
+	int			lastenv;
+	int			dollarused;
+	char		**redsplit;
+	int			foundpipe;
+	int			founderror;
+	int			foundred;
+	int			c;
+	int			nred;
+	int			npipe;
+	int			forkid;
+	char		**export;
+	char		**our_envp;
+	char		*re;
+	int			re_b;
+	char		*ra;
+	int			tmp;
+	char		*ctmp;
+	char		*ctmp2;
+	int			tmp2;
+	int			stop;
+	int			ra_b;
+	int			lastexp;
+	int			count;
+	int			allocate;
+	int			ispipered;
+	char		**filenames;
+	int			fd_r_c;
 	t_filename	*p;
 	t_pipe		*ptemp;
 	int			p_temp_i;
 }				t_source;
-
 
 typedef struct s_node {
 	char			*cmd;
@@ -101,21 +100,21 @@ typedef struct s_node {
 }	t_node;
 
 typedef struct s_var {
-	t_node	*head;
-	t_node	*first;
-	t_stack	*head1;
-	t_stack	*tmp;
-	char	*cmd;
-	char	*ret;
-	char	**pipes;
-	int		count;
-	int		edit;
-	int		help;
-	int		i;
-	int		c;
-	int		d;
-	t_filename *here;
-	t_filename *next;
+	t_node		*head;
+	t_node		*first;
+	t_stack		*head1;
+	t_stack		*tmp;
+	char		*cmd;
+	char		*ret;
+	char		**pipes;
+	int			count;
+	int			edit;
+	int			help;
+	int			i;
+	int			c;
+	int			d;
+	t_filename	*here;
+	t_filename	*next;
 }	t_var;
 
 typedef struct s_ft {
@@ -137,122 +136,103 @@ typedef struct s_global {
 t_global	g_global;
 
 //Parsing
-char	*ms_get_cmd(t_source *src, t_var *var);
-void	ms_init(t_source *src, t_var *var, char **envp);
-void	ms_nodes(t_var *var, t_source *src, char **pipes, int c);
-void	init_env(t_source *src, char **envp);
-void	ms_pipe_one(t_source *src, t_var *var);
-void	init_arg_pipe(char **arg, t_pipe *p, int tmp2);
-char	*get_x_env(char **envp, t_source *src, char *envv_name);
-void	freeList_pipe(t_pipe *head);
-void	freeList(t_node *head);
-int	num_of_node(t_pipe *tmp);
-void	init(t_source *src);
+char		*ms_get_cmd(t_source *src, t_var *var);
+void		ms_init(t_source *src, t_var *var, char **envp);
+void		ms_nodes(t_var *var, t_source *src, char **pipes, int c);
+void		init_env(t_source *src, char **envp);
+void		ms_pipe_one(t_source *src, t_var *var);
+void		init_arg_pipe(char **arg, t_pipe *p, int tmp2);
+char		*get_x_env(char **envp, t_source *src, char *envv_name);
+void		freeList_pipe(t_pipe *head);
+void		freeList(t_node *head);
+int			num_of_node(t_pipe *tmp);
+void		init(t_source *src);
 void		sigs(void);
 t_filename	*get_last_node(t_filename *tmp);
 t_pipe		*get_last_node_p(t_pipe *tmp);
-void	init_arg(t_node *head, char **arg, t_source *src, int tmp2);
-void	init_parse(t_source *src, t_node *head, char **envp, char **pipe);
-char	*find_command(char *s, t_node *head, t_source *src, char **envp);
-int		get_env_value_cmd(char *s, char **envp, t_source *src, int i);
-int		find_file_name(int **i, char *s, t_source *src, t_node *head);
-int		arg_if_space(char *s, int ***i, t_source *src);
-char	*find_argument(char *s, t_node *head, t_source *src, char **envp);
-int		count_argument(char *s, int offset, t_source *src);
-void	find_for_split(char *cmd, t_source *src);
-int 	finding_quotes(char *s, int i, t_source *src);
-int 	finding_quotes2(char *s, int i, t_source *src);
-int		finding_aslash(char *s, int i, t_source *src);
-int		finding_aslash2(char *s, int i, t_source *src);
-int 	finding_quotes_cmd(char *s, int i, t_source *src);
-int		get_env_value_cmd(char *s, char **envp, t_source *src, int i);
-int		get_env_value_arg(char *s, char **envp, t_source *src, int i);
-int		find_equal_length(char **envp,int c, int b);
-char	*get_env_value_cmd_two(char *s, char **envp, t_source *src, int i);
-int		finding_aslash_split(char *s, int i, t_source *src);
-int		finding_quotes_split(char *s, int i, t_source *src);
-char	**ft_split_normal(char *s, char c);
-char	**my_ft_split(char *s, char c, t_source *src);
-void	print_prompt1();
-void	print_prompt2();
-char	*read_line();
-void	ms_loop(t_source *src, char **envp, t_var *var);
-// Built in functions
-int		ft_exit(char **args, t_source *src);
-void	command_list(char *cmd, char **args, t_source *src);
-void	ft_echo(char **args);
-//export
-int		ft_strlen_eq(char *src);
-void	print_env(t_source *src);
-void	ft_export(char **args, t_source *src);
-char	*search_env(t_node *head, t_source *src, char **envp, int offset);
-void 	ft_sort(t_source *src);
-char	**our_realloc(char **s, int count);
-int 	check_exsyn(char *src);
-int		ft_alloc_count(char **envp, char **args);
-void	ft_expn_add_else(char *add, t_source *src, char **args);
-int		arg_counter(char **src);
-void	replace_env(char **envp, t_source *src, char *value);
-void	ft_set_enxp(char **args, t_source *src, char **envp);
-void	ft_expn_chng(char *add, t_source *src, char **envp, char **args);
-int		found_eq(char *src);
-void	em_export(t_source *src);
-void 	ft_expn_add(char *add, t_source *src, char **our_envp, char **args);
-void	ft_expn_add_two(char **tmp1, char **tmp2, int option, int i);
-//end export
-int		ft_unset(char **args,t_source *src);
-void	ft_cd(char **args,t_source *src, char *home);
-void	change_pwd_env(t_source *src);
-void 	change_pwd_export(t_source *src);
-void	ft_pwd (void);
-int		ft_isdollar(int c);
-char	*where_home(t_source *src);
-void	red_open(t_node *head, t_source *src);
-void	red_open_pipe(t_filename *tmp);
-void	fork_pips(int npipe, t_node *head, t_source *src);
-//Execute
-int		ft_execute(char *cmd, char **args, t_source *src, char **envp);
-char	*get_correct_path(char **s, char **varg);
-char	**get_env_path(char **envp, t_source *src);
-char	**ft_valide_args(char *cmd, char **args, int count);
-int		calc_args(char **args);
-int		print_cmd_error(char *cmd, int option, int message);
-
-//Signals
-void	ft_signal();
-void	handler(int c);
-void	handler2(int c);
-
-
-//Utils
-char	*get_x_env(char **envp, t_source *src, char *envv_name);
-void	set_x_env(char **envp, t_source *src, char *envv_name, char *value);
-int 	init_question_arg(t_source *src, int ret);
-int 	init_question_cmd(t_source *src, int ret);
-
-
-void	lstadd_dlist(t_stack **alst, t_stack *new);
-void	next_node(t_stack **list);
-void	prev_node(t_stack **list);
-t_stack	*lstnewc(void *data);
-
-///
-int is_equal(char *s1, char *s2);
-
-char *term_loop(t_stack **head, t_stack **tmp, t_var *var);
-char    *ft_strjoinchar(char *s, char c);
-int	get_char(void);
-int 	ft_search(char **src, char *value);
-int	ft_putc(int s);
-void	ft_key_remove(t_var *var);
-t_filename		*new_file(char *s, t_source *src);
-void	ft_key_down(t_stack **tmp, t_var *var);
-void init_filee(t_source *src);
-
-
-int		count_start(char *s, t_source *src, int start, int *i);
-int		count_start_two(char *s, t_source *src, int *start, int **i);
-void freeList(t_node* head);
-
-
+void		init_arg(t_node *head, char **arg, t_source *src, int tmp2);
+void		init_parse(t_source *src, t_node *head, char **envp, char **pipe);
+char		*find_command(char *s, t_node *head, t_source *src, char **envp);
+int			get_env_value_cmd(char *s, char **envp, t_source *src, int i);
+int			find_file_name(int **i, char *s, t_source *src, t_node *head);
+int			arg_if_space(char *s, int ***i, t_source *src);
+char		*find_argument(char *s, t_node *head, t_source *src, char **envp);
+int			count_argument(char *s, int offset, t_source *src);
+void		find_for_split(char *cmd, t_source *src);
+int			finding_quotes(char *s, int i, t_source *src);
+int			finding_quotes2(char *s, int i, t_source *src);
+int			finding_aslash(char *s, int i, t_source *src);
+int			finding_aslash2(char *s, int i, t_source *src);
+int			finding_quotes_cmd(char *s, int i, t_source *src);
+int			get_env_value_cmd(char *s, char **envp, t_source *src, int i);
+int			get_env_value_arg(char *s, char **envp, t_source *src, int i);
+int			find_equal_length(char **envp, int c, int b);
+char		*get_env_value_cmd_two(char *s, char **envp, t_source *src, int i);
+int			finding_aslash_split(char *s, int i, t_source *src);
+int			finding_quotes_split(char *s, int i, t_source *src);
+char		**ft_split_normal(char *s, char c);
+char		**my_ft_split(char *s, char c, t_source *src);
+void		print_prompt1(void);
+void		print_prompt2(void);
+void		ms_loop(t_source *src, char **envp, t_var *var);
+int			ft_exit(char **args, t_source *src);
+void		command_list(char *cmd, char **args, t_source *src);
+void		ft_echo(char **args);
+int			ft_strlen_eq(char *src);
+void		print_env(t_source *src);
+void		ft_export(char **args, t_source *src);
+char		*search_env(t_node *head, t_source *src, char **envp, int offset);
+void		ft_sort(t_source *src);
+char		**our_realloc(char **s, int count);
+int			check_exsyn(char *src);
+int			ft_alloc_count(char **envp, char **args);
+void		ft_expn_add_else(char *add, t_source *src, char **args);
+int			arg_counter(char **src);
+void		replace_env(char **envp, t_source *src, char *value);
+void		ft_set_enxp(char **args, t_source *src, char **envp);
+void		ft_expn_chng(char *add, t_source *src, char **envp, char **args);
+int			found_eq(char *src);
+void		em_export(t_source *src);
+void		ft_expn_add(char *add, t_source *src, char **our_envp, char **args);
+void		ft_expn_add_two(char **tmp1, char **tmp2, int option, int i);
+int			ft_unset(char **args, t_source *src);
+void		ft_cd(char **args, t_source *src, char *home);
+void		change_pwd_env(t_source *src);
+void		change_pwd_export(t_source *src);
+void		ft_pwd (void);
+int			ft_isdollar(int c);
+char		*where_home(t_source *src);
+void		red_open(t_node *head, t_source *src);
+void		red_open_pipe(t_filename *tmp);
+void		fork_pips(int npipe, t_node *head, t_source *src);
+int			ft_execute(char *cmd, char **args, t_source *src, char **envp);
+char		*get_correct_path(char **s, char **varg);
+char		**get_env_path(char **envp, t_source *src);
+char		**ft_valide_args(char *cmd, char **args, int count);
+int			calc_args(char **args);
+int			print_cmd_error(char *cmd, int option, int message);
+void		ft_signal(void);
+void		handler(int c);
+void		handler2(int c);
+char		*get_x_env(char **envp, t_source *src, char *envv_name);
+void		set_x_env(char **envp, t_source *src, char *envv_name, char *value);
+int			init_question_arg(t_source *src, int ret);
+int			init_question_cmd(t_source *src, int ret);
+void		lstadd_dlist(t_stack **alst, t_stack *new);
+void		next_node(t_stack **list);
+void		prev_node(t_stack **list);
+t_stack		*lstnewc(void *data);
+int			is_equal(char *s1, char *s2);
+char		*term_loop(t_stack **head, t_stack **tmp, t_var *var);
+char		*ft_strjoinchar(char *s, char c);
+int			get_char(void);
+int			ft_search(char **src, char *value);
+int			ft_putc(int s);
+void		ft_key_remove(t_var *var);
+t_filename	*new_file(char *s, t_source *src);
+void		ft_key_down(t_stack **tmp, t_var *var);
+void		init_filee(t_source *src);
+int			count_start(char *s, t_source *src, int start, int *i);
+int			count_start_two(char *s, t_source *src, int *start, int **i);
+void		freeList(t_node *head);
 #endif

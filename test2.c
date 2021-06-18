@@ -53,7 +53,7 @@ char	*ft_key_enter(t_stack **head, t_stack **tmp, t_var *var)
 	return (s);
 }
 
-int ret_d(void)
+int	ret_d(void)
 {
 	int		d;
 	char	*tmp;
