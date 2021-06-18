@@ -143,156 +143,177 @@ void	sigs()
 	g_global.ret = NULL;
 }
 
+char	*ms_get_cmd(t_source *src, t_var *var)
+{
+	char	*cmd;
+	int		b;
+
+	b = 0;
+	sigs();
+	cmd = term_loop(&var->head1, &var->tmp, var);
+	while (cmd[b] == ' ')
+		b++;
+	if (cmd[b] == '\0')
+	{
+		print_prompt1();
+		free(cmd);
+		free(g_global.ret);
+		return ("continue");
+	}
+	g_global.fsignal = 0;
+	init(src);
+	return (cmd);
+}
+void	ms_init(t_source *src, t_var *var, char **envp)
+{
+	init_env(src, envp);
+	g_global.return_value = 0;
+	var->edit = 0;
+	var->help = 0;
+	g_global.ret = NULL;
+  	tgetent(NULL, getenv("TERM"));
+	var->tmp = NULL;
+	var->head1 = NULL;
+}
+
+void	ms_nodes(t_var *var, t_source *src, char **pipes, int c)
+{
+	var->head = (t_node *) malloc(sizeof(t_node));
+	var->head->next = NULL;
+	var->head->pipe = NULL;
+	var->head->first_filename = NULL;
+	var->first = var->head;
+	find_for_split(pipes[c], src);
+	src->allocate = 0;
+	if (src->foundred == 1)
+	{
+		var->head->first_filename = (t_filename *)malloc(sizeof(t_filename));
+		var->head->first_filename->next = NULL;
+		src->p = var->head->first_filename;
+	}
+	src->dquotes = 0;
+	src->squotes = 0;
+	src->fd_r_c = 0;
+	src->c = c;
+	init_parse(src, var->head, src->our_envp, pipes);
+	src->offset = 0;
+	g_global.return_value = 0;
+	if (src->founderror == 1)
+		write(1, "Found error\n", 12);
+}
+
+void	ms_pipe_one(t_source *src, t_var *var)
+{
+	t_pipe		*here;
+	t_pipe		*next;
+	int			cont;
+
+	fork_pips(src->npipe + 1, var->head, src);
+	here = var->head->pipe;
+	while (here != NULL)
+	{
+		cont = 0;
+		next = here->next;
+		free(here->cmd);
+		while (here->arg[cont])
+			free(here->arg[cont++]);		
+		free(here->arg);
+		free(here);
+		here = next;
+	}
+	var->head->pipe = NULL;
+}
+
+void	ms_pipe_two(t_source *src, t_var *var)
+{
+	int id;
+
+	id = fork();
+	if (id == 0)
+	{
+		red_open(var->head, src);
+		command_list(var->head->cmd ,var->head->arg, src);
+		exit(0);
+	}
+	wait(&id);
+}
+
+
+void	ms_loop_semicolons(t_source *src, t_var *var)
+{
+	int  c;
+
+	c = 0;
+	while (var->pipes[c] != NULL)
+	{
+			ms_nodes(var ,src, var->pipes, c);
+			if (!var->head->cmd)
+			{
+				c++;
+				continue ;
+			}
+			if (src->foundred == 0 && src->foundpipe == 0)
+				command_list(var->head->cmd, var->head->arg, src);
+			else
+			{
+				if (src->foundpipe == 1)
+					ms_pipe_one(src, var);
+				if (src->foundred && !src->foundpipe)
+					ms_pipe_two(src, var);
+			}
+			c++;
+	}
+}
+
+void	ms_free(t_source *src, t_var *var)
+{
+	int n;
+	
+	n = 0;
+	var->here = var->head->first_filename;
+	while (var->here != NULL)
+	{
+		var->next = var->here->next;
+		free(var->here->filename);
+		free(var->here);
+		var->here = var->next;
+	}
+	free(var->head->cmd);
+	while (var->head->arg[n])
+		free(var->head->arg[n++]);
+	free(var->head->arg);
+	free(var->head);
+	n = 0;
+	while (var->pipes[n] != NULL)
+	{
+		free(var->pipes[n]);
+		n++;
+	}
+	free(var->pipes);
+}
+
 
 void	ms_loop(t_source *src, char **envp, t_var *var)
 {
 	char	*cmd;
 	int		count;
 	int		i = 0;
-	t_node	*head;
-	t_node	*first;
-	char	**pipes;
-	int		fsignal;
-	t_stack *head1;
-	t_stack *tmp;
 	char	*ret;
+	int		c;
 
-	init_env(src,envp);
-	g_global.return_value = 0;
-	var->edit = 0;
-	var->help = 0;
-	g_global.ret = NULL;
-  	tgetent(NULL, getenv("TERM"));
-	tmp = NULL;
-	head1 = NULL;
+	ms_init(src, var, envp);
 	while(1)
 	{
-		sigs();
-		cmd = term_loop(&head1, &tmp, var);
-		int b = 0;
-		while (cmd[b] == ' ')
-			b++;
-		if (cmd[b] == '\0')
-		{
-			print_prompt1();
-			free(cmd);
-			free(g_global.ret);
+		cmd = ms_get_cmd(src, var);
+		if (ft_strncmp(cmd, "continue", 8) == 0)
 			continue ;
-		}
-		g_global.fsignal = 0;
-		init(src);
-		pipes = my_ft_split(cmd, ';', src);
+		var->pipes = my_ft_split(cmd, ';', src);
 		free(cmd);
 		free(g_global.ret);
-		int c;
-		int o = 0;
 		c = 0;
 		src->fd_r_c = 0;
-		while (pipes[c] != NULL)
-		{
-			head = (t_node *) malloc(sizeof(t_node));
-			head->next = NULL;
-			head->pipe = NULL;
-			head->first_filename = NULL;
-			first = head;
-			find_for_split(pipes[c], src);
-			src->allocate = 0;
-			if (src->foundred == 1)
-			{
-				head->first_filename = (t_filename *)malloc(sizeof(t_filename));
-				head->first_filename->next = NULL;
-				src->p = head->first_filename;
-			}
-			src->dquotes = 0;
-			src->squotes = 0;
-			src->fd_r_c = 0;
-			i = 0;
-			src->c = c;
-			init_parse(src, head, src->our_envp, pipes);
-			if (src->founderror == 1)
-				write(1, "Found error\n", 12);
-			i = 0;
-			if (!head->cmd)
-			{
-				c++;
-				continue ;
-			}
-			src->offset = 0;
-			g_global.return_value = 0;
-			if (src->foundred == 0 && src->foundpipe == 0)
-				command_list(head->cmd, head->arg, src);
-			else
-			{
-					if (src->foundpipe == 1)
-						{
-							fork_pips (src->npipe + 1, head, src);
-							t_pipe *here;
-							
-							t_pipe *next;
-							int cont;
-
-							here = head->pipe;
-							while (here != NULL)
-							{
-								cont = 0;
-								next = here->next;
-								free (here->cmd);
-								while (here->arg[cont])
-									free(here->arg[cont++]);		
-								free(here->arg);
-								free(here);
-								here = next;
-
-							}
-							head->pipe = NULL;
-
-						}
-					if (src->foundred && !src->foundpipe)
-					{	
-						int id = fork();
-						int ge_id;
-						if (id == 0)
-						{
-							red_open(head, src);
-							command_list(head->cmd ,head->arg, src);
-						exit(0);
-					
-						
-						}
-						wait(&id);
-					}
-			}
-			c++;
-		}
-		// free(termc);
-		// freeList(head);
-			t_filename *here;
-			t_filename *next;
-
-			here = head->first_filename;
-			while (here != NULL)
-			{
-				next = here->next;
-				free(here->filename);
-				free(here);
-				here = next;
-			}
-		free(head->cmd);
-		int n = 0;
-		while (head->arg[n])
-			free(head->arg[n++]);
-		free(head->arg);
-	
-		free(head);
-		int p = 0;
-		while (pipes[p] != NULL)
-		{
-			free(pipes[p]);
-			p++;
-		}
-		// printf("\np: %d\n",p);
-		free(pipes);
-		// system("leaks a.out");
+		ms_loop_semicolons(src, var);
+		ms_free(src, var);
 	}
 }
 
@@ -300,7 +321,6 @@ int     main(int argc, char **argv, char **envp)
 {
 	t_source src;
 	t_var	var;
-	// clear();
 
 	ms_loop(&src, envp, &var);
 	

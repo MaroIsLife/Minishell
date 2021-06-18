@@ -104,14 +104,18 @@ typedef struct s_var {
 	t_node	*head;
 	t_node	*first;
 	t_stack	*head1;
-	t_stack	*tmp1;
+	t_stack	*tmp;
 	char	*cmd;
 	char	*ret;
-	int		fsignal;
 	char	**pipes;
 	int		count;
 	int		edit;
 	int		help;
+	int		i;
+	int		c;
+	int		d;
+	t_filename *here;
+	t_filename *next;
 }	t_var;
 
 typedef struct s_ft {
