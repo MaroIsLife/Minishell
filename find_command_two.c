@@ -18,7 +18,7 @@ char	*get_env_value_cmd_two(char *s, char **envp, t_source *src, int i)
 	return (temp);
 }
 
-int	get_env_value_three(t_source *src, int *b, int c, char *temp)
+int	get_env_value_cmd_three(t_source *src, int *b, int c, char *temp)
 {
 	if (ft_strncmp(src->our_envp[c], temp, ft_strlen(temp)) == 0
 		&& src->our_envp[c][ft_strlen(temp)] == '=')
@@ -51,7 +51,7 @@ int	get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	length = ft_strlen(temp);
 	while (src->our_envp[c] != NULL)
 	{
-		if (get_env_value_three(src, &b, c, temp) == 1)
+		if (get_env_value_cmd_three(src, &b, c, temp) == 1)
 			break ;
 		c++;
 	}
