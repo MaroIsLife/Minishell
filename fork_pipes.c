@@ -105,7 +105,6 @@ void fork_pips (int n, t_node *head,  t_source *src)
 {
   int i;
   int in;
-  int fd [2];
   t_pipe *tmp;
   
   tmp = head->pipe;
@@ -113,20 +112,20 @@ void fork_pips (int n, t_node *head,  t_source *src)
   i = 0;	
   while(i < n - 1)
     {
-      pipe (fd);
+      pipe (src->fd);
       if (i == 0)
-          first_child (in, fd , head ,src);
+          first_child (in, src->fd , head ,src);
       else
       {
         if (tmp->next == NULL)
             break;
-          inner_childs (in, fd , tmp, src);
+          inner_childs (in, src->fd , tmp, src);
         tmp = tmp->next;
        }
-      close (fd [1]); 
+      close (src->fd [1]); 
       if (i++ != 0)
         close(in);
-      in = fd [0];
+      in = src->fd [0];
     }
-	last_child(in, fd, tmp, src);
+	last_child(in, src->fd, tmp, src);
 }
