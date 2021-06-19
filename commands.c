@@ -40,7 +40,7 @@ void	ft_echo(char **args)
 			{
 				nl = 1;
 				i++;
-				if (check_bs(args[i]))
+				if (args[i] && check_bs(args[i]))
 					val_arg = 1;
 				continue ;
 			}
