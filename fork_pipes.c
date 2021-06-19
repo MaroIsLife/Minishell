@@ -66,7 +66,6 @@ void	last_child(int in, int *fd, t_pipe *tmp, t_source *src)
 {
 	int	x;
 	int	i;
-	int	ret;
 
 	x = fork();
 	if (x == 0)

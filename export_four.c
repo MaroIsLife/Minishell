@@ -11,7 +11,7 @@ int	ft_strlen_eq(char *src)
 	return (i);
 }
 
-void	replace_env(char **envp, t_source *src, char *value)
+void	replace_env(t_source *src, char *value)
 {
 	int		i;
 	char	*tmp;

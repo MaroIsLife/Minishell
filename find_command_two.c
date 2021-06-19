@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*get_env_value_cmd_two(char *s, char **envp, t_source *src, int i)
+char	*get_env_value_cmd_two(char *s, t_source *src, int i)
 {
 	int		b;
 	char	*temp;
@@ -33,7 +33,7 @@ int	get_env_value_cmd_three(t_source *src, int *b, int c, char *temp)
 	return (0);
 }
 
-int	get_env_value_cmd(char *s, char **envp, t_source *src, int i)
+int	get_env_value_cmd(char *s, t_source *src, int i)
 {
 	char	*temp;
 	int		b;
@@ -45,7 +45,7 @@ int	get_env_value_cmd(char *s, char **envp, t_source *src, int i)
 	if (s[i] == '?')
 		return (init_question_cmd(src, i));
 	src->dollarused = 1;
-	temp = get_env_value_cmd_two(s, envp, src, i);
+	temp = get_env_value_cmd_two(s, src, i);
 	i = src->tmp;
 	b = 0;
 	length = ft_strlen(temp);

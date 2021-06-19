@@ -53,7 +53,7 @@ int	get_env_value_arg_three(t_source *src, int *b, int c, char *temp)
 	return (0);
 }
 
-int	get_env_value_arg(char *s, char **envp, t_source *src, int i)
+int	get_env_value_arg(char *s, t_source *src, int i)
 {
 	char	*temp;
 	int		b;
@@ -65,7 +65,7 @@ int	get_env_value_arg(char *s, char **envp, t_source *src, int i)
 	c = 0;
 	if (s[i] == '?')
 		return (init_question_arg(src, i));
-	temp = get_env_value_cmd_two(s, envp, src, i);
+	temp = get_env_value_cmd_two(s, src, i);
 	i = src->tmp;
 	b = 0;
 	length = ft_strlen(temp);

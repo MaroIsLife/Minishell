@@ -36,12 +36,12 @@ void	ms_loop_semicolons(t_source *src, t_var *var)
 			if (src->foundred && !src->foundpipe)
 				ms_pipe_two(src, var);
 		}
-		ms_free_inside(src, var);
+		ms_free_inside(var);
 		c++;
 	}
 }
 
-void	ms_free_inside(t_source *src, t_var *var)
+void	ms_free_inside(t_var *var)
 {
 	int	n;
 
@@ -64,8 +64,6 @@ void	ms_free_inside(t_source *src, t_var *var)
 void	ms_loop(t_source *src, char **envp, t_var *var)
 {
 	char	*cmd;
-	int		count;
-	char	*ret;
 	int		c;
 
 	ms_init(src, var, envp);
@@ -80,7 +78,7 @@ void	ms_loop(t_source *src, char **envp, t_var *var)
 		c = 0;
 		src->fd_r_c = 0;
 		ms_loop_semicolons(src, var);
-		ms_free(src, var);
+		ms_free(var);
 	}
 }
 
@@ -89,6 +87,7 @@ int	main(int argc, char **argv, char **envp)
 	t_source	src;
 	t_var		var;
 
+	argc = arg_counter(argv);
 	ms_loop(&src, envp, &var);
 	return (0);
 }

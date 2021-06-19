@@ -39,10 +39,10 @@ void	command_list(char *cmd, char **args, t_source *src)
 	else if (ft_strncmp(cmd, "unset", 5) == 0 && cmd[5] == '\0')
 		ft_unset(args, src);
 	else if (ft_strncmp(cmd, "exit", 4) == 0 && cmd[4] == '\0')
-		ft_exit(args, src);
+		ft_exit(args);
 	else if ((src->dollarused == 1 && cmd[0] == '\0'))
 		;
 	else
-		ft_execute(cmd, args, src, src->our_envp);
+		ft_execute(cmd, args, src);
 	free(home);
 }

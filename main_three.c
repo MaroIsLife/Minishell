@@ -18,7 +18,6 @@ int	num_of_node(t_pipe *tmp)
 void	freeList_pipe(t_pipe *head)
 {
 	t_pipe	*tmp;
-	char	*c_tmp;
 	int		i;
 	int		n;
 
@@ -42,12 +41,11 @@ void	freeList_pipe(t_pipe *head)
 	free(tmp);
 }
 
-char	*get_x_env(char **envp, t_source *src, char *envv_name)
+char	*get_x_env(char **envp, char *envv_name)
 {
 	int		i;
 	int		b;
 	int		c;
-	char	*s;
 
 	b = 0;
 	c = 0;

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void 	ft_expn_add(char *add, t_source *src, char **our_envp, char **args)
+void 	ft_expn_add(char *add, t_source *src, char **args)
 {
 	int		id;
 	char	**tmp1;
@@ -25,17 +25,17 @@ void 	ft_expn_add(char *add, t_source *src, char **our_envp, char **args)
 	{
 		tmp1 = src->export;
 		ft_expn_add_else(add, src, args);
-		ft_expn_add_two(tmp1, tmp2, 2, 0);
+		ft_expn_add_two(tmp1, NULL, 2, 0);
 	}
 }
 
-void	ft_expn_chng_two(char *add, t_source *src, char **args, char **envp)
+void	ft_expn_chng_two(char *add, t_source *src)
 {
 	int		i;
 	char	**tmp;
 
 	if (ft_search(src->our_envp, add))
-		replace_env(envp, src, add);
+		replace_env(src, add);
 	else
 	{
 		tmp = src->our_envp;
@@ -54,7 +54,7 @@ void	ft_expn_chng_two(char *add, t_source *src, char **args, char **envp)
 	}
 }
 
-void	ft_expn_chng(char *add, t_source *src, char **envp, char **args)
+void	ft_expn_chng(char *add, t_source *src)
 {
 	int		i;
 	char	*s_tmp;
@@ -78,10 +78,10 @@ void	ft_expn_chng(char *add, t_source *src, char **envp, char **args)
 		i++;
 	}
 	if (found_eq(add))
-		ft_expn_chng_two(add, src, args, envp);
+		ft_expn_chng_two(add, src);
 }
 
-void	ft_set_enxp(char **args, t_source *src, char **envp)
+void	ft_set_enxp(char **args, t_source *src)
 {
 	int	argn;
 	int	i;
@@ -100,9 +100,9 @@ void	ft_set_enxp(char **args, t_source *src, char **envp)
 			continue ;
 		}
 		if (ft_search(src->export, args[i]))
-			ft_expn_chng(args[i], src, src->our_envp, args);
+			ft_expn_chng(args[i], src);
 		else
-			ft_expn_add(args[i], src, src->our_envp, args);
+			ft_expn_add(args[i], src, args);
 		i++;
 	}
 }
@@ -112,5 +112,5 @@ void	ft_export(char **args, t_source *src)
 	if (args[0] == NULL)
 		em_export(src);
 	else
-		ft_set_enxp(args, src, src->our_envp);
+		ft_set_enxp(args, src);
 }

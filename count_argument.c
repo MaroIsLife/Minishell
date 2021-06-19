@@ -44,7 +44,7 @@ int	count_argument_two(char *s, int *i, int *count, t_source *src)
 	return (0);
 }
 
-int	count_argument(char *s, int offset, t_source *src)
+int	count_argument(char *s, t_source *src)
 {
 	int	i;
 	int	jump;

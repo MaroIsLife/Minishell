@@ -61,9 +61,9 @@ void	ft_key_remove(t_var *var)
 	int	i;
 
 	i = 0;
-	if (strlen(g_global.ret) > 0)
+	if (ft_strlen(g_global.ret) > 0)
 	{
-		while (i < (strlen(g_global.ret) - 1))
+		while (i < (ft_strlen(g_global.ret) - 1))
 			i++;
 		tputs(tgetstr("le", NULL), 1, ft_putc);
 		tputs(tgetstr("dc", NULL), 1, ft_putc);

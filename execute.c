@@ -1,6 +1,6 @@
 #	include "minishell.h"
 
-char	*get_path(t_source *src, char *cmd, char **args, char **varg)
+char	*get_path(t_source *src, char *cmd, char **varg)
 {
 	char	*path;
 	char	**s;
@@ -11,7 +11,7 @@ char	*get_path(t_source *src, char *cmd, char **args, char **varg)
 		path = ft_strdup(cmd);
 	else
 	{
-		s = get_env_path(src->our_envp, src);
+		s = get_env_path(src->our_envp);
 		path = get_correct_path(s, varg);
 		index = 0;
 		while (s[index])
@@ -49,20 +49,18 @@ void	ft_execute_child(char **varg, char *path, t_source *src)
 	}
 }
 
-int	ft_execute(char *cmd, char **args, t_source *src, char **envp)
+int	ft_execute(char *cmd, char **args, t_source *src)
 {
-	char			**s;
 	char			*path;
-	static int		i;
 	char			**varg;
 
 	varg = ft_valide_args(cmd, args, calc_args(args));
 	if (cmd[0] == '\0')
 		return (print_cmd_error(cmd, 1, 1));
-	if (get_x_env(src->our_envp, src, "PATH") == 0
+	if (get_x_env(src->our_envp, "PATH") == 0
 		&& (cmd[0] != '/' && cmd[0] != '.'))
 		return (print_cmd_error(cmd, 1, 1));
-	path = get_path(src, cmd, args, varg);
+	path = get_path(src, cmd, varg);
 	if (path != 0)
 		ft_execute_child(varg, path, src);
 	else

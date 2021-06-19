@@ -8,6 +8,7 @@ void	handler(int c)
 	g_global.return_value = 1;
 	if (g_global.ret != NULL)
 		g_global.ret = NULL;
+	c++;
 }
 
 void	handler2(int c)
@@ -18,6 +19,7 @@ void	handler2(int c)
 		fprintf(stderr, "%d", c);
 		write(2, "\n", 1);
 	}
+	c++;
 }
 
 void	sigs(void)
