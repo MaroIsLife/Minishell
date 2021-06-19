@@ -36,11 +36,12 @@ void	ms_loop_semicolons(t_source *src, t_var *var)
 			if (src->foundred && !src->foundpipe)
 				ms_pipe_two(src, var);
 		}
+		ms_free_inside(src, var);
 		c++;
 	}
 }
 
-void	ms_free(t_source *src, t_var *var)
+void	ms_free_inside(t_source *src, t_var *var)
 {
 	int	n;
 
@@ -58,6 +59,12 @@ void	ms_free(t_source *src, t_var *var)
 		free(var->head->arg[n++]);
 	free(var->head->arg);
 	free(var->head);
+}
+
+void	ms_free(t_source *src, t_var *var)
+{
+	int n;
+
 	n = 0;
 	while (var->pipes[n] != NULL)
 	{
