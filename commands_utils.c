@@ -18,7 +18,7 @@ void	change_pwd_env(t_source *src)
 			s = getcwd(s, 100);
 			free(src->our_envp[i]);
 			src->our_envp[i] = NULL;
-			src->our_envp[i] = ft_strjoin("PWD =", s);
+			src->our_envp[i] = ft_strjoin("PWD=", s);
 			free(s);
 			break ;
 		}
@@ -40,7 +40,7 @@ void	set_old_env(t_source *src, char *pwd)
 			check = 1;
 			free(src->our_envp[i]);
 			src->our_envp[i] = NULL;
-			src->our_envp[i] = ft_strjoin("OLD", pwd);
+			src->our_envp[i] = (pwd);
 			break ;
 		}
 		i++;
