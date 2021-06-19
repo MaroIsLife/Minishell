@@ -38,7 +38,8 @@ char	**get_env_path(char **envp, t_source *src)
 		if (ft_strncmp(envp[i], "PATH", 4) == 0 && envp[i][4] == '=')
 		{
 			s = ft_strchr(envp[i], '=') + 1;
-			paths = ft_split_normal(s, ':');
+			if (s != 0)
+				paths = ft_split_normal(s, ':');
 			return (paths);
 		}
 		i++;

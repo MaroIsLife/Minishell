@@ -53,10 +53,19 @@ int	ft_unset(char **args, t_source *src)
 	int	env;
 	int	exp;
 	int	j;
+	int n;
 
 	j = 0;
 	while (args[j])
 	{
+		n = check_exsyn(args[j]);
+		if (n)
+		{
+			write (2, "Minishell : not a valid identifier\n", 35);
+			g_global.return_value = 1;
+			j++;
+			continue ;
+		}
 		env = ft_search(src->our_envp, args[j]);
 		exp = ft_search(src->export, args[j]);
 		if (exp)

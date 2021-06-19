@@ -12,7 +12,7 @@ CC = gcc
 all : $(NAME)
 
 $(NAME):
-	@$(CC) $(SRC) $(GN) $(LIB) -g -lcurses -fsanitize=address
+	@$(CC) $(SRC) $(GN) $(LIB) -g -lcurses 
 	# @$(CC) $(SRC) $(GN) $(LIB) -g -ltermcap -fsanitize=address 
 	
 clean :
