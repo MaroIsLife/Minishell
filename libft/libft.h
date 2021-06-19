@@ -21,7 +21,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 
-int     ft_strlen(const char *str);
+int		ft_strlen(const char *str);
 int		ft_atoi(const char *str);
 void	ft_bzero(void *s, size_t n);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);

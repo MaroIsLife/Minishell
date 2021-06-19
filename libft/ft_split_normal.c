@@ -2,8 +2,8 @@
 
 static	size_t	delimc(const char *s, char c)
 {
-	size_t i;
-	size_t n;
+	size_t	i;
+	size_t	n;
 
 	i = 0;
 	n = 0;
@@ -14,9 +14,7 @@ static	size_t	delimc(const char *s, char c)
 		while ((s[i] != c && s[i] != '\0'))
 		{
 			while (s[i] != c && s[i] != '\0')
-			{
 				i++;
-			}
 			n++;
 		}
 		while (s[i] && s[i] == c)
@@ -33,7 +31,7 @@ static	char	**ft_free(char **p, int j)
 	return (NULL);
 }
 
-char			**ft_split_normal(char *s, char c)
+char	**ft_split_normal(char *s, char c)
 {
 	size_t		j;
 	size_t		len;
@@ -44,8 +42,7 @@ char			**ft_split_normal(char *s, char c)
 	if (s == 0)
 		return (0);
 	j = delimc(s, c) + 1;
-	if (!(p = (char **)malloc(j * sizeof(char *))))
-		return (NULL);
+	p = (char **)malloc(j * sizeof(char *));
 	k = 0;
 	len = 0;
 	while (k < j - 1)
@@ -55,8 +52,7 @@ char			**ft_split_normal(char *s, char c)
 		start = len;
 		while (s[len] != c && s[len])
 			len++;
-		if (!(p[k++] = ft_substr(s, start, (len - start))))
-			return (ft_free(p, j));
+		p[k++] = ft_substr(s, start, (len - start));
 	}
 	p[k] = 0;
 	return (p);

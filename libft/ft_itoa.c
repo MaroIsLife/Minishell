@@ -12,9 +12,9 @@
 
 #include <stdlib.h>
 
-static	int		count(int n)
+static	int	count(int n)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (n / 10 != 0)
@@ -50,7 +50,7 @@ static	char	*negative(int a, char *p, unsigned int nb)
 	return (p);
 }
 
-char			*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	int				a;
 	char			*p;
