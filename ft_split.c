@@ -14,7 +14,7 @@
 #include "gnl/get_next_line.h"
 #include "minishell.h"
 
-int	delimc(char *s, char c, t_source *src) 
+int	delimc(char *s, char c, t_source *src)
 {
 	int	i;
 	int	n;
@@ -30,14 +30,26 @@ int	delimc(char *s, char c, t_source *src)
 		}
 		if (s[i] == '\0')
 			break ;
-		if (s[i] == c && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
+		if (s[i] == c && src->dquotes == 0 && src->squotes == 0
+			&& src->aslash == 0)
 			n++;
-			i++;
+		i++;
 	}
 	return (n);
 }
 
-char		**my_ft_split(char *s, char c, t_source *src)
+int	count_len(char *s, char c, t_source *src, int *len)
+{
+	while (s[(*len)] != '\0' && s[(*len)] == c && src->dquotes == 0
+		&& src->squotes == 0 && src->aslash == 0)
+	{
+		finding_quotes2(s, (*len), src);
+		(*len)++;
+	}
+	return ((*len));
+}
+
+char	**my_ft_split(char *s, char c, t_source *src)
 {
 	int		j;
 	int		len;
@@ -51,15 +63,11 @@ char		**my_ft_split(char *s, char c, t_source *src)
 	len = 0;
 	while (k < j - 1)
 	{
-		while (s[len] != '\0' && s[len] == c && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
-		{
-			finding_quotes2(s, len, src);
-			len++;
-		}
-		start = len;
+		start = count_len(s, c, src, &len);
 		while (s[len] != '\0')
 		{
-			if (s[len] == c && src->dquotes == 0 && src->squotes == 0 && src->aslash == 0)
+			if (s[len] == c && src->dquotes == 0
+				&& src->squotes == 0 && src->aslash == 0)
 				break ;
 			finding_quotes2(s, len, src);
 			len++;

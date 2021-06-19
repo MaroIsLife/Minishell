@@ -11,9 +11,7 @@
 /* ************************************************************************** */
 
 # include "minishell.h"
-/**
- *  TO DO: SWICH BETWEEN FILE DISCREPTORS (in out) with (fd - fd2)
- */
+
 void  return_fun()
 {
   if (WIFSIGNALED(g_global.id))
@@ -22,30 +20,30 @@ void  return_fun()
 		g_global.return_value = WEXITSTATUS(g_global.id);
 }
 
-int first_child (int in,  int *out, t_node *tmp, t_source *src)
+int first_child (int in, int *out, t_node *tmp, t_source *src)
 {
   int pid;
-  
-  pid = fork ();
+
+  pid = fork();
   if (pid== 0)
+  {
+    if (tmp->first_filename != NULL)
+        red_open_pipe(tmp->first_filename);
+    if (in != 0)
     {
-      if (tmp->first_filename != NULL)
-          red_open_pipe(tmp->first_filename);
-      if (in != 0)
-        {
-			dup2 (in, 0);
-			close (in);
-        }
-      if (out[1] != 1)
-        {
-        	dup2 (out[1], 1);
-          	close (out[1]);
-			close (out[0]);
-        }
-      close(out[0]);
-     command_list(tmp->cmd, tmp->arg, src);
-     exit(g_global.return_value);
+      dup2(in, 0);
+      close(in);
     }
+    if (out[1] != 1)
+      {
+        dup2 (out[1], 1);
+          close (out[1]);
+    close (out[0]);
+      }
+    close(out[0]);
+    command_list(tmp->cmd, tmp->arg, src);
+    exit(g_global.return_value);
+  }
   return pid;
 }
 
