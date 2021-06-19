@@ -94,7 +94,8 @@ void	ft_set_enxp(char **args, t_source *src, char **envp)
 		n = check_exsyn(args[i]);
 		if (n)
 		{
-			write (2, "not a valid identifier\n", 23);
+			write (2, "Minishell : not a valid identifier\n", 35);
+			g_global.return_value = 1;
 			i++;
 			continue ;
 		}

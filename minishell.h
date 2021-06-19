@@ -131,6 +131,8 @@ typedef struct s_global {
 	int		id;
 	int		return_value;
 	char	*ret;
+	int fd1;
+	int fd2;
 
 }		t_global;
 

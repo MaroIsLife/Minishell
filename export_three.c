@@ -11,7 +11,7 @@ void	ft_wr_eq(char *s)
 		sign = 0;
 		while (s[i] != 0)
 		{
-			if (s[i] == '=' && s[i + 1])
+			if (s[i] == '=' && s[i + 1] && sign != 1)
 			{
 				sign = 1;
 				write(1, &s[i++], 1);
