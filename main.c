@@ -72,7 +72,7 @@ void	ms_loop(t_source *src, char **envp, t_var *var)
 	while (1)
 	{
 		cmd = ms_get_cmd(src, var);
-		if (ft_strncmp(cmd, "continue", 8) == 0)
+		if (ms_free_two(cmd) == 1)
 			continue ;
 		var->pipes = my_ft_split(cmd, ';', src);
 		free(cmd);

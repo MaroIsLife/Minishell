@@ -243,4 +243,5 @@ int			count_start_two(char *s, t_source *src, int *start, int **i);
 void		freeList(t_node *head);
 int			parse_check(t_node *head, t_source *src);
 void		ft_free_filenames(t_filename *head);
+int			ms_free_two(char *cmd);
 #endif
