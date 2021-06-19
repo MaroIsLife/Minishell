@@ -53,7 +53,7 @@ int	ft_unset(char **args, t_source *src)
 	int	env;
 	int	exp;
 	int	j;
-	int n;
+	int	n;
 
 	j = 0;
 	while (args[j])

@@ -26,9 +26,7 @@ void	red_open_pipe_two(t_filename *p, int *fd, int *fd2)
 	else if (p->c == 94 || p->c == '>')
 		dup2((*fd), 1);
 	else if (p->c == '<')
-		{dup2((*fd2), 0);
-		}
-	
+		dup2((*fd2), 0);
 }
 
 void	red_open_pipe(t_filename *tmp)
