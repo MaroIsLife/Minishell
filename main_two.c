@@ -13,19 +13,15 @@ void	init_env(t_source *src, char **envp)
 	}
 	src->our_envp = malloc(sizeof(char *) * (i + 2));
 	src->export = malloc(sizeof(char *) * (i + 2));
-	src->our_envp[i] = "\0";
 	i = 0;
-	src->export[i] = ft_strdup("OLDPWD");
 	while (envp[i] != NULL)
 	{
 		src->our_envp[i] = ft_strdup(envp[i]);
-		src->export[i + 1] = ft_strdup(envp[i]);
+		src->export[i] = ft_strdup(envp[i]);
 		i++;
 	}
-	src->our_envp[i + 1] = NULL;
-	src->export[i + 1] = NULL;
-	src->lastenv++;
-	src->lastexp++;
+	src->our_envp[i] = NULL;
+	src->export[i] = NULL;
 }
 
 char	*ms_get_cmd(t_source *src, t_var *var)
