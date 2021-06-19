@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 
-int		ft_memcmp(const void *s1, const void *s2, size_t length)
+int	ft_memcmp(const void *s1, const void *s2, size_t length)
 {
 	size_t			i;
 	unsigned char	*ss1;

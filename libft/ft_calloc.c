@@ -18,7 +18,7 @@ static	void	ftt_bzero(void *s, size_t n)
 	unsigned char	*s1;
 
 	i = 0;
-	s1 = (unsigned char*)s;
+	s1 = (unsigned char *)s;
 	while (i < n)
 	{
 		s1[i] = 0;
@@ -26,9 +26,9 @@ static	void	ftt_bzero(void *s, size_t n)
 	}
 }
 
-void			*ft_calloc(size_t n, size_t size)
+void	*ft_calloc(size_t n, size_t size)
 {
-	void *i;
+	void	*i;
 
 	i = malloc(n * size);
 	if (i == NULL)

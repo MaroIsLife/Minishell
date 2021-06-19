@@ -12,10 +12,10 @@
 
 #include "libft.h"
 
-static	int		tester(char const s1, const char *set)
+static	int	tester(char const s1, const char *set)
 {
-	int i;
-	int k;
+	int	i;
+	int	k;
 
 	k = ft_strlen((const char *)set);
 	i = 0;
@@ -33,10 +33,10 @@ static	int		tester(char const s1, const char *set)
 	return (0);
 }
 
-static	int		triml(char const *s1, const char *set)
+static	int	triml(char const *s1, const char *set)
 {
-	int i;
-	int k;
+	int	i;
+	int	k;
 
 	i = 0;
 	k = ft_strlen(s1);
@@ -54,10 +54,10 @@ static	int		triml(char const *s1, const char *set)
 	return (0);
 }
 
-static int		trimr(char const *s1, const char *set)
+static int	trimr(char const *s1, const char *set)
 {
-	int k;
-	int i;
+	int	k;
+	int	i;
 
 	i = 0;
 	k = ft_strlen(s1);
@@ -75,7 +75,7 @@ static int		trimr(char const *s1, const char *set)
 	return (ft_strlen((char *)s1));
 }
 
-char			*ft_strtrim(char const *s1, char const *set)
+char	*ft_strtrim(char const *s1, char const *set)
 {
 	int		i;
 	int		k;
@@ -91,8 +91,7 @@ char			*ft_strtrim(char const *s1, char const *set)
 		i = triml(s1, set);
 	else
 		i = k;
-	if (!(p = malloc(k - i + 2 * sizeof(char))))
-		return (NULL);
+	p = malloc(k - i + 2 * sizeof(char));
 	c = 0;
 	while (i <= k)
 	{
