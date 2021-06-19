@@ -105,5 +105,6 @@ void	ms_pipe_one(t_source *src, t_var *var)
 		free(here);
 		here = next;
 	}
+	ft_free_filenames(var->head->pipe->pipef);
 	var->head->pipe = NULL;
 }

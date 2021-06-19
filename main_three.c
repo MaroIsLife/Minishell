@@ -1,27 +1,5 @@
 #include "minishell.h"
 
-void	freeList(t_node *head)
-{
-	t_node	*tmp;
-	char	*c_tmp;
-	int		i;
-
-	while (head != NULL)
-	{
-		tmp = head;
-		head = head->next;
-		free(tmp->cmd);
-		i = 0;
-		if (tmp->arg)
-		{
-			while (tmp->arg[i])
-				free(tmp->arg[i++]);
-		}
-		free(tmp->arg);
-	}
-	free(tmp);
-}
-
 int	num_of_node(t_pipe *tmp)
 {
 	int	i;
