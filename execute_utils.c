@@ -19,7 +19,8 @@ char	**ft_valide_args(char *cmd, char **args, int count)
 	i = 0;
 	b = 1;
 	varg = malloc (sizeof(char *) * (count + 2));
-	varg[0] = ft_strdup(cmd);
+	if (cmd[0] != '\0')
+		varg[0] = ft_strdup(cmd);
 	while (args && args[i] != NULL)
 		varg[b++] = ft_strdup(args[i++]);
 	varg[b] = NULL;
