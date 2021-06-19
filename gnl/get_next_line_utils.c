@@ -12,8 +12,7 @@
 
 #include "get_next_line.h"
 
-
-char		*ft_substr(char *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	size_t		i;
 	char		*s1;
@@ -40,7 +39,7 @@ char		*ft_substr(char *s, unsigned int start, size_t len)
 	return (s1);
 }
 
-char		*ft_strjoin(char *dst, char *src)
+char	*ft_strjoin(char *dst, char *src)
 {
 	char	*p;
 	int		size;
@@ -51,8 +50,7 @@ char		*ft_strjoin(char *dst, char *src)
 		return (0);
 	i = -1;
 	size = ft_strlen((char *)dst) + ft_strlen((char *)src) + 1;
-	if (!(p = malloc(size * sizeof(char))))
-		return (NULL);
+	p = malloc(size * sizeof(char));
 	while (dst[++i] != '\0')
 		p[i] = dst[i];
 	b = 0;
@@ -66,7 +64,7 @@ char		*ft_strjoin(char *dst, char *src)
 	return (p);
 }
 
-char		*ft_strdup(const char *s1)
+char	*ft_strdup(const char *s1)
 {
 	int		i;
 	char	*p;
@@ -84,11 +82,10 @@ char		*ft_strdup(const char *s1)
 		p[i] = s1[i];
 		i++;
 	}
-	// p[i] = '\0';
 	return (p);
 }
 
-char		*ftt_substr(char *s, unsigned int start, size_t len)
+char	*ftt_substr(char *s, unsigned int start, size_t len)
 {
 	size_t		i;
 	char		*s1;
@@ -102,8 +99,6 @@ char		*ftt_substr(char *s, unsigned int start, size_t len)
 	i = 0;
 	size = len + 1;
 	s1 = malloc(size * sizeof(char));
-	if (s1 == NULL)
-		return (NULL);
 	c = start;
 	while (s[c] != '\0' && i < len)
 	{
