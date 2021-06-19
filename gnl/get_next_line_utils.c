@@ -21,7 +21,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 
 	if (s == 0)
 		return (0);
-	if (start > ft_strlen(s))
+	if ((int)start > ft_strlen(s))
 		len = 0;
 	i = 0;
 	size = len + 1;
@@ -94,7 +94,7 @@ char	*ftt_substr(char *s, unsigned int start, size_t len)
 
 	if (s == 0)
 		return (0);
-	if (start > ft_strlen(s))
+	if ((int)start > ft_strlen(s))
 		len = 0;
 	i = 0;
 	size = len + 1;

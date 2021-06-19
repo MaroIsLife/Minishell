@@ -77,7 +77,7 @@ void	find_file_name_three(int ***i, char *s, t_source *src, t_ft *ft)
 			if (ft_search(src->our_envp, ft->tmp)
 				&& !ft_isalpha(s[(***i) + 1]))
 			{
-				ft->rev = get_x_env(src->our_envp, src, ft->tmp);
+				ft->rev = get_x_env(src->our_envp, ft->tmp);
 				ft->j = 0;
 				while (ft->rev[ft->j] != '\0')
 					src->p->filename[ft->b++] = ft->rev[ft->j++];
@@ -92,7 +92,7 @@ void	find_file_name_three(int ***i, char *s, t_source *src, t_ft *ft)
 	}
 }
 
-int	find_file_name(int **i, char *s, t_source *src, t_node *head)
+int	find_file_name(int **i, char *s, t_source *src )
 {
 	t_ft	ft;
 

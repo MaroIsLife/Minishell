@@ -12,7 +12,7 @@ int	find_space(t_source *src, int i)
 	return (c);
 }
 
-void	init_arg(t_node *head, char **arg, t_source *src, int tmp2)
+void	init_arg(t_node *head, char **arg, int tmp2)
 {
 	int		b;
 	int		i;

@@ -87,7 +87,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	if (set == 0)
 		return ((char *)s1);
 	k = trimr(s1, set);
-	if ((size_t)k != ft_strlen(s1))
+	if (k != ft_strlen(s1))
 		i = triml(s1, set);
 	else
 		i = k;

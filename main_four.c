@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	ms_free(t_source *src, t_var *var)
+void	ms_free(t_var *var)
 {
 	int	n;
 

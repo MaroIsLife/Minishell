@@ -22,7 +22,7 @@ void	find_command_four(char *s, t_source *src, int **i, int option)
 	}
 }
 
-int	find_command_three(char *s, t_source *src, t_node *head, int *i)
+int	find_command_three(char *s, t_source *src, int *i)
 {
 	if (s[(*i)] == '\'')
 		find_command_four(s, src, &i, 1);
@@ -33,12 +33,12 @@ int	find_command_three(char *s, t_source *src, t_node *head, int *i)
 		src->ra[src->ra_b++] = s[++(*i)];
 	else if (s[(*i)] == '$' && src->squotes == 0 && (ft_isalpha(s[(*i) + 1])
 			== 1 || s[(*i) + 1] == '?') && src->aslash == 0)
-		(*i) = get_env_value_cmd(s, src->our_envp, src, (*i)) - 1;
+		(*i) = get_env_value_cmd(s, src, (*i)) - 1;
 	else if ((s[(*i)] == '>' || s[(*i)] == '<') && src->aslash == 0
 		&& src->dquotes == 0 && src->squotes == 0)
 	{
 		while (s[(*i)] == '>' || s[(*i)] == '<')
-			find_file_name(&i, s, src, head);
+			find_file_name(&i, s, src);
 		(*i)++;
 		return (1);
 	}
@@ -49,7 +49,7 @@ int	find_command_three(char *s, t_source *src, t_node *head, int *i)
 	return (0);
 }
 
-int	find_command_two(char *s, t_source *src, int i, t_node *head)
+int	find_command_two(char *s, t_source *src, int i )
 {
 	int	start;
 
@@ -59,14 +59,14 @@ int	find_command_two(char *s, t_source *src, int i, t_node *head)
 	while (i < start)
 	{
 		finding_quotes(s, i, src);
-		if (find_command_three(s, src, head, &i) == 1)
+		if (find_command_three(s, src, &i) == 1)
 			continue ;
 		i++;
 	}
 	return (i);
 }
 
-char	*find_command(char *s, t_node *head, t_source *src, char **envp)
+char	*find_command(char *s, t_source *src)
 {
 	int	i;
 	int	start;
@@ -80,7 +80,7 @@ char	*find_command(char *s, t_node *head, t_source *src, char **envp)
 	src->ctmp = ft_strdup("");
 	start = count_start(s, src, start, &i);
 	src->ra = malloc((4096) * sizeof(char));
-	i = find_command_two(s, src, i, head);
+	i = find_command_two(s, src, i);
 	src->ra[src->ra_b] = '\0';
 	src->offset = i;
 	return (ft_strdup(src->ra));

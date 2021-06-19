@@ -12,6 +12,7 @@ int	count_start_two(char *s, t_source *src, int *start, int **i)
 {
 	char	*tmp;
 
+	tmp = NULL;
 	finding_quotes(s, ++(*start), src);
 	if (src->squotes == 1 || src->dquotes == 1)
 	{
@@ -21,7 +22,7 @@ int	count_start_two(char *s, t_source *src, int *start, int **i)
 	}
 	while (s[*start] != '\0' && s[*start] != '$' && s[*start] != ' ')
 		count_start_option(s, src, &start, tmp);
-	if (get_x_env(src->our_envp, src, src->ctmp) == 0)
+	if (get_x_env(src->our_envp, src->ctmp) == 0)
 	{
 		free(src->ctmp);
 		src->ctmp = ft_strdup("");
@@ -34,7 +35,7 @@ int	count_start_two(char *s, t_source *src, int *start, int **i)
 	return (0);
 }
 
-void	count_start_three(char *s, t_source *src, int *start, int *file_found)
+void	count_start_three(char *s, int *start, int *file_found)
 {
 	if (s[(*start) + 1] == '>')
 		(*start) = (*start) + 2;
@@ -61,7 +62,7 @@ int	count_start(char *s, t_source *src, int start, int *i)
 				continue ;
 		}
 		if (s[start] == '>' || s[start] == '<')
-			count_start_three(s, src, &start, &file_found);
+			count_start_three(s, &start, &file_found);
 		if ((s[start] == ' ' || s[start] == '|') && src->dquotes == 0
 			&& src->squotes == 0 && file_found == 0)
 			break ;

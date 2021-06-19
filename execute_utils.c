@@ -27,13 +27,14 @@ char	**ft_valide_args(char *cmd, char **args, int count)
 	return (varg);
 }
 
-char	**get_env_path(char **envp, t_source *src)
+char	**get_env_path(char **envp)
 {
 	int		i;
 	char	*s;
 	char	**paths;
 
 	i = 0;
+	paths = NULL;
 	while (envp[i] != NULL)
 	{
 		if (ft_strncmp(envp[i], "PATH", 4) == 0 && envp[i][4] == '=')

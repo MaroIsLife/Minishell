@@ -20,10 +20,9 @@ void	ft_exit_two(char **args, int ret)
 	}
 }
 
-int	ft_exit(char **args, t_source *src)
+int	ft_exit(char **args)
 {
 	int	b;
-	int	ret;
 
 	b = 0;
 	if (args[0] == NULL)
@@ -44,6 +43,6 @@ int	ft_exit(char **args, t_source *src)
 		g_global.return_value = 1;
 		return (0);
 	}
-	ft_exit_two(args, ret);
+	ft_exit_two(args, 0);
 	return (0);
 }

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	**parse_pipe_arg(int count, t_source *src, t_node *head, char **pipe)
+char	**parse_pipe_arg(int count, t_source *src, char **pipe)
 {
 	char	**arg;
 	int		i;
@@ -12,14 +12,14 @@ char	**parse_pipe_arg(int count, t_source *src, t_node *head, char **pipe)
 	src->tmp2 = 0;
 	while (i < count)
 	{
-		arg[i] = find_argument(pipe[src->c], head, src, src->our_envp);
+		arg[i] = find_argument(pipe[src->c], src);
 		i++;
 	}
 	arg[i] = NULL;
 	return (arg);
 }
 
-t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
+t_pipe	*new_pipe(char **pipe, t_source *src)
 {
 	t_pipe	*tmp;
 	char	**arg;
@@ -31,10 +31,10 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 	tmp->pipef = NULL;
 	src->ptemp = tmp;
 	src->tmp2 = 0;
-	tmp->cmd = find_command(pipe[src->c], head, src, src->our_envp);
+	tmp->cmd = find_command(pipe[src->c], src);
 	free(src->ra);
-	count = count_argument(pipe[src->c], src->offset, src);
-	arg = parse_pipe_arg(count, src, head, pipe);
+	count = count_argument(pipe[src->c], src);
+	arg = parse_pipe_arg(count, src, pipe);
 	if (src->fd_r_c == 50 && tmp->pipef != NULL)
 		tmp->pipef->fd_r_c = 50;
 	init_arg_pipe(arg, tmp, src->tmp2);
@@ -45,10 +45,9 @@ t_pipe	*new_pipe(char **pipe, t_source *src, t_node *head)
 	return (tmp);
 }
 
-void	loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
+void	loop_pipe(t_source *src, t_node *head, char **pipe)
 {
 	int		c;
-	int		count;
 	t_pipe	*tmp;
 	int		i;
 
@@ -58,9 +57,9 @@ void	loop_pipe(t_source *src, char **envp, t_node *head, char **pipe)
 	{
 		tmp = get_last_node_p(head->pipe);
 		if (tmp == NULL)
-			head->pipe = new_pipe(pipe, src, head);
+			head->pipe = new_pipe(pipe, src);
 		else
-			tmp->next = new_pipe(pipe, src, head);
+			tmp->next = new_pipe(pipe, src);
 		c++;
 	}
 }
@@ -75,11 +74,11 @@ void	init_parse_arg(int count, char **pipe, t_source *src, t_node *head)
 	src->tmp2 = 0;
 	while (i < count)
 	{
-		arg[i] = find_argument(pipe[src->c], head, src, src->our_envp);
+		arg[i] = find_argument(pipe[src->c], src);
 		i++;
 	}
 	arg[i] = NULL;
-	init_arg(head, arg, src, src->tmp2);
+	init_arg(head, arg, src->tmp2);
 	i = 0;
 	while (arg[i] != NULL)
 	{
@@ -89,23 +88,21 @@ void	init_parse_arg(int count, char **pipe, t_source *src, t_node *head)
 	free(arg);
 }
 
-int	init_parse(t_source *src, t_node *head, char **envp, char **pipe)
+int	init_parse(t_source *src, t_node *head, char **pipe)
 {
 	int		i;
 	int		c;
 	int		count;
-	char	**arg;
-	t_pipe	*p;
 
 	i = 0;
 	c = 0;
 	src->dollarused = 0;
 	src->ispipered = 0;
 	src->tmp2 = 0;
-	head->cmd = find_command(pipe[src->c], head, src, envp);
+	head->cmd = find_command(pipe[src->c], src);
 	if (parse_check(head, src) == 1)
 		return (0);
-	count = count_argument(pipe[src->c], src->offset, src);
+	count = count_argument(pipe[src->c], src);
 	src->count = count;
 	src->dquotes = 0;
 	src->squotes = 0;
@@ -113,7 +110,7 @@ int	init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 	if (src->foundpipe == 1)
 	{
 		head->pipe = NULL;
-		loop_pipe(src, envp, head, pipe);
+		loop_pipe(src, head, pipe);
 	}
 	return (0);
 }

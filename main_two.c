@@ -79,7 +79,7 @@ void	ms_nodes(t_var *var, t_source *src, char **pipes, int c)
 	src->squotes = 0;
 	src->fd_r_c = 0;
 	src->c = c;
-	init_parse(src, var->head, src->our_envp, pipes);
+	init_parse(src, var->head, pipes);
 	src->offset = 0;
 	g_global.return_value = 0;
 	if (src->founderror == 1)

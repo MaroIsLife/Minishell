@@ -23,14 +23,6 @@ static	size_t	delimc(const char *s, char c)
 	return (n);
 }
 
-static	char	**ft_free(char **p, int j)
-{
-	while (--j)
-		free(&p[j]);
-	free(p);
-	return (NULL);
-}
-
 char	**ft_split_normal(char *s, char c)
 {
 	size_t		j;
