@@ -40,6 +40,31 @@ void	find_red(int ***i, char *s, t_source *src)
 	}
 }
 
+void	find_file_name_six(t_source *src, int i, t_ft *ft, char *s)
+{
+	if ((s[(i)] == '\"') && src->squotes == 0 && src->aslash == 0)
+		;
+	else if ((s[(i)] == '\'') && src->dquotes == 0 && src->aslash == 0)
+		;
+	else if ((s[(i)] == '\\' || s[(i)] == '\"'
+			|| s[(i)] == '\'') && src->aslash == 1)
+	{
+		src->p->filename[ft->b++] = s[(i)];
+		src->aslash = 0;
+	}
+	else if (s[(i)] == '\\' && src->aslash == 0)
+	{
+		src->tmp = finding_aslash(s, i, src);
+		if (src->aslash == 0 && src->tmp != 1)
+		{
+			src->p->filename[ft->b++] = s[(i)];
+			src->tmp = 0;
+		}
+	}
+	else
+		src->p->filename[ft->b++] = s[(i)];
+}
+
 void	find_file_name_three(int ***i, char *s, t_source *src, t_ft *ft)
 {
 	if (s[***i] == '$' && src->squotes == 0)
@@ -55,17 +80,16 @@ void	find_file_name_three(int ***i, char *s, t_source *src, t_ft *ft)
 				ft->rev = get_x_env(src->our_envp, src, ft->tmp);
 				ft->j = 0;
 				while (ft->rev[ft->j] != '\0')
-				{	
-					src->p->filename[ft->b] = ft->rev[ft->j];
-					ft->j++;
-					ft->b++;
-				}
+					src->p->filename[ft->b++] = ft->rev[ft->j++];
 			}
 			(***i)++;
 		}
 	}
 	else
-		src->p->filename[ft->b++] = s[(***i)++];
+	{
+		find_file_name_six(src, ***i, ft, s);
+		(***i)++;
+	}
 }
 
 int	find_file_name(int **i, char *s, t_source *src, t_node *head)

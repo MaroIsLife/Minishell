@@ -61,19 +61,6 @@ void	ms_free_inside(t_source *src, t_var *var)
 	free(var->head);
 }
 
-void	ms_free(t_source *src, t_var *var)
-{
-	int n;
-
-	n = 0;
-	while (var->pipes[n] != NULL)
-	{
-		free(var->pipes[n]);
-		n++;
-	}
-	free(var->pipes);
-}
-
 void	ms_loop(t_source *src, char **envp, t_var *var)
 {
 	char	*cmd;

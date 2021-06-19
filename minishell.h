@@ -131,8 +131,8 @@ typedef struct s_global {
 	int		id;
 	int		return_value;
 	char	*ret;
-	int fd1;
-	int fd2;
+	int		fd1;
+	int		fd2;
 
 }		t_global;
 
@@ -140,9 +140,8 @@ t_global	g_global;
 
 //Parsing
 
-void	ms_free(t_source *src, t_var *var);
-
-void	ms_free_inside(t_source *src, t_var *var);
+void		ms_free(t_source *src, t_var *var);
+void		ms_free_inside(t_source *src, t_var *var);
 char		*ms_get_cmd(t_source *src, t_var *var);
 void		ms_init(t_source *src, t_var *var, char **envp);
 void		ms_nodes(t_var *var, t_source *src, char **pipes, int c);
