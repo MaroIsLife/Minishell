@@ -37,14 +37,20 @@ void	ft_cd(char **args, t_source *src, char *home)
 	if (!args[0])
 	{
 		if (!home)
-			write(1, "minishell: cd: HOME not set\n", 23);
+		{
+			write(1, "minishell: cd: HOME not set\n", 28);
+			g_global.return_value = 1;
+		}
 		else
 			chdir(home);
 	}
 	else
 		sign = chdir(args[0]);
 	if (sign != 0)
+	{
 		printf ("Error: %s\n", strerror(errno));
+		g_global.return_value = 1;
+	}
 	change_pwd_env(src);
 	change_pwd_export(src);
 }

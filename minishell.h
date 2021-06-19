@@ -152,7 +152,7 @@ void		sigs(void);
 t_filename	*get_last_node(t_filename *tmp);
 t_pipe		*get_last_node_p(t_pipe *tmp);
 void		init_arg(t_node *head, char **arg, t_source *src, int tmp2);
-void		init_parse(t_source *src, t_node *head, char **envp, char **pipe);
+int			init_parse(t_source *src, t_node *head, char **envp, char **pipe);
 char		*find_command(char *s, t_node *head, t_source *src, char **envp);
 int			get_env_value_cmd(char *s, char **envp, t_source *src, int i);
 int			find_file_name(int **i, char *s, t_source *src, t_node *head);
@@ -236,4 +236,5 @@ void		init_filee(t_source *src);
 int			count_start(char *s, t_source *src, int start, int *i);
 int			count_start_two(char *s, t_source *src, int *start, int **i);
 void		freeList(t_node *head);
+int			parse_check(t_node *head, t_source *src);
 #endif

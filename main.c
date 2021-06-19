@@ -54,7 +54,7 @@ void	ms_free(t_source *src, t_var *var)
 		var->here = var->next;
 	}
 	free(var->head->cmd);
-	while (var->head->arg[n])
+	while (var->head->arg && var->head->arg[n])
 		free(var->head->arg[n++]);
 	free(var->head->arg);
 	free(var->head);

@@ -10,6 +10,7 @@ void	print_errno(char *filename)
 	write(2, " ", 1);
 	write(2, err, ft_strlen(err));
 	write(2, "\n", 1);
+	g_global.return_value = 1;
 	exit(0);
 }
 

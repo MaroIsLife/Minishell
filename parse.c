@@ -89,7 +89,7 @@ void	init_parse_arg(int count, char **pipe, t_source *src, t_node *head)
 	free(arg);
 }
 
-void	init_parse(t_source *src, t_node *head, char **envp, char **pipe)
+int	init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 {
 	int		i;
 	int		c;
@@ -103,9 +103,8 @@ void	init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 	src->ispipered = 0;
 	src->tmp2 = 0;
 	head->cmd = find_command(pipe[src->c], head, src, envp);
-	free(src->ra);
-	if (head->cmd[0] == 0 && src->tmp2 == 1)
-		src->dollarused = 1;
+	if (parse_check(head, src) == 1)
+		return (0);
 	count = count_argument(pipe[src->c], src->offset, src);
 	src->count = count;
 	src->dquotes = 0;
@@ -116,4 +115,5 @@ void	init_parse(t_source *src, t_node *head, char **envp, char **pipe)
 		head->pipe = NULL;
 		loop_pipe(src, envp, head, pipe);
 	}
+	return (0);
 }

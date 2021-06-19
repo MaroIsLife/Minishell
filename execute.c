@@ -59,7 +59,8 @@ int	ft_execute(char *cmd, char **args, t_source *src, char **envp)
 	varg = ft_valide_args(cmd, args, calc_args(args));
 	if (cmd[0] == '\0')
 		return (print_cmd_error(cmd, 1, 1));
-	if (get_x_env(src->our_envp, src, "PATH") == 0)
+	if (get_x_env(src->our_envp, src, "PATH") == 0
+		&& (cmd[0] != '/' && cmd[0] != '.'))
 		return (print_cmd_error(cmd, 1, 1));
 	path = get_path(src, cmd, args, varg);
 	if (path != 0)

@@ -40,3 +40,20 @@ void	init_arg(t_node *head, char **arg, t_source *src, int tmp2)
 	}
 	head->arg[b] = NULL;
 }
+
+int	parse_check(t_node *head, t_source *src)
+{
+	free(src->ra);
+	if (head->cmd[0] == 0 && src->tmp2 == 1)
+		src->dollarused = 1;
+	if (src->aslash == 1 || src->dquotes == 1 || src->squotes == 1)
+	{
+		printf("Error\n");
+		printf("Dquotes: %d, Squotes: %d, Aslash: %d\n", src->dquotes,
+			src->squotes, src->aslash);
+		src->dollarused = 1;
+		head->arg = NULL;
+		return (1);
+	}
+	return (0);
+}
