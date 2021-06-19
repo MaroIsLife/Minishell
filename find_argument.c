@@ -106,11 +106,7 @@ char	*find_argument(char *s, t_node *head, t_source *src, char **envp)
 	src->re_b = 0;
 	i = find_argument_two(s, src, i, head);
 	if (src->dquotes == 1 || src->squotes == 1 || src->aslash == 1)
-	{
-		printf("Error\n");
-		printf("Dquotes: %d, Squotes: %d, Aslash: %d\n", src->dquotes,
-			src->squotes, src->aslash);
-	}
+		;
 	src->offset = i;
 	src->re[src->re_b] = '\0';
 	return ((src->re));
