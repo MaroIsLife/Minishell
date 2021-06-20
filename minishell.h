@@ -215,7 +215,7 @@ char		*get_correct_path(char **s, char **varg);
 char		**get_env_path(char **envp);
 char		**ft_valide_args(char *cmd, char **args, int count);
 int			calc_args(char **args);
-int			print_cmd_error(char *cmd, int option, int message);
+int			print_cmd_error(char *cmd, int option, int message, char **varg);
 void		ft_signal(void);
 void		handler(int c);
 void		handler2(int c);

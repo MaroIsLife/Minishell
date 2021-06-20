@@ -1,12 +1,18 @@
 #include "minishell.h"
 
-int	print_cmd_error(char *cmd, int option, int message)
+int	print_cmd_error(char *cmd, int option, int message, char **varg)
 {
+	int i;
+
+	i = 0;
 	if (message == 1)
 	{
 		write(2, "minishell: ", 11);
 		write(2, cmd, ft_strlen(cmd));
 		write(2, ": command not found\n", 20);
+		while (varg[i])
+			free(varg[i++]);
+		free(varg);
 	}
 	if (message == 2)
 	{
