@@ -30,7 +30,7 @@ void	ft_execute_child(char **varg, char *path, t_source *src)
 	{
 		if (execve(path, &varg[0], src->our_envp) == -1)
 		{
-			print_cmd_error(varg[0], 0, 2);
+			print_cmd_error(varg[0], 0, 2, NULL);
 			while (varg[src->tmp])
 				free(varg[src->tmp++]);
 			free(varg);
@@ -56,15 +56,15 @@ int	ft_execute(char *cmd, char **args, t_source *src)
 
 	varg = ft_valide_args(cmd, args, calc_args(args));
 	if (cmd[0] == '\0')
-		return (print_cmd_error(cmd, 1, 1));
+		return (print_cmd_error(cmd, 1, 1, varg));
 	if (get_x_env(src->our_envp, "PATH") == 0
 		&& (cmd[0] != '/' && cmd[0] != '.'))
-		return (print_cmd_error(cmd, 1, 1));
+		return (print_cmd_error(cmd, 1, 1, varg));
 	path = get_path(src, cmd, varg);
 	if (path != 0)
 		ft_execute_child(varg, path, src);
 	else
-		print_cmd_error(varg[0], 1, 1);
+		print_cmd_error(varg[0], 1, 1, NULL);
 	src->tmp = 0;
 	while (varg[src->tmp])
 		free(varg[src->tmp++]);
