@@ -156,6 +156,10 @@ void fork_pips (int n, t_node *head, t_source *src)
 	n = 1;
 	int h = -50;
     t_pipe *tmp = head->pipe;
+	/**
+	 *  make head-> cmd into pipe->cmd;
+	 * **/
+	
 	while (tmp)
 	{
 		// fprintf(stderr, "current cmd: %s\n", cmd_list->argv[0]);
