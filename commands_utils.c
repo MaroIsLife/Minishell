@@ -30,6 +30,7 @@ void	set_old_env(t_source *src, char *pwd)
 {
 	int	i;
 	int	check;
+	char *tmp;
 
 	i = 0;
 	check = 0;
@@ -38,9 +39,9 @@ void	set_old_env(t_source *src, char *pwd)
 		if (ft_strncmp(src->our_envp[i], "OLDPWD", 6) == 0)
 		{
 			check = 1;
-			free(src->our_envp[i]);
-			src->our_envp[i] = NULL;
-			src->our_envp[i] = (pwd);
+			tmp = src->our_envp[i];
+			src->our_envp[i] = ft_strdup(pwd);
+			free(tmp);
 			break ;
 		}
 		i++;
@@ -54,16 +55,17 @@ void	set_old_env(t_source *src, char *pwd)
 void	set_old_pwd(t_source *src, char *pwd)
 {
 	int	i;
+	char *tmp;
 
 	i = 0;
 	while (src->export[i] != NULL)
 	{
 		if (ft_strncmp(src->export[i], "OLDPWD", 6) == 0)
 		{
-			free(src->export[i]);
-			src->export[i] = NULL;
+			tmp = src->export[i];
 			src->export[i] = ft_strjoin("OLD", pwd);
 			set_old_env(src, src->export[i]);
+			free(tmp);
 			break ;
 		}
 		i++;

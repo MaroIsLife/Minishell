@@ -6,7 +6,7 @@ CC = gcc
 all: minishell
 
 minishell:
-	@$(CC) $(SRC) $(GN) $(LIB) -o minishell -lncurses -lreadline -Wall -Wextra -Werror -Werror
+	@$(CC) $(SRC) $(GN) $(LIB) -o minishell -lncurses -lreadline -Wall -Wextra -Werror -Werror 
 clean :
 	rm -rf minishell.o
 fclean : clean

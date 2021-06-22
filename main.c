@@ -74,11 +74,12 @@ void	ms_loop(t_source *src, char **envp, t_var *var)
 			continue ;
 		var->pipes = my_ft_split(cmd, ';', src);
 		free(cmd);
-		free(g_global.ret);
 		c = 0;
 		src->fd_r_c = 0;
 		ms_loop_semicolons(src, var);
 		ms_free(var);
+		if (g_global.ret != NULL)
+			free(g_global.ret);
 	}
 }
 

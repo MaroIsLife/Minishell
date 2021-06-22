@@ -6,18 +6,24 @@ void	handler(int c)
 	print_prompt1();
 	g_global.fsignal = 1;
 	g_global.return_value = 1;
-	if (g_global.ret != NULL)
-		g_global.ret = NULL;
+	if (g_global.ffork != 1 && g_global.ret != NULL )
+		{
+			free(g_global.ret);
+			g_global.ret = NULL;
+		}
 	c++;
 }
 
 void	handler2(int c)
 {
-	if (g_global.ffork == 1)
+
+	if ((g_global.ret && ft_strlen(g_global.ret) > 0) || g_global.ffork == 1)
 	{
 		write(2, "Quit: ", 6);
 		fprintf(stderr, "%d", c);
 		write(2, "\n", 1);
+		if (g_global.ffork != 1)
+			exit(120);
 	}
 	c++;
 }

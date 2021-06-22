@@ -30,12 +30,12 @@ void	ft_execute_child(char **varg, char *path, t_source *src)
 	{
 		if (execve(path, &varg[0], src->our_envp) == -1)
 		{
-			print_cmd_error(varg[0], 0, 2, NULL);
+			print_cmd_error(varg[0], 1, 2, NULL);
 			while (varg[src->tmp])
 				free(varg[src->tmp++]);
 			free(varg);
 			free(path);
-			exit(-1);
+			exit(g_global.return_value);
 		}
 	}
 	else
@@ -43,7 +43,7 @@ void	ft_execute_child(char **varg, char *path, t_source *src)
 		wait(&g_global.id);
 		g_global.ffork = 0;
 		if (WIFSIGNALED(g_global.id))
-			g_global.return_value = WTERMSIG(g_global.id) + 128;
+			g_global.return_value = WTERMSIG(g_global.id) % 128;
 		if (WIFEXITED(g_global.id))
 			g_global.return_value = WEXITSTATUS(g_global.id);
 	}
