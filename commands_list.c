@@ -2,7 +2,7 @@
 
 int	print_cmd_error(char *cmd, int option, int message, char **varg)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (message == 1)
@@ -10,7 +10,7 @@ int	print_cmd_error(char *cmd, int option, int message, char **varg)
 		write(2, "minishell: ", 11);
 		write(2, cmd, ft_strlen(cmd));
 		write(2, ": command not found\n", 20);
-		while (varg &&varg[i])
+		while (varg && varg[i])
 			free(varg[i++]);
 		if (varg)
 			free(varg);

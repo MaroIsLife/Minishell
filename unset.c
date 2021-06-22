@@ -2,8 +2,8 @@
 
 void 	unset_export(t_source *src, char *arg)
 {
-	int	i;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
 	i = 0;
 	while (src->export[i] != NULL)
@@ -27,8 +27,8 @@ void 	unset_export(t_source *src, char *arg)
 
 void	unset_env(t_source *src, char *arg)
 {
-	int	i;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
 	i = 0;
 	while (src->our_envp[i] != NULL)
