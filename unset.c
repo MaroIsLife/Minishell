@@ -3,20 +3,21 @@
 void 	unset_export(t_source *src, char *arg)
 {
 	int	i;
+	char *tmp;
 
 	i = 0;
 	while (src->export[i] != NULL)
 	{
 		if (is_equal(src->export[i], arg))
 		{
-			free(src->export[i]);
-			src->export[i] = NULL;
+			tmp = src->export[i];
 			while ((src->export[i] != NULL))
 			{
 				src->export[i] = src->export[i + 1];
 				i++;
 			}
 			src->lastexp--;
+			free(tmp);
 			src->export[i] = NULL;
 			break ;
 		}
@@ -27,20 +28,21 @@ void 	unset_export(t_source *src, char *arg)
 void	unset_env(t_source *src, char *arg)
 {
 	int	i;
+	char *tmp;
 
 	i = 0;
 	while (src->our_envp[i] != NULL)
 	{
 		if (is_equal(src->our_envp[i], arg))
 		{
-			free(src->our_envp[i]);
-			src->our_envp[i] = NULL;
+			tmp = src->our_envp[i];
 			while ((src->our_envp[i] != NULL))
 			{
 				src->our_envp[i] = src->our_envp[i + 1];
 				i++;
 			}
 			src->lastenv--;
+			free (tmp);
 			src->our_envp[i] = NULL;
 			break ;
 		}

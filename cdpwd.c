@@ -24,8 +24,8 @@ void	ft_pwd (void)
 {
 	char	*s;
 
-	s = malloc(100 * sizeof(char));
-	printf("%s\n", getcwd(s, 100));
+	s = malloc(1024 * sizeof(char));
+	printf("%s\n", getcwd(s, 1024));
 	free (s);
 }
 
@@ -34,11 +34,12 @@ void	ft_cd(char **args, t_source *src, char *home)
 	int	sign;
 
 	sign = 0;
-	if (!args[0])
+	// puts (args[0]);
+	if (args[0] == NULL)
 	{
 		if (!home)
 		{
-			write(1, "minishell: cd: HOME not set\n", 28);
+			write(2, "minishell: cd: HOME not set\n", 28);
 			g_global.return_value = 1;
 		}
 		else
