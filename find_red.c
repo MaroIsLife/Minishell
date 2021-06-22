@@ -5,30 +5,18 @@ void	find_red_two(t_source *src, int option)
 	if (option == 1)
 	{
 		if (src->fd_r_c == 2)
-		{
-			puts("Here 4");
 			src->fd_r_c = 50;
-		}
 		else if (src->fd_r_c == 3)
 			src->fd_r_c = 51;
 		else if (src->fd_r_c != 50)
-		{
 			src->fd_r_c = 1;
-			puts("Here 5");
-		}
 	}
 	else if (option == 2)
 	{
 		if (src->fd_r_c == 1)
-		{
-			puts("here 1");
 			src->fd_r_c = 50;
-		}
 		else if (src->fd_r_c == 0)
-		{
-			puts("Here 2");
 			src->fd_r_c = 2;
-		}
 	}
 	else if (option == 3)
 	{

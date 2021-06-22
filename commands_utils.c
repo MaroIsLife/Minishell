@@ -28,9 +28,9 @@ void	change_pwd_env(t_source *src)
 
 void	set_old_env(t_source *src, char *pwd)
 {
-	int	i;
-	int	check;
-	char *tmp;
+	int		i;
+	int		check;
+	char	*tmp;
 
 	i = 0;
 	check = 0;
@@ -54,8 +54,8 @@ void	set_old_env(t_source *src, char *pwd)
 
 void	set_old_pwd(t_source *src, char *pwd)
 {
-	int	i;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
 	i = 0;
 	while (src->export[i] != NULL)

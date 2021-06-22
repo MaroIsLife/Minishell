@@ -34,7 +34,6 @@ void	ft_cd(char **args, t_source *src, char *home)
 	int	sign;
 
 	sign = 0;
-	// puts (args[0]);
 	if (args[0] == NULL)
 	{
 		if (!home)

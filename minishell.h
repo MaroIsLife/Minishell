@@ -17,10 +17,8 @@
 # include <term.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-#include<readline/readline.h>
-#include<readline/history.h>
-
-
+# include<readline/readline.h>
+# include<readline/history.h>
 # define KEY_UP 183
 # define KEY_DOWN 184
 # define KEY_LEFT  186
@@ -91,7 +89,7 @@ typedef struct s_source
 	t_pipe		*ptemp;
 	int			p_temp_i;
 	int			fd[2];
-	int 		read_fd;
+	int			read_fd;
 	int			write_fd;
 	int			i;
 }				t_source;
@@ -249,4 +247,11 @@ void		freeList(t_node *head);
 int			parse_check(t_node *head, t_source *src);
 void		ft_free_filenames(t_filename *head);
 int			ms_free_two(char *cmd);
+void		red_spawn(t_pipe *tmp, int write_fd, int read_fd, t_source *src);
+void		red_open_normal(int write_fd, t_filename *tmp);
+void		red_read (int read_fd, t_filename *tmp);
+void		red_open_append(int read_fd, t_filename *tmp);
+void		both_red(t_filename *tmp);
+void		red_open_two(t_filename *p, int *fd, int *fd2, t_source *src);
+void		print_errno(char *filename);
 #endif
