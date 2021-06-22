@@ -1,4 +1,3 @@
-
 #	include "minishell.h"
 
 int 	get_last_filename(t_filename *tmp, int i)

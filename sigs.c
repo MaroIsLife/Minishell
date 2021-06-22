@@ -7,16 +7,15 @@ void	handler(int c)
 	g_global.fsignal = 1;
 	g_global.return_value = 1;
 	if (g_global.ffork != 1 && g_global.ret != NULL )
-		{
-			free(g_global.ret);
-			g_global.ret = NULL;
-		}
+	{
+		free(g_global.ret);
+		g_global.ret = NULL;
+	}
 	c++;
 }
 
 void	handler2(int c)
 {
-
 	if ((g_global.ret && ft_strlen(g_global.ret) > 0) || g_global.ffork == 1)
 	{
 		write(2, "Quit: ", 6);
