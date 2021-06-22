@@ -61,7 +61,7 @@ int	ret_d(void)
 	d = get_char();
 	if (d == 4)
 	{
-		if (g_global.ret == NULL)
+		if (g_global.ret == NULL || g_global.ret[0] == '\0')
 		{
 			write(1, "exit", 4);
 			exit(0);
