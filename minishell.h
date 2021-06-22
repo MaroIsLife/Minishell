@@ -93,6 +93,7 @@ typedef struct s_source
 	int			fd[2];
 	int 		read_fd;
 	int			write_fd;
+	int			i;
 }				t_source;
 
 typedef struct s_node {

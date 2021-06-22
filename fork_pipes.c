@@ -76,21 +76,21 @@ void red_spawn(t_pipe *tmp, int write_fd, int read_fd, t_source *src)
 	else if(lastnamef->c == 94)
 		red_open_append(read_fd, lastnamef);
 }
-void child_exec(t_pipe *tmp, t_node *head, int write_fd, int read_fd, int i,  t_source *src)
+void child_exec(t_pipe *tmp, t_node *head,  t_source *src)
 {
 	if(tmp != NULL && tmp->pipef == NULL)
 	{
-		dup2(read_fd, 0);
-		dup2(write_fd, 1);
-		close(read_fd);
-		close(write_fd);
+		dup2(src->read_fd, 0);
+		dup2(src->write_fd, 1);
+		close(src->read_fd);
+		close(src->write_fd);
 	}
 	else if(tmp->pipef != NULL)
 	{
-		red_spawn(tmp, write_fd, read_fd, src);
+		red_spawn(tmp, src->write_fd, src->read_fd, src);
 
 	}
-	if (i == 0)
+	if (src->i == 0)
 		command_list(head->cmd, head->arg, src);
 	else
 		command_list(tmp->cmd, tmp->arg, src);
@@ -135,29 +135,29 @@ void	pipe_close_nrm(int i, t_source *src)
 
 void fork_pips (int n, t_node *head, t_source *src)
 {
-    int i;
+    // int i;
     t_pipe *tmp;
 	
-	i = 0;
+	src->i = 0;
 	src->read_fd = dup(0);
 	tmp = head->pipe;
 	while (tmp)
 	{
-		if (i == 0 || tmp->next)
+		if (src->i == 0 || tmp->next)
 			pipe_close_nrm(0, src);
 		else
 			src->write_fd = dup(1);
 		if (fork() == 0)
-			child_exec(tmp, head, src->write_fd, src->read_fd, i, src);
+			child_exec(tmp, head, src);
 		else
 		{
 			pipe_close_nrm(69, src);
-			if (i == 0 || tmp->next)
+			if (src->i == 0 || tmp->next)
 				pipe_close_nrm(1, src);
 		}
-		if (i > 0)
+		if (src->i > 0)
 			tmp = tmp->next;
-		i++;
+	src->i++;
 	}
 	return_fun(n);
 }
