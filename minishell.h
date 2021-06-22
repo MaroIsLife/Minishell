@@ -91,6 +91,8 @@ typedef struct s_source
 	t_pipe		*ptemp;
 	int			p_temp_i;
 	int			fd[2];
+	int 		read_fd;
+	int			write_fd;
 }				t_source;
 
 typedef struct s_node {

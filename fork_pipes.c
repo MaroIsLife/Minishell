@@ -22,10 +22,10 @@ void both_red(t_filename *tmp)
 {
 	int fd_input = open(tmp->filename, O_RDONLY);
 	tmp = tmp->next;
-	int fd_out = open(tmp->filename, O_CREAT|O_WRONLY|O_APPEND, 0644);
-	if(fd_out == -100)
+	int fd_out = open(tmp->filename, O_CREAT|O_WRONLY|O_TRUNC, 0644);
+	if(fd_out == -1)
 		exit(1);
-	if(fd_input == -100)
+	if(fd_input == -1)
 		exit(1);
 	dup2(fd_input, 0);
 	close(fd_input);
@@ -35,30 +35,34 @@ void both_red(t_filename *tmp)
 
 void red_open_normal(int write_fd, t_filename *tmp)
 {
-	int h;
+	int file;
 
-	h = get_last_filename(tmp, 1);//open(lastnamef->filename, O_RDONLY);
-	dup2(h, 0);
+	file = get_last_filename(tmp, 1);//open(lastnamef->filename, O_RDONLY);
+	dup2(file, 0);
 	dup2(write_fd, 1);
-	close(h);
+	close(file);
 }
 void red_read (int read_fd, t_filename *tmp)
 {
-	int h;
+	int file;
 
-	h = get_last_filename(tmp, 0);//open(lastnamef->filename,  O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	dup2(h, 1);
+	file = get_last_filename(tmp, 0);//open(lastnamef->filename,  O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if(file == -1)
+		exit(1);
+	dup2(file, 1);
 	dup2(read_fd, 0);
-	close(h);
+	close(file);
 }
 void red_open_append(int read_fd, t_filename *tmp)
 {
-	int h;
+	int file;
 
-	h = open(tmp->filename, O_CREAT|O_WRONLY|O_APPEND, 0644);
-	dup2(h, 1);
+	file = open(tmp->filename, O_CREAT|O_WRONLY|O_APPEND, 0644);
+	if(file == -1)
+		exit(1);
+	dup2(file, 1);
 	dup2(read_fd, 0);
-	close(h);
+	close(file);
 }
 void red_spawn(t_pipe *tmp, int write_fd, int read_fd, t_source *src)
 {
@@ -72,65 +76,88 @@ void red_spawn(t_pipe *tmp, int write_fd, int read_fd, t_source *src)
 	else if(lastnamef->c == 94)
 		red_open_append(read_fd, lastnamef);
 }
+void child_exec(t_pipe *tmp, t_node *head, int write_fd, int read_fd, int i,  t_source *src)
+{
+	if(tmp != NULL && tmp->pipef == NULL)
+	{
+		dup2(read_fd, 0);
+		dup2(write_fd, 1);
+		close(read_fd);
+		close(write_fd);
+	}
+	else if(tmp->pipef != NULL)
+	{
+		red_spawn(tmp, write_fd, read_fd, src);
+
+	}
+	if (i == 0)
+		command_list(head->cmd, head->arg, src);
+	else
+		command_list(tmp->cmd, tmp->arg, src);
+	exit(g_global.return_value);
+}
+
+void	return_fun(int n)
+{
+	int i;
+
+	i = 0;
+	while (i < n)
+	{
+		wait(&g_global.id);
+		i++;
+		if (WIFSIGNALED(g_global.id))
+			g_global.return_value = WTERMSIG(g_global.id) + 128;
+		if (WIFEXITED(g_global.id))
+			g_global.return_value = WEXITSTATUS(g_global.id);
+	}
+}
+void	pipe_close_nrm(int i, t_source *src)
+{
+	if (i == 0)
+	{
+		pipe(src->fd);
+		src->write_fd = dup(src->fd[1]);
+		close(src->fd[1]);
+	}
+	else if (i == 1) 
+	{
+		src->read_fd = dup(src->fd[0]);
+		close(src->fd[0]);
+	}
+	else 
+	{
+		close(src->read_fd);
+		close(src->write_fd);
+	}
+
+}
+
 void fork_pips (int n, t_node *head, t_source *src)
 {
     int i;
-	int fd[2];
-	int read_fd;
-	int write_fd;
+    t_pipe *tmp;
 	
 	i = 0;
-	read_fd = dup(0);
-	n = 1;
-    t_pipe *tmp = head->pipe;
-	/**
-	 *  make head-> cmd into pipe->cmd;
-	 * **/
+	src->read_fd = dup(0);
+	tmp = head->pipe;
 	while (tmp)
 	{
-		fd[0] = -1;
-		fd[1] = -1;
 		if (i == 0 || tmp->next)
-		{
-			pipe(fd);
-			write_fd = dup(fd[1]);
-			close(fd[1]);
-		}
+			pipe_close_nrm(0, src);
 		else
-			write_fd = dup(1);
+			src->write_fd = dup(1);
 		if (fork() == 0)
-		{
-			if(tmp != NULL && tmp->pipef == NULL)
-			{
-				dup2(read_fd, 0);
-				dup2(write_fd, 1);
-		   		close(read_fd);
-				close(write_fd);
-			}
-			else if(tmp->pipef != NULL)
-			{
-				red_spawn(tmp, write_fd, read_fd, src);
-
-			}
-			if (i == 0)
-				command_list(head->cmd, head->arg, src);
-			else
-				command_list(tmp->cmd, tmp->arg, src);
-			exit(g_global.return_value);
-		}
+			child_exec(tmp, head, src->write_fd, src->read_fd, i, src);
 		else
 		{
-			close(read_fd);
-			close(write_fd);
+			pipe_close_nrm(69, src);
 			if (i == 0 || tmp->next)
-			{
-				read_fd = dup(fd[0]);
-				close(fd[0]);
-			}
+				pipe_close_nrm(1, src);
 		}
 		if (i > 0)
 			tmp = tmp->next;
 		i++;
 	}
-	while (wait(NULL) > 0);
+	return_fun(n);
 }
