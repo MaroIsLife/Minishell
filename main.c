@@ -37,7 +37,7 @@ void	ms_loop_semicolons(t_source *src, t_var *var)
 				ms_pipe_two(src, var);
 		}
 		ms_free_inside(var);
-		c++;
+		break ;
 	}
 }
 
